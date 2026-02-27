@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = env_list(
 INSTALLED_APPS = [
     "cloudinary",
     "jazzmin",
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -116,6 +117,10 @@ LOGIN_URL = "/login/"
 # ======================
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
