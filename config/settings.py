@@ -124,6 +124,7 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 
+WHITENOISE_MANIFEST_STRICT = False
 # ======================
 # CLOUDINARY (ONE SOURCE OF TRUTH)
 # ======================
