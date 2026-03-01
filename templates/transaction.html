@@ -65,6 +65,102 @@
   }
 
   .muted{ font-size:12px; opacity:.75; margin-top:2px; }
+  /* =========================
+   ✅ TRANSACTIONS = WHITE CARD (wallet-style)
+   ========================= */
+
+.tx-card{
+  position: relative !important;
+  overflow:hidden !important;
+
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 45%,#eef2f7 75%,#ffffff 100%) !important;
+
+  border-radius: 18px !important;
+  border: 2px solid rgba(212,175,55,.85) !important;
+
+  box-shadow: 0 20px 45px rgba(0,0,0,.12),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.tx-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 90% 90%, rgba(212,175,55,.25), transparent 55%),
+    radial-gradient(circle at 10% 10%, rgba(0,65,130,.08), transparent 60%);
+  opacity:.75;
+}
+.tx-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0) 55%);
+  opacity:.6;
+}
+.tx-card > *{ position:relative; z-index:1; }
+
+/* all text inside -> blue */
+.tx-page, .tx-page *{
+  color:#0b2f55 !important;
+  text-shadow:none !important;
+}
+.tx-page .sub, .tx-page .muted{
+  color: rgba(11,47,85,.72) !important;
+}
+
+/* Balance badge -> blue pill */
+.tx-page .badge{
+  background: linear-gradient(90deg, #004182, #054585d0) !important;
+  color:#e6f1ff !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18) !important;
+}
+
+/* list divider -> light */
+.list-row{
+  border-bottom: 1px solid rgba(11,47,85,.10) !important;
+}
+
+/* status pills keep colors but match white page */
+.pill{
+  border: 1px solid rgba(11,47,85,.12) !important;
+  background: rgba(11,47,85,.06) !important;
+  color:#0b2f55 !important;
+}
+.pill-success{
+  background: rgba(34,197,94,.12) !important;
+  border-color: rgba(34,197,94,.30) !important;
+  color: #106a2d !important;
+}
+.pill-danger{
+  background: rgba(239,68,68,.12) !important;
+  border-color: rgba(239,68,68,.30) !important;
+  color: #9f1d1d !important;
+}
+/* ✅ Back button on WHITE card (visible, not blending) */
+.btn-ghost{
+  background: #ffffff !important;
+  color: #0b2f55 !important;                 /* blue text */
+  border: 2px solid rgba(11,47,85,.22) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,.14),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+}
+
+.btn-ghost:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(0,0,0,.16),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+}
+
+.btn-ghost:active{
+  transform: scale(.98);
+}
 </style>
 
 <div class="tx-wrap tx-page">

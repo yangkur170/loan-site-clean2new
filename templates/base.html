@@ -1,11 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>  
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="{% static 'img/logo.webp' %}?v=3">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
+{% block extra_css %}
 <style>
 :root{
   --g1:#0f7a3a;
@@ -18,7 +18,21 @@
   font-style: normal;
   font-display: swap;
 }
+
 body {
+  font-family: "Ovelion", sans-serif !important;
+}
+
+/* ===== FORCE OVELION FONT FOR ALL ELEMENTS ===== */
+
+body,
+button,
+select,
+input,
+textarea,
+th,
+td,
+a {
   font-family: "Ovelion", sans-serif !important;
 }
 .ovelion{
@@ -87,15 +101,14 @@ body{ padding-bottom: calc(var(--bar-h) + var(--bar-gap)); }
 }
 /* ===== BODY (Dashboard background) ===== */
 body{
-  margin:0;
-  min-height:100vh;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  background:
-    linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.78)),
-    url("{% static 'img/SL-012322-48100-03.webp' %}") center/cover no-repeat fixed;
-  color:#fff;
-  /* Reserve space for fixed bottom bar (height + offset) */
-  padding-bottom: calc(var(--bar-h) + var(--bar-gap));
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* ✅ NO overlay, show image original */
+  background: url("{% static 'img/SL-012322-48100-03.webp' %}") center/cover no-repeat fixed !important;
+  background-color: #ffffff;
+  background-blend-mode: normal;
 }
 
 /* ===== PAGE ENTER/LEAVE ANIMATION ===== */
@@ -119,18 +132,20 @@ body{
 .wrap{
   width:100%;
   min-height:100vh;
-  display:flex;                 /* ✅ center pages again */
-  justify-content:center;       /* ✅ center horizontally */
-  align-items:flex-start;       /* keep start from top */
-  padding: 20px 14px 26px;      /* ✅ add left/right padding */
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding: 18px 5px 5px;   /* 🔥 top 18px | left-right 5px | bottom 5px */
   box-sizing:border-box;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* make any page container centered (dash-wrap / card / any main box) */
 
 /* ONLY when a page needs topbar spacing, add class "has-topbar" on .wrap */
 .wrap.has-topbar{
-  padding-top: 72px;
+  padding-top: 18px;
 }
 
 /* ===== GLASS CARD ===== */
@@ -323,7 +338,66 @@ input:focus, select:focus, textarea:focus{
   align-items: center;
   justify-content: center;
 }
+
+/* =========================
+   ✅ TOPBAR FIX (PC + Mobile)
+   Make topbar align with centered content
+   ========================= */
+
+/* Container width for ALL pages (same line, no cut) */
+.wrap{
+  width: 100% !important;
+  max-width: 800px !important;   /* ✅ match your bottom bar max width */
+  margin: 0 auto !important;
+}
+
+/* If some pages need wider, you can add class "wide" in template later */
+.wrap.wide{
+  max-width: 1400px !important;
+}
+
+/* Generic topbar (if your pages have .topbar) */
+.topbar{
+  width: 100% !important;
+  max-width: 800px !important;   /* ✅ same as wrap/bottom bar */
+  margin: 0 auto 14px auto !important;
+  box-sizing: border-box !important;
+}
+
+/* If topbar is outside wrap, still keep it centered */
+body > .topbar{
+  max-width: 800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+/* prevent clipping on PC */
+html, body{
+  height: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* =========================
+   ✅ GLOBAL CardX (ALL pages)
+   Make cards NOT transparent
+   ========================= */
+.cardx{
+  background: rgb(0, 0, 0) !important;   /* ✅ darker solid */
+  border: 2px solid rgba(192,192,192,.904) !important;
+  border-radius: 18px !important;
+
+  /* ✅ remove glass see-through */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  box-shadow: 0 0 10px rgba(10,10,9,.78),
+              0 14px 10px rgba(0,0,0,.82) !important;
+}
+
 </style>
+{% endblock %}
 </head>
 
 <body data-auth="{{ request.user.is_authenticated|yesno:'true,false' }}">

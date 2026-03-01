@@ -14,12 +14,13 @@
 
   .cardx{
   position: relative;
-  background: rgba(9, 10, 10, 0.856);
+  background: rgba(0, 0, 0, 0.788);
   border-radius: 18px;
+  border: 2px solid rgba(192, 192, 192, 0.904);
   padding: 16px;
   backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: 0 10px 26px rgba(0,0,0,.45), inset 0 1px 0 rgba(163,157,157,.35);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 0 10px rgba(10, 10, 9, 0.788), 0 14px 10px rgba(0, 0, 0, 0.815);
   overflow: hidden;
   margin-bottom: 14px;
 }
@@ -85,14 +86,14 @@
   input[readonly]{ opacity:.92; }
 
   .term-grid{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:10px;
-    margin-top:10px;
-  }
-  @media(max-width:520px){
-    .term-grid{ grid-template-columns:repeat(3,1fr); }
-  }
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:10px;
+}
+@media(max-width:520px){
+  .term-grid{ grid-template-columns:repeat(2,1fr); }
+}
   .term-btn{
     padding:12px 0;
     border-radius:999px;
@@ -256,11 +257,11 @@
     </div>
     <div class="top-actions-line"></div>
     <div class="field">
-      <label>Loan amount (Min 100,000 • Max 5,000,000)</label>
+      <label>Loan amount (Min 80,000 • Max 5,000,000)</label>
       <input
         type="number"
         id="qAmount"
-        min="100000"
+        min="80000"
         max="5000000"
         placeholder="Enter amount"
         {% if loan %}readonly{% endif %}
@@ -272,13 +273,11 @@
       <input type="hidden" id="qTerm">
 
       <div class="term-grid">
-        <button type="button" class="term-btn" data-term="6"  {% if loan %}disabled{% endif %}>6</button>
-        <button type="button" class="term-btn" data-term="12" {% if loan %}disabled{% endif %}>12</button>
-        <button type="button" class="term-btn" data-term="24" {% if loan %}disabled{% endif %}>24</button>
-        <button type="button" class="term-btn" data-term="36" {% if loan %}disabled{% endif %}>36</button>
-        <button type="button" class="term-btn" data-term="48" {% if loan %}disabled{% endif %}>48</button>
-        <button type="button" class="term-btn" data-term="60" {% if loan %}disabled{% endif %}>60</button>
-      </div>
+  <button type="button" class="term-btn" data-term="6" {% if loan %}disabled{% endif %}>6</button>
+  <button type="button" class="term-btn" data-term="12" {% if loan %}disabled{% endif %}>12</button>
+  <button type="button" class="term-btn" data-term="24" {% if loan %}disabled{% endif %}>24</button>
+  <button type="button" class="term-btn" data-term="36" {% if loan %}disabled{% endif %}>36</button>
+</div>
 
       <div class="muted hint" id="qHint">Choose months</div>
     </div>

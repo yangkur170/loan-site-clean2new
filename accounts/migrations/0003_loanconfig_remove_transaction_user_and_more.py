@@ -17,9 +17,9 @@ class Migration(migrations.Migration):
             name='LoanConfig',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('interest_rate_monthly', models.DecimalField(decimal_places=6, default=Decimal('0.000300'), max_digits=10)),
-                ('min_amount', models.DecimalField(decimal_places=2, default=Decimal('200000.00'), max_digits=14)),
-                ('max_amount', models.DecimalField(decimal_places=2, default=Decimal('60000000.00'), max_digits=14)),
+                ('interest_rate_monthly', models.DecimalField(decimal_places=6, default=Decimal('0.000500'), max_digits=10)),
+                ('min_amount', models.DecimalField(decimal_places=2, default=Decimal('80000.00'), max_digits=14)),
+                ('max_amount', models.DecimalField(decimal_places=2, default=Decimal('5000000.00'), max_digits=14)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
         ),

@@ -97,15 +97,6 @@
     border-right: 13px solid #e7e7e7;
   }
 }
-  body{
-    margin:0;
-    min-height:100vh;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background:
-      linear-gradient(rgba(0,0,0,.58), rgba(0,0,0,.78)),
-      url("{% static 'img/SL-012322-48100-03.webp' %}") center / cover no-repeat fixed !important;
-    color:#fff;
-  }
 
   .wrap{
     align-items:flex-start !important;
@@ -121,16 +112,23 @@
   }
 
   .cardx{
-    position: relative;
-    background: rgba(9, 10, 10, 0.78);
-    border-radius: 18px;
-    padding: 18px;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: 0 3px 4px rgba(245,245,245,.55), inset 0 1px 0 rgba(163,157,157,.90);
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
+  position: relative;
+
+  background: rgba(0, 0, 0, 0.788);
+
+  border-radius: 18px;
+  border: 2px solid rgba(192, 192, 192, 0.904);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  box-shadow: 0 0 10px rgba(10, 10, 9, 0.788),
+              0 14px 10px rgba(0, 0, 0, 0.815);
+
+  overflow: hidden;
+  margin-bottom: 16px;
+  padding: 18px;
+}
 
   .title{
     font-weight: 950;
@@ -205,6 +203,225 @@
     opacity:.75;
     margin-top: 10px;
   }
+
+/* =========================
+   CONTACT US = WHITE CARDS + BLUE TEXT
+   ========================= */
+
+/* Font */
+.page, .page *{
+  font-family: "Ovelion", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* page wrapper */
+.page{
+  width: min(520px, 94vw);
+  margin: 0 auto;
+  padding: 14px 14px 92px;
+  box-sizing: border-box;
+}
+
+/* ✅ White luxury card style (same as wallet white cards) */
+.cardx{
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f8fafc 45%,
+      #eef2f7 75%,
+      #ffffff 100%
+  ) !important;
+
+  border-radius: 18px;
+  border: 2px solid rgba(212,175,55,.85) !important;
+
+  box-shadow:
+    0 20px 45px rgba(0,0,0,.12),
+    0 0 0 1px rgba(255,255,255,.9) inset !important;
+
+  margin-bottom: 16px;
+  padding: 18px;
+}
+
+/* glow */
+.cardx::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.75;
+  background:
+    radial-gradient(circle at 90% 90%, rgba(212,175,55,.25), transparent 55%),
+    radial-gradient(circle at 10% 10%, rgba(0,65,130,.08), transparent 60%);
+}
+
+/* shine */
+.cardx::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.6;
+  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0) 55%);
+}
+
+/* keep content above overlays */
+.cardx > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ Blue text inside cards */
+.cardx, .cardx *{
+  color:#0b2f55 !important;
+  text-shadow: none !important;
+}
+
+.title{
+  font-weight: 950;
+  font-size: 18px;
+  letter-spacing:.04em;
+  margin: 0 0 6px;
+}
+.sub{
+  font-size: 12px;
+  opacity: .75;
+  margin: 0;
+}
+
+/* labels */
+label{
+  display:block;
+  font-size: 12px;
+  margin: 10px 0 6px;
+  font-weight: 900;
+  color:#0b2f55 !important;
+  opacity: .9;
+}
+
+/* ✅ inputs look like wallet white inputs */
+input, textarea{
+  width:100%;
+  box-sizing:border-box;
+  border-radius: 14px;
+
+  border: 1px solid rgba(11,47,85,.18) !important;
+  background: rgba(11,47,85,.06) !important;
+
+  color:#0b2f55 !important;
+  padding: 12px 12px;
+  outline:none;
+}
+
+input::placeholder, textarea::placeholder{
+  color: rgba(11,47,85,.55) !important;
+}
+
+textarea{
+  min-height: 110px;
+  resize: none;
+}
+
+input:focus, textarea:focus{
+  border-color: rgba(0,65,130,.75) !important;
+  box-shadow: 0 0 0 3px rgba(5,69,133,.22) !important;
+  background: rgba(11,47,85,.08) !important;
+}
+
+/* send button keep blue */
+.btn{
+  width:100%;
+  margin-top: 12px;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 16px;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color:#fff !important;
+  cursor:pointer;
+  background: linear-gradient(90deg, #004182, #054585d0);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+.btn:active{ transform: scale(.99); }
+
+/* ✅ success alert also white style */
+.alert-success{
+  border: 2px solid rgba(212,175,55,.65) !important;
+  background: linear-gradient(180deg, #ffffff, #f3f6fb) !important;
+  color:#0b2f55 !important;
+
+  padding: 12px 12px;
+  border-radius: 14px;
+  font-weight: 900;
+  margin-bottom: 12px;
+
+  box-shadow: 0 14px 34px rgba(0,0,0,.12);
+}
+
+/* =========================
+   ✅ Back button = White visible
+   ========================= */
+.top-actions{
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  height: 42px;
+  padding: 0 22px;
+  border-radius: 12px;
+
+  background: #ffffff !important;
+  color: #0b2f55 !important;
+  font-weight: 950;
+  text-decoration:none;
+
+  border: 2px solid rgba(11,47,85,.22) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,.14),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+}
+
+.back-btn:hover{
+  transform: translateY(-1px);
+}
+.back-btn:active{
+  transform: scale(.98);
+  opacity: 1 !important;
+}
+
+/* keep telegram inline text readable */
+.telegram-inline{
+  text-align:center;
+  margin: 6px 0 12px;
+}
+/* Telegram title = Blue (visible on light background) */
+.tg-title{
+  color:#004182 !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.65);
+}
+/* =========================
+   CONTACT PAGE BODY (MATCH WALLET/DASHBOARD)
+   ========================= */
+
+body{
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* ✅ NO overlay, show image original */
+  background: url("{% static 'img/SL-012322-48100-03.webp' %}") center/cover no-repeat fixed !important;
+  background-color: #ffffff;
+  background-blend-mode: normal;
+}
 </style>
 
 <div class="page">

@@ -132,6 +132,95 @@
 .cs-danger .cs-score{
   color: #ff6b6b !important;
 }
+/* =========================
+   ✅ CREDIT SCORE = WHITE CARD (wallet-style)
+   ========================= */
+
+.cs-card{
+  position: relative !important;
+  overflow:hidden !important;
+
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 45%,#eef2f7 75%,#ffffff 100%) !important;
+
+  border: 2px solid rgba(212,175,55,.85) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,.12),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.cs-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 90% 90%, rgba(212,175,55,.25), transparent 55%),
+    radial-gradient(circle at 10% 10%, rgba(0,65,130,.08), transparent 60%);
+  opacity:.75;
+}
+.cs-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0) 55%);
+  opacity:.6;
+}
+.cs-card > *{ position:relative; z-index:1; }
+
+/* text -> blue */
+.cs-title, .cs-label, .cs-score{ color:#0b2f55 !important; }
+.cs-sub, .cs-note{ color: rgba(11,47,85,.72) !important; }
+
+.cs-pill{
+  border: 1px solid rgba(11,47,85,.16) !important;
+  background: rgba(11,47,85,.06) !important;
+  color:#0b2f55 !important;
+}
+
+/* inner score box -> light panel */
+.cs-scorebox{
+  border: 1px solid rgba(11,47,85,.14) !important;
+  background: rgba(11,47,85,.04) !important;
+}
+
+/* ⚠️ remove old "danger red theme" look, keep readable even if low score */
+.cs-danger{
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 45%,#eef2f7 75%,#ffffff 100%) !important;
+  border-color: rgba(212,175,55,.85) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,.12),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+}
+.cs-danger .cs-score{ color:#c62828 !important; } /* still show low score in red */
+.cs-danger .cs-pill{
+  background: rgba(198,40,40,.06) !important;
+  border-color: rgba(198,40,40,.18) !important;
+  color:#c62828 !important;
+}
+.cs-danger .cs-scorebox{
+  background: rgba(198,40,40,.04) !important;
+  border-color: rgba(198,40,40,.14) !important;
+}
+/* ✅ Back button on WHITE card (visible, not blending) */
+.btn-ghost{
+  background: #ffffff !important;
+  color: #0b2f55 !important;                 /* blue text */
+  border: 2px solid rgba(11,47,85,.22) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,.14),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+}
+
+.btn-ghost:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(0,0,0,.16),
+              0 0 0 1px rgba(255,255,255,.9) inset !important;
+}
+
+.btn-ghost:active{
+  transform: scale(.98);
+}
 </style>
 
 {% with cs=request.user.credit_score|default:650 %}

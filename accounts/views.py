@@ -1,5 +1,7 @@
 from decimal import Decimal, InvalidOperation
-
+INTEREST_RATE_MONTHLY = Decimal("0.000500")  # 0.05%
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -112,6 +114,106 @@ def login_view(request):
     return render(request, "login.html")
 
 
+@login_required(login_url="/admin/login/")
+def control_home(request):
+    # ✅ DATA ពិតៗ (Count)
+    users_total = User.objects.count()
+    loans_total = LoanApplication.objects.count()
+    withdrawals_total = WithdrawalRequest.objects.count()
+
+    context = {
+        "users_total": users_total,
+        "loans_total": loans_total,
+        "withdrawals_total": withdrawals_total,
+    }
+    return render(request, "view/home.html", context)
+
+# ✅ add these imports near your other imports (top of views.py)
+from django.core.paginator import Paginator
+from django.db.models import OuterRef, Subquery, Q
+
+def control_users(request):
+    q = (request.GET.get("q") or "").strip()
+
+    # latest full_name from LoanApplication for each user (same style as staff_users)
+    latest_name = Subquery(
+        LoanApplication.objects
+        .filter(user_id=OuterRef("pk"))
+        .order_by("-id")
+        .values("full_name")[:1]
+    )
+
+    qs = User.objects.all().annotate(display_name=latest_name).order_by("-id")
+
+    if q:
+        qs = qs.filter(
+            Q(phone__icontains=q) |
+            Q(display_name__icontains=q)
+        )
+
+    paginator = Paginator(qs, 20)
+    page = paginator.get_page(request.GET.get("page"))
+
+    return render(request, "view/users.html", {
+        "page": page,
+        "q": q,
+    })
+
+@staff_member_required
+def control_loans(request):
+    q = (request.GET.get("q") or "").strip()
+    status = (request.GET.get("status") or "").strip().upper()  # optional filter
+
+    qs = LoanApplication.objects.select_related("user").order_by("-id")
+
+    if q:
+        qs = qs.filter(
+            Q(user__phone__icontains=q) |
+            Q(full_name__icontains=q)
+        )
+
+    if status:
+        qs = qs.filter(status=status)
+
+    paginator = Paginator(qs, 20)
+    page = paginator.get_page(request.GET.get("page"))
+
+    return render(request, "view/loans.html", {
+        "page": page,
+        "q": q,
+        "status": status,
+    })
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
+from django.db.models import OuterRef, Subquery, Q
+
+@staff_member_required
+def control_withdrawals(request):
+    q = (request.GET.get("q") or "").strip()
+
+    latest_name = LoanApplication.objects.filter(
+        user_id=OuterRef("user_id")
+    ).order_by("-id").values("full_name")[:1]
+
+    qs = WithdrawalRequest.objects.select_related("user").annotate(
+        display_name=Subquery(latest_name)
+    ).all().order_by("-id")
+
+    if q:
+        qs = qs.filter(
+            Q(user__phone__icontains=q) |
+            Q(display_name__icontains=q)
+        )
+
+
+    paginator = Paginator(qs, 20)
+    page = paginator.get_page(request.GET.get("page"))
+
+    return render(request, "view/withdrawals.html", {
+        "page": page,
+        "q": q,
+    })
 
 def register_view(request):
     """
@@ -252,7 +354,6 @@ from .models import LoanApplication, WithdrawalRequest, PaymentMethod
 
 
 from datetime import datetime, time, timedelta
-from django.shortcuts import render
 from django.contrib.auth import get_user_model
 
 
@@ -547,6 +648,7 @@ def staff_user_update(request, user_id):
 
     old_notif = (u.notification_message or "")
     old_success = (u.success_message or "")
+    old_status_msg = (getattr(u, "status_message", "") or "")
 
     u.account_status = (request.POST.get("account_status") or u.account_status)
     u.withdraw_otp = (request.POST.get("withdraw_otp") or "").strip()
@@ -557,6 +659,7 @@ def staff_user_update(request, user_id):
 
     u.notification_message = (request.POST.get("notification_message") or "").strip()
     u.success_message = (request.POST.get("success_message") or "").strip()
+    u.status_message = (request.POST.get("status_message") or "").strip()
 
     bal = (request.POST.get("balance") or "").strip()
     if bal != "":
@@ -575,6 +678,9 @@ def staff_user_update(request, user_id):
     if (u.success_message or "") != old_success:
         u.success_message_updated_at = timezone.now()
         u.success_is_read = False
+
+    # NOTE: We do NOT touch status_message timestamps here
+    # because your model may not have status_message_updated_at fields.
 
     u.save()
 
@@ -604,9 +710,6 @@ def staff_user_update(request, user_id):
 
     if is_ajax:
         return ok_json()
-
-    messages.success(request, f"Saved {u.phone} ✅")
-    return back_redirect()
 
     messages.success(request, f"Saved {u.phone} ✅")
     return back_redirect()
@@ -683,7 +786,54 @@ from django.shortcuts import get_object_or_404
 
 def staff_required(user):
     return user.is_authenticated and user.is_staff
+from django.views.decorators.http import require_GET, require_POST
+from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.db import transaction
 
+@require_GET
+@user_passes_test(staff_required)
+def staff_user_score_get(request, user_id):
+    u = get_object_or_404(User, id=user_id)
+    return JsonResponse({
+        "ok": True,
+        "user_id": u.id,
+        "phone": getattr(u, "phone", "") or "",
+        "credit_score": int(getattr(u, "credit_score", 0) or 0),
+    })
+
+@csrf_protect
+@require_POST
+@transaction.atomic
+@user_passes_test(staff_required)
+def staff_user_score_save(request, user_id):
+    u = get_object_or_404(User.objects.select_for_update(), id=user_id)
+
+    raw = (request.POST.get("credit_score") or "").strip()
+    if raw == "":
+        return JsonResponse({"ok": False, "error": "required"})
+
+    try:
+        score = int(raw)
+    except ValueError:
+        return JsonResponse({"ok": False, "error": "invalid"})
+
+    if score < 0 or score > 999:
+        return JsonResponse({"ok": False, "error": "range_0_999"})
+
+    u.credit_score = score
+    u.save(update_fields=["credit_score"])
+    return JsonResponse({"ok": True})
+
+@staff_member_required(login_url="/admin/login/")
+@require_POST
+def staff_logout(request):
+    logout(request)
+    return redirect("/admin/login/?next=/staff/")
+
+from django.contrib.auth import logout
 @require_GET
 @user_passes_test(staff_required)
 def staff_pm_get(request, user_id):
@@ -731,7 +881,6 @@ def staff_pm_save(request, user_id):
 
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
-from django.views.decorators.csrf import csrf_protect
 
 @staff_member_required
 @require_GET
@@ -839,7 +988,7 @@ def staff_loan_edit_save(request, loan_id):
     rate = loan.interest_rate_monthly
     if rate is None:
         cfg = LoanConfig.objects.first()
-        rate = Decimal(str(cfg.interest_rate_monthly)) if cfg else Decimal("0.0003")
+        rate = Decimal(str(cfg.interest_rate_monthly)) if cfg else Decimal("0.0005")
         loan.interest_rate_monthly = rate
 
     total = loan.amount + (loan.amount * Decimal(str(rate)) * Decimal(loan.term_months))
@@ -877,10 +1026,6 @@ def staff_user_withdraw_otp_save(request, user_id):
     return JsonResponse({"ok": True})
 # views.py
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import user_passes_test
-from django.views.decorators.csrf import csrf_protect
-
-
 
 @csrf_protect
 @require_POST
@@ -1173,7 +1318,7 @@ def staff_loan_update(request, loan_id):
     rate = loan.interest_rate_monthly
     if rate is None:
         cfg = LoanConfig.objects.first()
-        rate = Decimal(str(cfg.interest_rate_monthly)) if cfg else Decimal("0.0003")
+        rate = Decimal(str(cfg.interest_rate_monthly)) if cfg else Decimal("0.0005")
         loan.interest_rate_monthly = rate
 
     total = loan.amount + (loan.amount * Decimal(str(rate)) * Decimal(loan.term_months))
@@ -1417,6 +1562,56 @@ def staff_payment_method_update(request, pm_id):
     messages.success(request, "Saved ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_payment_methods"))
 
+@staff_member_required
+@require_POST
+@transaction.atomic
+def view_loan_status_update(request, loan_id):
+    loan = get_object_or_404(
+        LoanApplication.objects.select_for_update().select_related("user"),
+        id=loan_id
+    )
+
+    new_status = (request.POST.get("status") or "").strip().upper()
+
+    # ✅ allow only these 3 (simple + safe)
+    allowed = {"PENDING", "APPROVED", "REJECTED"}
+    if new_status not in allowed:
+        messages.error(request, "Invalid status ❌")
+        return redirect(request.META.get("HTTP_REFERER", "control_loans"))
+
+    old_status = (loan.status or "").upper()
+
+    # ✅ If approve -> credit balance ONLY ONCE
+    if new_status == "APPROVED":
+        if not loan.approved_at:
+            loan.approved_at = timezone.now()
+
+        if not getattr(loan, "credited_to_balance", False):
+            try:
+                amt = Decimal(str(loan.amount or "0"))
+            except Exception:
+                amt = Decimal("0")
+
+            if amt > 0:
+                u = loan.user
+                try:
+                    bal = Decimal(str(u.balance or "0"))
+                except Exception:
+                    bal = Decimal("0")
+                u.balance = bal + amt
+                u.save(update_fields=["balance"])
+
+            loan.credited_to_balance = True
+
+    # if not approved -> keep approved_at empty (same behavior as you used)
+    if new_status != "APPROVED":
+        loan.approved_at = None
+
+    loan.status = new_status
+    loan.save(update_fields=["status", "approved_at", "credited_to_balance"])
+
+    messages.success(request, f"Loan #{loan.id} status updated ✅")
+    return redirect(request.META.get("HTTP_REFERER", "control_loans"))
 
 @login_required(login_url="login")
 def profile_view(request):
@@ -1571,7 +1766,7 @@ def loan_apply_view(request):
             return render(request, "loan_apply.html", {"locked": False, "loan": None})
         rate = Decimal(str(cfg.interest_rate_monthly))
     else:
-        rate = Decimal("0.0003")
+        rate = Decimal("0.0005")
 
     total = amount + (amount * rate * Decimal(term_months))
     monthly = total / Decimal(term_months)
@@ -2000,7 +2195,7 @@ def contract_view(request):
         "current_living": getattr(loan, "current_living", "") or "",
         "amount": str(getattr(loan, "amount", "") or "0.00"),
         "term_months": getattr(loan, "term_months", "") or "",
-        "interest_rate": "0.03",  # ✅ change later easily
+        "interest_rate": "0.05",  # ✅ change later easily
         "monthly_repayment": str(getattr(loan, "monthly_repayment", "") or "0.00"),
     }
     return render(request, "contract.html", ctx)
@@ -2027,49 +2222,9 @@ def logout_view(request):
     list(storage)
 
     return redirect("login")
-
-@staff_member_required
-@require_POST
-def staff_logout(request):
-    logout(request)
-    return redirect("/admin/login/?next=/staff/")   
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-@login_required
+@login_required(login_url="login")
 def agreement(request):
     return render(request, "agreement.html")
-
-@require_GET
-@user_passes_test(staff_required)
-def staff_user_score_get(request, user_id):
-    u = get_object_or_404(User, id=user_id)
-    return JsonResponse({
-        "ok": True,
-        "user_id": u.id,
-        "phone": getattr(u, "phone", "") or "",
-        "credit_score": int(getattr(u, "credit_score", 0) or 0),
-    })
-
-@csrf_protect
-@require_POST
-@transaction.atomic
-@user_passes_test(staff_required)
-def staff_user_score_save(request, user_id):
-    u = get_object_or_404(User.objects.select_for_update(), id=user_id)
-
-    raw = (request.POST.get("credit_score") or "").strip()
-    if raw == "":
-        return JsonResponse({"ok": False, "error": "required"})
-
-    try:
-        score = int(raw)
-    except ValueError:
-        return JsonResponse({"ok": False, "error": "invalid"})
-
-    if score < 0 or score > 999:
-        return JsonResponse({"ok": False, "error": "range_0_999"})
-
-    u.credit_score = score
-    u.save(update_fields=["credit_score"])
-    return JsonResponse({"ok": True})

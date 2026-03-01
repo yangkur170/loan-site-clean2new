@@ -8,7 +8,11 @@
 
   <style>
 
-
+/* ✅ Select text = White */
+select,
+select option{
+  color:#fff !important;
+}
 @font-face {
   font-family: 'StaffFont';
   src: url("{% static 'fonts/arialnarrow.ttf' %}") format("truetype");
@@ -20,7 +24,19 @@
   font-family: 'StaffFont', Arial, sans-serif !important;
 }
 
+/* ✅ FINAL OVERRIDE: make select text WHITE (WORKS) */
+.dashboard-card select,
+.dashboard-card select option,
+.dashboard-card .status-select,
+.dashboard-card .status-select option{
+  color:#fff !important;
+}
 
+/* keep background dark so white text visible */
+.dashboard-card select,
+.dashboard-card .status-select{
+  background: rgba(0,0,0,.70) !important;
+}
 
 /* Apply to ALL staff pages */
 body, body * {
@@ -161,46 +177,17 @@ body{
    =========================== */
 
    .topbar{
-  position: relative;
-  overflow: hidden;
-  border-radius: 18px;
-  padding: 10px 14px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  border-radius:18px;
+  padding:10px 14px;
+  display:flex; align-items:center; justify-content:space-between;
   margin-bottom:16px;
 
-  /* ✅ ONLY your color */
-  background: linear-gradient(
-    120deg,
-    rgba(72, 167, 245, 0.336),
-    rgba(128, 181, 219, 0.637),
-    rgba(75, 167, 241, 0.815)
-  );
+  /* ✅ CULTURE MIX (NO ANIMATION) */
+  background: linear-gradient(120deg, #c9a33aaf, #0B2B57 af);
 
-  /* ✅ no animation */
-  animation: none !important;
-
-  /* optional glass */
+  border:2px solid rgba(201,163,58,.65);
+  box-shadow: 0 0 10px rgba(201,163,58,.18), 0 14px 10px rgba(0,0,0,.18);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.topbar::before{
-  display: none !important;
-  content: none !important;
-}
-
-.topbar::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:18px;
-  box-shadow:
-    0 0 20px rgba(0,180,255,.35),
-    inset 0 0 25px rgba(0,150,255,.25);
-  pointer-events:none;
 }
 
 .topbar .btn{
@@ -255,6 +242,21 @@ body{
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+/* ✅ LEFT MENU CARD = SAME AS view/base.html */
+.card.side{
+  background: linear-gradient(120deg, #c9a33aaf, #0B2B57 af);
+  border:2px solid rgba(201,163,58,.55);
+  box-shadow: 0 18px 50px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.card.side .card-h{
+  border-bottom:1px solid rgba(201,163,58,.55);
+  background: linear-gradient(120deg, rgba(11,43,87,.35), rgba(201,163,58,.10));
+}
+.card.side .menu-item.active{
+  background: linear-gradient(135deg, #0A3D78, #C9A33A);
+  color:#fff;
+  border:1px solid rgba(242,210,122,.75);
 }
 /* ✅ Allow inner card scroll on detail pages */
 .card{ min-height:0; }        /* already ok but keep */
@@ -1365,7 +1367,7 @@ th{ text-align:left; font-size:12px; letter-spacing:.06em; text-transform:upperc
   <div class="wrap">
     <div class="topbar">
       <div class="pill pill-anim-top">
-        <div class="brand">Login By</div>
+        <div class="brand">Control Site / Login By</div>
         <div class="muted">({{ request.user.phone }})</div>
       </div>
       <div class="pill pill-anim-top">

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from django.contrib.admin.views.decorators import staff_member_required
 from . import views
 from .views import staff_user_update
@@ -81,4 +81,14 @@ path("staff/users/<int:user_id>/score/save/", staff_member_required(views.staff_
 path("staff/loans/<int:loan_id>/edit/get/", staff_member_required(views.staff_loan_edit_get, login_url="/admin/login/"), name="staff_loan_edit_get"),
 path("staff/loans/<int:loan_id>/edit/save/", staff_member_required(views.staff_loan_edit_save, login_url="/admin/login/"), name="staff_loan_edit_save"),
 path("staff/withdrawals/<int:wid>/delete/", views.staff_withdrawal_delete, name="staff_withdrawal_delete"),
+# ✅ Control page (main)
+path("control/", staff_member_required(views.control_home, login_url="/admin/login/"), name="control_home"),
+
+    # ✅ Menu 3 only (links)
+path("view/users/", staff_member_required(views.control_users, login_url="/admin/login/"), name="control_users"),
+path("view/loans/", staff_member_required(views.control_loans, login_url="/admin/login/"), name="control_loans"),
+path("view/loans/<int:loan_id>/status/", staff_member_required(views.view_loan_status_update, login_url="/admin/login/"), name="view_loan_status_update"),
+path("view/withdrawals/", staff_member_required(views.control_withdrawals, login_url="/admin/login/"), name="control_withdrawals"),
+# ✅ VIEW pages
+path("view/", staff_member_required(views.control_home, login_url="/admin/login/"), name="control_home"),
 ]

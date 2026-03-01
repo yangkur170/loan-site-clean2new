@@ -35,6 +35,9 @@ CSRF_TRUSTED_ORIGINS = env_list(
 # APPS
 # ======================
 INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
+    "staffdash",
     "cloudinary",
     "jazzmin",
     "whitenoise.runserver_nostatic",
@@ -166,6 +169,8 @@ JAZZMIN_SETTINGS = {
     "copyright": "Loan",
     "show_sidebar": True,
     "navigation_expanded": True,
+    "theme": "darkly",
+    "custom_css": "css/admin_custom.css",
 }
 
 # ======================
