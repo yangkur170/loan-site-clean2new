@@ -242,7 +242,7 @@
       <tbody>
       {% for loan in page.object_list %}
 
-        <form id="loanForm{{ loan.id }}" method="post" action="{% url 'view_loan_status_update' loan.id %}">
+        <form id="loanForm{{ loan.id }}" method="post" action="{% url 'view_loan_status_update_view' loan.id %}">
   {% csrf_token %}
 
   <!-- ✅ like staff_users: auto send notification success message -->

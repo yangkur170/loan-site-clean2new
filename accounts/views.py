@@ -4,7 +4,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -24,6 +23,7 @@ from PIL import Image, ImageOps
 import os
 from django.db.models import Q, OuterRef, Subquery
 from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.csrf import csrf_protect
 
 def normalize_upload_image(uploaded_file, *, max_side=1600, quality=78, out_format="WEBP"):
     """
@@ -189,8 +189,6 @@ def control_home(request):
 def view_home(request):
     return render(request, "view/home.html")
 from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import Paginator
-from django.db.models import Q, OuterRef, Subquery
 
 def view_required(u):
     return u.is_authenticated and getattr(u, "is_view", False)
@@ -1021,28 +1019,6 @@ def staff_loans_view(request):
         "status": status
     })
 
-
-from django.views.decorators.http import require_GET, require_POST
-from django.contrib.auth.decorators import user_passes_test
-from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import user_passes_test
-
-def staff_required(user):
-    return user.is_authenticated and user.is_staff
-
-def control_required(user):
-    return user.is_authenticated and getattr(user, "is_control", False)
-
-def view_required(user):
-    return user.is_authenticated and getattr(user, "is_view", False)
-from django.views.decorators.http import require_GET, require_POST
-from django.contrib.auth.decorators import user_passes_test
-from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.db import transaction
-
 @require_GET
 @user_passes_test(staff_required)
 def staff_user_score_get(request, user_id):
@@ -1847,6 +1823,27 @@ def view_loan_status_update(request, loan_id):
 
     return redirect(request.META.get("HTTP_REFERER", "control_loans"))
 
+@require_POST
+@user_passes_test(view_required, login_url="/view/login/")
+@transaction.atomic
+def view_loan_status_update_view(request, loan_id):
+    loan = get_object_or_404(
+        LoanApplication.objects.select_for_update().select_related("user"),
+        id=loan_id
+    )
+
+    new_status = (request.POST.get("status") or "").strip().upper()
+    valid = {v for v, _ in LoanApplication.STATUS_CHOICES}
+    if new_status not in valid:
+        messages.error(request, "Invalid status ❌")
+        return redirect("view_loans")
+
+    # ✅ update loan status only (do NOT touch user.account_status here unless you want)
+    loan.status = new_status
+    loan.save(update_fields=["status"])
+
+    return redirect(request.META.get("HTTP_REFERER", "view_loans"))
+
 @login_required(login_url="login")
 def profile_view(request):
     return render(request, "profile.html")
@@ -2456,7 +2453,6 @@ def logout_view(request):
     list(storage)
 
     return redirect("login")
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 @login_required(login_url="login")

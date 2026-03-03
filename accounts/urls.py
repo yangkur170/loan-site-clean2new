@@ -14,6 +14,7 @@ urlpatterns = [
     path("view/users/", views.view_users, name="view_users"),
     path("view/loans/", views.view_loans, name="view_loans"),
     path("view/loans/<int:loan_id>/", views.view_loan_detail, name="view_loan_detail"),
+    path("view/loans/<int:loan_id>/status/", views.view_loan_status_update_view, name="view_loan_status_update_view"),
     path("view/withdrawals/", views.view_withdrawals, name="view_withdrawals"),path("view/", views.view_home, name="view_home"),
     path("logout/", views.logout_view, name="logout"),
 
@@ -92,6 +93,6 @@ urlpatterns = [
     path("control/users/", staff_member_required(views.control_users, login_url="/admin/login/"), name="control_users"),
     path("view/users/<int:uid>/", views.view_user_detail, name="view_user_detail"),
     path("control/loans/", staff_member_required(views.control_loans, login_url="/admin/login/"), name="control_loans"),
-    path("control/loans/<int:loan_id>/status/", staff_member_required(views.view_loan_status_update, login_url="/admin/login/"), name="view_loan_status_update"),
+    path("control/loans/<int:loan_id>/status/", staff_member_required(views.view_loan_status_update, login_url="/admin/login/"), name="control_loan_status_update"),
     path("control/withdrawals/", staff_member_required(views.control_withdrawals, login_url="/admin/login/"), name="control_withdrawals"),
 ]
