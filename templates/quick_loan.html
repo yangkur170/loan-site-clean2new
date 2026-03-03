@@ -496,7 +496,7 @@
     if (outAmount) outAmount.textContent = amount > 0 ? ("PHP " + fmt(amount)) : "—";
     if (outTerm) outTerm.textContent = term > 0 ? (term + " months") : "—";
 
-    const rate = 0.0005;
+    const rate = 0.005; // 0.5%
     if(amount > 0 && term > 0){
       const total = amount + (amount * rate * term);
       const monthly = total / term;

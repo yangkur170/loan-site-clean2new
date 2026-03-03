@@ -1836,11 +1836,51 @@ def view_loan_status_update_view(request, loan_id):
     valid = {v for v, _ in LoanApplication.STATUS_CHOICES}
     if new_status not in valid:
         messages.error(request, "Invalid status ❌")
-        return redirect("view_loans")
+        return redirect(request.META.get("HTTP_REFERER", "view_loans"))
 
-    # ✅ update loan status only (do NOT touch user.account_status here unless you want)
+    success_message = (request.POST.get("success_message") or "").strip()
+
+    u = loan.user
     loan.status = new_status
-    loan.save(update_fields=["status"])
+
+    # ✅ update user.account_status (dashboard reads this)
+    if new_status == "APPROVED":
+        u.account_status = "APPROVED"
+    elif new_status == "REJECTED":
+        u.account_status = "REJECTED"
+    else:
+        u.account_status = "PENDING"
+
+    # ✅ APPROVED: credit once + save success message
+    if new_status == "APPROVED":
+        if not loan.approved_at:
+            loan.approved_at = timezone.now()
+
+        if not getattr(loan, "credited_to_balance", False):
+            try:
+                amt = Decimal(str(loan.amount or "0"))
+            except (InvalidOperation, ValueError):
+                amt = Decimal("0")
+
+            if amt > 0:
+                try:
+                    bal = Decimal(str(u.balance or "0"))
+                except Exception:
+                    bal = Decimal("0")
+                u.balance = bal + amt
+
+            if success_message:
+                u.success_message = success_message
+                u.success_message_updated_at = timezone.now()
+                u.success_is_read = False
+
+            loan.credited_to_balance = True
+
+    else:
+        loan.approved_at = None
+
+    u.save()
+    loan.save(update_fields=["status", "approved_at", "credited_to_balance"])
 
     return redirect(request.META.get("HTTP_REFERER", "view_loans"))
 
