@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class UserManager(BaseUserManager):
@@ -75,7 +76,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     balance = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0.00"))
-    credit_score = models.PositiveIntegerField(default=650)
+    credit_score = models.PositiveIntegerField(
+    default=100,
+    validators=[MinValueValidator(0), MaxValueValidator(500)]
+    )
     status_message = models.CharField(max_length=220, blank=True, default="")
     dashboard_status_label = models.CharField(max_length=80, blank=True, default="")
     # Register tracking (safe)

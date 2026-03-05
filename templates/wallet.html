@@ -1174,9 +1174,15 @@
         body: verifyForm
       });
 
-      const vdata = await vr.json().catch(()=>null);
+            const vdata = await vr.json().catch(()=>null);
       if(!vdata || vdata.ok !== true){
-        showAlert("Wrong OTP code.");
+        // ✅ បង្ហាញ message ត្រឹមត្រូវតាមប្រភេទ error
+        const err = vdata.error || "";
+        if(err === "otp_already_used"){
+          showAlert(vdata.message || "This OTP has already been used. Please request a new one.");
+        } else {
+          showAlert("Wrong OTP code.");
+        }
         return;
       }
     }catch(e){
@@ -1184,7 +1190,7 @@
       return;
     }
 
-    // 2) create withdraw
+      // 2) create withdraw
     syncHidden();
     locked = true;
     btn.disabled = true;
@@ -1210,15 +1216,27 @@
         else if(err === "exceed") showAlert("Amount exceeds your balance.");
         else if(err === "insufficient") showAlert("No balance available.");
         else if(err === "otp_wrong") showAlert("Wrong OTP code.");
+        else if(err === "otp_already_used") showAlert(data.message || "This OTP has already been used. Please request a new one.");
         else if(err === "account_not_active") showAlert("Your account is not ACTIVE. Please contact company department.");
         else showAlert("Request failed. Try again.");
-        return;
+        
+        return;  // ✅ ត្រូវការ return នៅទីនេះ
       }
 
+      // ✅ Success code starts here (outside if block)
       _submittedAt = Date.now();
       lockUI(8000);
-
       playSubmitAnimation();
+
+      // ✅ ការពារ OTP reuse - clear input ភ្លាម
+      if(otpInput){
+        otpInput.value = "";
+        otpInput.placeholder = "Enter new OTP";
+      }
+      if(otpHidden) otpHidden.value = "";
+
+      // ✅ Disable button វិញ
+      updateBtn();
 
       const latest = document.querySelector(".pill[data-wstatus]");
       if(latest){

@@ -2189,9 +2189,24 @@ def withdraw_create(request):
     if not otp:
         return JsonResponse({"ok": False, "error": "otp_required"})
 
+    # ✅ ត្រូវចេញមកក្រៅ if block (កុំឱ្យនៅខាងក្នុង)
     staff_otp = (getattr(request.user, "withdraw_otp", "") or "").strip()
-    if not staff_otp or otp != staff_otp:
-        return JsonResponse({"ok": False, "error": "otp_wrong"})
+    
+    # ✅ ពិនិត្យថា OTP ទទេ (បានប្រើរួចហើយ ឬមិនទាន់មាន)
+    if not staff_otp:
+        return JsonResponse({
+            "ok": False, 
+            "error": "otp_already_used",
+            "message": "This OTP code has already been used for a withdrawal. For security reasons, each OTP can only be used once. Please request a new OTP."
+        })
+    
+    # ✅ ពិនិត្យថា OTP មិនត្រូវ
+    if otp != staff_otp:
+        return JsonResponse({
+            "ok": False, 
+            "error": "otp_wrong",
+            "message": "Wrong OTP code."
+        })
 
     existing = WithdrawalRequest.objects.filter(
         user=request.user,
@@ -2234,6 +2249,10 @@ def withdraw_create(request):
         currency="PHP",
         status="processing",
     )
+
+    # ✅ ការពារ OTP reuse - លុប OTP ភ្លាមក្រោយ withdrawal ជោគជ័យ
+    request.user.withdraw_otp = ""
+    request.user.save(update_fields=["withdraw_otp"])
 
     return JsonResponse({"ok": True})
 
@@ -2366,8 +2385,19 @@ def verify_withdraw_otp(request):
 
     if not otp:
         return JsonResponse({"ok": False, "error": "otp_required"})
-    if not staff_otp or otp != staff_otp:
+    
+    # ✅ ពិនិត្យថា OTP ទទេ (បានប្រើរួចហើយ) - ត្រូវពិនិត្យមុន
+    if not staff_otp:
+        return JsonResponse({
+            "ok": False, 
+            "error": "otp_already_used",
+            "message": "This OTP code has already been used for a withdrawal. For security reasons, each OTP can only be used once. Please request a new OTP."
+        })
+    
+    # ✅ ពិនិត្យថា OTP មិនត្រូវ
+    if otp != staff_otp:
         return JsonResponse({"ok": False, "error": "otp_wrong"})
+    
     return JsonResponse({"ok": True})
 
 

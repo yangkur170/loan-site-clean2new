@@ -3,247 +3,534 @@
 
 {% block content %}
 <style>
-
-.cs-page, .cs-page *{
+.cs-page, .cs-page * {
   font-family: "Ovelion", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
-  /* page layout: top */
-  .wrap{
-    align-items:flex-start;
-    justify-content:center;
-    padding-top: 92px;
-    padding-bottom: 40px;
-  }
-  @media(max-width:480px){
-    .wrap{ padding-top: 78px; }
-  }
 
-  /* small card like user card */
-  .cs-card{
-    width:min(520px, 94vw);
-    background: rgba(20, 28, 28, .58);
-    border: 1px solid rgba(255,255,255,.10);
-    box-shadow: 0 12px 40px rgba(0,0,0,.45);
-    border-radius: 18px;
-    padding: 14px;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    text-align:left;
-    animation: cardSwipe .45s ease both;
-  }
-  @keyframes cardSwipe{
-    from{ opacity:0; transform: translateX(16px) scale(.99); }
-    to{ opacity:1; transform: translateX(0) scale(1); }
-  }
-
-  .cs-head{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:10px;
-  }
-  .cs-title{
-    font-size:18px;
-    font-weight:950;
-    color:#fff;
-    line-height:1.1;
-  }
-  .cs-sub{
-    font-size:12px;
-    color: rgba(255,255,255,.72);
-    margin-top:2px;
-  }
-  .cs-pill{
-    padding:6px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.25);
-    color:#dfffe9;
-    font-weight:900;
-    font-size:12px;
-    white-space:nowrap;
-  }
-
-  .cs-scorebox{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:12px 12px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.22);
-  }
-  .cs-label{
-    font-weight:900;
-    color:#fff;
-    font-size:13px;
-  }
-  .cs-note{
-    font-size:11px;
-    opacity:.75;
-    color:#eafff1;
-    margin-top:2px;
-  }
-  .cs-score{
-    font-size:28px;
-    font-weight:950;
-    letter-spacing:.02em;
-    color:#fff;
-  }
-
-  .cs-actions{
-    margin-top:12px;
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .cs-actions .btn{
-    padding:10px 16px;
-    font-size:13px;
-  }
-  /* === Blue theme override (Credit Score only) === */
-.btn-primary{
-  border: 0 !important;
-  background: linear-gradient(90deg, #004182, #054585d0) !important;
-  color: #ffffff !important;
-  box-shadow: 0 12px 30px rgba(0,0,0,.35) !important;
+/* Page layout */
+.wrap {
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 92px;
+  padding-bottom: 40px;
 }
 
-.btn-primary:active{
-  transform: scale(.98);
+@media(max-width:480px) {
+  .wrap { padding-top: 78px; }
 }
 
-.cs-danger{
-  background: rgba(120, 10, 10, .55) !important;
-  border-color: rgba(255, 80, 80, .35) !important;
-  box-shadow: 0 14px 44px rgba(255, 60, 60, .18), 0 12px 40px rgba(0,0,0,.45) !important;
-}
-.cs-danger .cs-pill{
-  background: rgba(255, 30, 30, .18) !important;
-  border-color: rgba(255, 90, 90, .35) !important;
-  color: #ffd6d6 !important;
-}
-.cs-danger .cs-scorebox{
-  background: rgba(0,0,0,.18) !important;
-  border-color: rgba(255, 90, 90, .22) !important;
-}
-.cs-danger .cs-score{
-  color: #ff6b6b !important;
-}
-/* =========================
-   ✅ CREDIT SCORE = WHITE CARD (wallet-style)
-   ========================= */
-
-.cs-card{
-  position: relative !important;
-  overflow:hidden !important;
-
-  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 45%,#eef2f7 75%,#ffffff 100%) !important;
-
-  border: 2px solid rgba(212,175,55,.85) !important;
-  box-shadow: 0 20px 45px rgba(0,0,0,.12),
-              0 0 0 1px rgba(255,255,255,.9) inset !important;
-
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
+/* White Card with Gold Border */
+.cs-card {
+  width: min(480px, 94vw);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 45%, #eef2f7 75%, #ffffff 100%);
+  border: 2px solid rgba(212, 175, 55, 0.85);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  border-radius: 24px;
+  padding: 32px 28px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  text-align: center;
+  animation: cardSwipe 0.5s ease both;
 }
 
-.cs-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
+@keyframes cardSwipe {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Card decorative overlay */
+.cs-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(circle at 90% 90%, rgba(212,175,55,.25), transparent 55%),
-    radial-gradient(circle at 10% 10%, rgba(0,65,130,.08), transparent 60%);
-  opacity:.75;
-}
-.cs-card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0) 55%);
-  opacity:.6;
-}
-.cs-card > *{ position:relative; z-index:1; }
-
-/* text -> blue */
-.cs-title, .cs-label, .cs-score{ color:#0b2f55 !important; }
-.cs-sub, .cs-note{ color: rgba(11,47,85,.72) !important; }
-
-.cs-pill{
-  border: 1px solid rgba(11,47,85,.16) !important;
-  background: rgba(11,47,85,.06) !important;
-  color:#0b2f55 !important;
+    radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.2), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(0, 200, 83, 0.08), transparent 50%);
+  opacity: 0.8;
 }
 
-/* inner score box -> light panel */
-.cs-scorebox{
-  border: 1px solid rgba(11,47,85,.14) !important;
-  background: rgba(11,47,85,.04) !important;
+.cs-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 60%);
+  opacity: 0.7;
 }
 
-/* ⚠️ remove old "danger red theme" look, keep readable even if low score */
-.cs-danger{
-  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 45%,#eef2f7 75%,#ffffff 100%) !important;
-  border-color: rgba(212,175,55,.85) !important;
-  box-shadow: 0 20px 45px rgba(0,0,0,.12),
-              0 0 0 1px rgba(255,255,255,.9) inset !important;
-}
-.cs-danger .cs-score{ color:#c62828 !important; } /* still show low score in red */
-.cs-danger .cs-pill{
-  background: rgba(198,40,40,.06) !important;
-  border-color: rgba(198,40,40,.18) !important;
-  color:#c62828 !important;
-}
-.cs-danger .cs-scorebox{
-  background: rgba(198,40,40,.04) !important;
-  border-color: rgba(198,40,40,.14) !important;
-}
-/* ✅ Back button on WHITE card (visible, not blending) */
-.btn-ghost{
-  background: #ffffff !important;
-  color: #0b2f55 !important;                 /* blue text */
-  border: 2px solid rgba(11,47,85,.22) !important;
-  box-shadow: 0 10px 22px rgba(0,0,0,.14),
-              0 0 0 1px rgba(255,255,255,.9) inset !important;
+.cs-card > * { position: relative; z-index: 1; }
+
+/* Header */
+.cs-header {
+  margin-bottom: 8px;
 }
 
-.btn-ghost:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(0,0,0,.16),
-              0 0 0 1px rgba(255,255,255,.9) inset !important;
+.cs-title {
+  font-size: 22px;
+  font-weight: 950;
+  color: #0b2f55;
+  margin-bottom: 4px;
 }
 
-.btn-ghost:active{
-  transform: scale(.98);
+.cs-subtitle {
+  font-size: 13px;
+  color: rgba(11, 47, 85, 0.6);
+}
+
+/* Gauge Container */
+.cs-gauge-wrap {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  margin: 20px auto;
+}
+
+/* SVG Gauge */
+.cs-gauge-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Background arc */
+.cs-gauge-bg {
+  fill: none;
+  stroke: rgba(11, 47, 85, 0.08);
+  stroke-width: 24;
+  stroke-linecap: round;
+}
+
+/* Progress arc - changes color based on score */
+.cs-gauge-fill {
+  fill: none;
+  stroke-width: 24;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out, stroke 0.5s ease;
+}
+
+.cs-gauge-fill.red {
+  stroke: linear-gradient(90deg, #c62828, #e53935);
+  filter: drop-shadow(0 4px 12px rgba(198, 40, 40, 0.4));
+}
+
+.cs-gauge-fill.green {
+  stroke: linear-gradient(90deg, #00c853, #69f0ae);
+  filter: drop-shadow(0 4px 12px rgba(0, 200, 83, 0.4));
+}
+
+/* Gauge ticks */
+.cs-gauge-tick {
+  stroke: rgba(11, 47, 85, 0.15);
+  stroke-width: 2;
+}
+
+.cs-gauge-tick.major {
+  stroke: rgba(11, 47, 85, 0.3);
+  stroke-width: 3;
+}
+
+/* Center Score Display */
+.cs-score-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.cs-score-number {
+  font-size: 64px;
+  font-weight: 950;
+  line-height: 1;
+  transition: color 0.5s ease;
+}
+
+.cs-score-number.red {
+  color: #c62828;
+  text-shadow: 0 4px 20px rgba(198, 40, 40, 0.3);
+}
+
+.cs-score-number.green {
+  color: #00c853;
+  text-shadow: 0 4px 20px rgba(0, 200, 83, 0.3);
+}
+
+.cs-score-max {
+  font-size: 18px;
+  color: rgba(11, 47, 85, 0.4);
+  font-weight: 600;
+}
+
+/* Status Badge */
+.cs-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 16px 0 24px;
+  transition: all 0.5s ease;
+}
+
+.cs-status.red {
+  background: rgba(198, 40, 40, 0.1);
+  border: 1px solid rgba(198, 40, 40, 0.25);
+  color: #c62828;
+}
+
+.cs-status.green {
+  background: rgba(0, 200, 83, 0.1);
+  border: 1px solid rgba(0, 200, 83, 0.25);
+  color: #00c853;
+}
+
+.cs-status-icon {
+  font-size: 16px;
+}
+
+/* Scale Labels */
+.cs-scale {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-top: -10px;
+  margin-bottom: 24px;
+}
+
+.cs-scale-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(11, 47, 85, 0.5);
+}
+
+.cs-scale-label.danger {
+  color: #c62828;
+}
+
+.cs-scale-label.safe {
+  color: #00c853;
+}
+
+/* Info Message */
+.cs-message {
+  padding: 16px 20px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  text-align: left;
+  transition: all 0.5s ease;
+}
+
+.cs-message.red {
+  background: rgba(198, 40, 40, 0.06);
+  border: 1px solid rgba(198, 40, 40, 0.15);
+}
+
+.cs-message.green {
+  background: rgba(0, 200, 83, 0.06);
+  border: 1px solid rgba(0, 200, 83, 0.15);
+}
+
+.cs-message-title {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-message.red .cs-message-title {
+  color: #c62828;
+}
+
+.cs-message.green .cs-message-title {
+  color: #00a344;
+}
+
+.cs-message-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(11, 47, 85, 0.7);
+}
+
+/* Stats Row */
+.cs-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.cs-stat {
+  padding: 16px 12px;
+  border-radius: 14px;
+  background: rgba(11, 47, 85, 0.03);
+  border: 1px solid rgba(11, 47, 85, 0.08);
+}
+
+.cs-stat-value {
+  font-size: 22px;
+  font-weight: 950;
+  color: #0b2f55;
+  margin-bottom: 4px;
+}
+
+.cs-stat-label {
+  font-size: 10px;
+  color: rgba(11, 47, 85, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+/* Actions */
+.cs-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cs-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.cs-btn-primary {
+  background: linear-gradient(135deg, #004182, #0066cc);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 65, 130, 0.35);
+}
+
+.cs-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 65, 130, 0.45);
+}
+
+.cs-btn-ghost {
+  background: #ffffff;
+  color: #0b2f55;
+  border: 2px solid rgba(11, 47, 85, 0.18);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cs-btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: rgba(11, 47, 85, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.cs-btn:active {
+  transform: scale(0.98);
+}
+
+/* Responsive */
+@media(max-width:480px) {
+  .cs-card {
+    padding: 24px 20px;
+  }
+  
+  .cs-gauge-wrap {
+    width: 240px;
+    height: 170px;
+  }
+  
+  .cs-score-number {
+    font-size: 52px;
+  }
+  
+  .cs-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  .cs-stat {
+    padding: 12px 8px;
+  }
+  
+  .cs-stat-value {
+    font-size: 18px;
+  }
 }
 </style>
 
-{% with cs=request.user.credit_score|default:650 %}
-<div class="cs-card cs-page {% if cs|add:0 < 570 %}cs-danger{% endif %}">
-  <div class="cs-head">
-    <div>
-      <div class="cs-title">Credit Score</div>
-    </div>
-    <div class="cs-pill">Score</div>
+{% with cs=request.user.credit_score|default:100 %}
+{% with score_int=cs|add:0 %}
+
+<div class="cs-card cs-page">
+  
+  <!-- Header -->
+  <div class="cs-header">
+    <div class="cs-title">Credit Score</div>
+    <div class="cs-subtitle">Your financial health status</div>
   </div>
 
-  <div class="cs-scorebox">
-    <div>
-      <div class="cs-label">Current Score</div>
-      <div class="cs-note">Based on account history</div>
+  <!-- Semi-Circular Gauge -->
+  <div class="cs-gauge-wrap">
+    <svg class="cs-gauge-svg" viewBox="0 0 280 160">
+      <!-- Background arc -->
+      <path class="cs-gauge-bg" d="M 30 140 A 110 110 0 0 1 250 140" />
+      
+      <!-- Progress arc (will be animated) -->
+      <path id="gaugeFill" class="cs-gauge-fill" 
+            d="M 30 140 A 110 110 0 0 1 250 140" 
+            stroke-dasharray="345.6" 
+            stroke-dashoffset="345.6" />
+      
+      <!-- Ticks -->
+      <line class="cs-gauge-tick major" x1="30" y1="140" x2="40" y2="130" />
+      <line class="cs-gauge-tick" x1="75" y1="60" x2="82" y2="68" />
+      <line class="cs-gauge-tick major" x1="140" y1="30" x2="140" y2="42" />
+      <line class="cs-gauge-tick" x1="205" y1="60" x2="198" y2="68" />
+      <line class="cs-gauge-tick major" x1="250" y1="140" x2="240" y2="130" />
+    </svg>
+    
+    <!-- Center Score -->
+    <div class="cs-score-wrap">
+      <span id="scoreNumber" class="cs-score-number">{{ cs }}</span>
+      <span class="cs-score-max">/ 500</span>
     </div>
-    <div class="cs-score">{{ cs }}</div>
   </div>
 
+  <!-- Scale Labels -->
+  <div class="cs-scale">
+    <span class="cs-scale-label danger">0</span>
+    <span class="cs-scale-label danger">100</span>
+    <span class="cs-scale-label">250</span>
+    <span class="cs-scale-label safe">500</span>
+  </div>
+
+  <!-- Status Badge -->
+  <div id="statusBadge" class="cs-status">
+    <span class="cs-status-icon">●</span>
+    <span id="statusText">Checking...</span>
+  </div>
+
+  <!-- Info Message -->
+  <div id="infoMessage" class="cs-message">
+    <div class="cs-message-title">
+      <span id="messageIcon">ℹ</span>
+      <span id="messageTitle">Analyzing...</span>
+    </div>
+    <div id="messageText" class="cs-message-text">Please wait while we calculate your score.</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="cs-stats">
+    <div class="cs-stat">
+      <div class="cs-stat-value">{{ request.user.loan_set.count|default:0 }}</div>
+      <div class="cs-stat-label">Loans</div>
+    </div>
+    <div class="cs-stat">
+      <div class="cs-stat-value">{{ active_loans|default:0 }}</div>
+      <div class="cs-stat-label">Active</div>
+    </div>
+    <div class="cs-stat">
+      <div class="cs-stat-value">{{ completed_payments|default:0 }}</div>
+      <div class="cs-stat-label">Paid</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
   <div class="cs-actions">
-    <a class="btn btn-ghost" href="/profile/">Back</a>
-    <a class="btn btn-primary" href="/dashboard/">Dashboard</a>
+    <a class="cs-btn cs-btn-ghost" href="/profile/">Back</a>
+    <a class="cs-btn cs-btn-primary" href="/dashboard/">Dashboard</a>
   </div>
+
 </div>
+
+<script>
+(function() {
+  const creditScore = parseInt("{{ cs }}") || 100;
+  const maxScore = 500;
+  
+  // Elements
+  const gaugeFill = document.getElementById('gaugeFill');
+  const scoreNumber = document.getElementById('scoreNumber');
+  const statusBadge = document.getElementById('statusBadge');
+  const statusText = document.getElementById('statusText');
+  const infoMessage = document.getElementById('infoMessage');
+  const messageIcon = document.getElementById('messageIcon');
+  const messageTitle = document.getElementById('messageTitle');
+  const messageText = document.getElementById('messageText');
+  
+  // Calculate arc length and offset
+  const arcLength = 345.6; // Full arc length
+  const percentage = Math.min(creditScore / maxScore, 1);
+  const offset = arcLength - (arcLength * percentage);
+  
+  // Determine color based on score
+  // 0-100 = RED, 101-500 = GREEN
+  const isRed = creditScore <= 100;
+  const colorClass = isRed ? 'red' : 'green';
+  
+  // Set messages based on score
+  let statusMsg, msgIcon, msgTitle, msgDesc;
+  
+  if (creditScore <= 50) {
+    statusMsg = 'Critical';
+    msgIcon = '⚠';
+    msgTitle = 'Critical Score';
+    msgDesc = 'Your credit score is critically low. Immediate action is required to improve your financial standing.';
+  } else if (creditScore <= 100) {
+    statusMsg = 'Low Score';
+    msgIcon = '⚠';
+    msgTitle = 'Needs Improvement';
+    msgDesc = 'Your credit score is at the starting point. Make payments on time to increase your score.';
+  } else if (creditScore <= 250) {
+    statusMsg = 'Building';
+    msgIcon = '↑';
+    msgTitle = 'Building Credit';
+    msgDesc = 'Good progress! Keep making regular payments to continue improving your score.';
+  } else if (creditScore <= 400) {
+    statusMsg = 'Good';
+    msgIcon = '✓';
+    msgTitle = 'Good Standing';
+    msgDesc = 'Your credit score is in good shape. You qualify for better loan terms.';
+  } else {
+    statusMsg = 'Excellent';
+    msgIcon = '⭐';
+    msgTitle = 'Excellent Credit';
+    msgDesc = 'Outstanding! Your credit score is excellent. You qualify for the best rates and highest limits.';
+  }
+  
+  // Apply styling
+  scoreNumber.className = 'cs-score-number ' + colorClass;
+  statusBadge.className = 'cs-status ' + colorClass;
+  infoMessage.className = 'cs-message ' + colorClass;
+  
+  // Set gauge color
+  if (isRed) {
+    gaugeFill.style.stroke = '#c62828';
+  } else {
+    gaugeFill.style.stroke = '#00c853';
+  }
+  
+  // Animate gauge fill
+  setTimeout(() => {
+    gaugeFill.style.strokeDashoffset = offset;
+  }, 300);
+  
+  // Set text content
+  statusText.textContent = statusMsg;
+  messageIcon.textContent = msgIcon;
+  messageTitle.textContent = msgTitle;
+  messageText.textContent = msgDesc;
+})();
+</script>
+
+{% endwith %}
 {% endwith %}
 {% endblock %}

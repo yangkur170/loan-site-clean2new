@@ -1427,7 +1427,10 @@ if(wdSave) wdSave.addEventListener("click", saveWd);
       scoreMsg.textContent = "Cannot load ❌";
       return;
     }
-    scoreVal.value = data.credit_score ?? 0;
+    // ប្រសិនបើ credit_score > 500 ឬ < 0 កំណត់ឲ្យត្រឹម 100
+    let score = parseInt(data.credit_score) || 100;
+    if (score > 500 || score < 0) score = 100;
+    scoreVal.value = score;
     scoreModal.style.display = "flex";
     setTimeout(()=>{ try{ scoreVal.focus(); }catch(e){} }, 50);
   }
