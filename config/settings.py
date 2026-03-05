@@ -148,6 +148,26 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 
+# ======================
+# CSRF & UPLOAD SETTINGS (បន្ថែមថ្មី)
+# ======================
+
+# CSRF - សម្រាប់ multiple domains
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_USE_SESSIONS = False
+
+# Upload settings - កាត់បន្ថយទំហំឲ្យតូចជាងនេះ
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2621440  # 2.5MB (ពី 5MB)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440  # 2.5MB
+FILE_UPLOAD_MAX_NUMBER_FILES = 10
+
+# Request timeout
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
+
 WHITENOISE_MANIFEST_STRICT = False
 
 # ======================

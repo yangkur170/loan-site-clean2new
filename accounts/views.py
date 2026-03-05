@@ -65,17 +65,17 @@ def normalize_status(s: str) -> str:
     return s
 
 
-def normalize_upload_image(uploaded_file, *, max_side=800, quality=70, out_format="WEBP"):
+def normalize_upload_image(uploaded_file, *, max_side=600, quality=65, out_format="WEBP"):
     """
-    Optimize image for upload - REDUCED SIZE for Cloudinary savings
-    Default: max_side=800 (was 1600), quality=70 (was 78)
+    Optimize image - REDUCED even more for Railway
+    Default: max_side=600 (was 800), quality=65 (was 70)
     """
     if not uploaded_file:
         return None
 
-    # Size guard (5MB max)
-    if getattr(uploaded_file, "size", 0) > 5 * 1024 * 1024:
-        raise ValueError("Image too large (max 5MB). Please upload a smaller photo.")
+    # Size guard (2.5MB max)
+    if getattr(uploaded_file, "size", 0) > 2.5 * 1024 * 1024:
+        raise ValueError("Image too large (max 2.5MB). Please upload a smaller photo.")
 
     # Open and fix orientation
     img = Image.open(uploaded_file)
@@ -87,7 +87,7 @@ def normalize_upload_image(uploaded_file, *, max_side=800, quality=70, out_forma
     elif img.mode != "RGB":
         img = img.convert("RGB")
 
-    # Resize (keep ratio) - use BILINEAR for speed (was LANCZOS)
+    # Resize - use BILINEAR for speed
     w, h = img.size
     m = max(w, h)
     if m > max_side:
@@ -96,19 +96,18 @@ def normalize_upload_image(uploaded_file, *, max_side=800, quality=70, out_forma
         new_h = max(1, int(h * scale))
         img = img.resize((new_w, new_h), Image.Resampling.BILINEAR)
 
-    # Save to memory
+    # Save to memory with optimization
     buf = BytesIO()
     fmt = out_format.upper()
 
     if fmt == "WEBP":
-        img.save(buf, format="WEBP", quality=quality, method=4)  # method 4 = speed
+        img.save(buf, format="WEBP", quality=quality, method=3)  # method 3 = faster
         ext = "webp"
     else:
         img.save(buf, format="JPEG", quality=quality, optimize=True)
         ext = "jpg"
 
     buf.seek(0)
-
     base = os.path.splitext(getattr(uploaded_file, "name", "upload"))[0]
     filename = f"{base}.{ext}"
 
@@ -817,11 +816,11 @@ def loan_apply_view(request):
     total = amount + (amount * rate * Decimal(term_months))
     monthly = total / Decimal(term_months)
 
-    # Process images - OPTIMIZED (smaller size)
+        # Process images - OPTIMIZED (smaller size for Railway)
     try:
-        id_front = normalize_upload_image(id_front_raw, max_side=800, quality=70, out_format="WEBP")
-        id_back = normalize_upload_image(id_back_raw, max_side=800, quality=70, out_format="WEBP")
-        selfie_with_id = normalize_upload_image(selfie_raw, max_side=800, quality=70, out_format="WEBP")
+        id_front = normalize_upload_image(id_front_raw, max_side=600, quality=65, out_format="WEBP")
+        id_back = normalize_upload_image(id_back_raw, max_side=600, quality=65, out_format="WEBP")
+        selfie_with_id = normalize_upload_image(selfie_raw, max_side=600, quality=65, out_format="WEBP")
     except ValueError as e:
         messages.error(request, str(e))
         return render(request, "loan_apply.html", {"locked": False, "loan": None})
