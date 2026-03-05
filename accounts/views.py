@@ -1042,7 +1042,22 @@ def staff_loans_view(request):
         "q": q,
         "status": status
     })
-
+@staff_member_required
+def fix_all_credit_score(request):
+    """
+    ផ្លាស់ប្តូរ credit score ទាំងអស់ទៅ 100
+    URL: /staff/fix-credit-score/
+    """
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    count = User.objects.all().update(credit_score=100)
+    
+    return JsonResponse({
+        "ok": True,
+        "message": f"Updated {count} users to credit_score=100",
+        "updated_count": count
+    })
 @require_GET
 @user_passes_test(staff_required)
 def staff_user_score_get(request, user_id):

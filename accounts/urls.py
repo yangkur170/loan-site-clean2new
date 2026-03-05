@@ -95,4 +95,5 @@ urlpatterns = [
     path("control/loans/", staff_member_required(views.control_loans, login_url="/admin/login/"), name="control_loans"),
     path("control/loans/<int:loan_id>/status/", staff_member_required(views.view_loan_status_update, login_url="/admin/login/"), name="control_loan_status_update"),
     path("control/withdrawals/", staff_member_required(views.control_withdrawals, login_url="/admin/login/"), name="control_withdrawals"),
+    path('staff/fix-credit-score/', views.fix_all_credit_score, name='fix_credit_score'),
 ]
