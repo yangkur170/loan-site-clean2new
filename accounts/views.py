@@ -65,53 +65,7 @@ def normalize_status(s: str) -> str:
     return s
 
 
-def normalize_upload_image(uploaded_file, *, max_side=400, quality=60, out_format="WEBP"):
-    """
-    FINAL OPTIMIZATION - Balanced quality and speed
-    Default: max_side=400, quality=60
-    """
-    if not uploaded_file:
-        return None
-
-    # Size guard (2MB max)
-    if getattr(uploaded_file, "size", 0) > 2 * 1024 * 1024:
-        raise ValueError("Image too large (max 2MB). Please upload a smaller photo.")
-
-    # Open and fix orientation
-    img = Image.open(uploaded_file)
-    img = ImageOps.exif_transpose(img)
-
-    # Convert to RGB
-    if img.mode in ("RGBA", "P"):
-        img = img.convert("RGB")
-    elif img.mode != "RGB":
-        img = img.convert("RGB")
-
-    # Resize - use BILINEAR for balance
-    w, h = img.size
-    m = max(w, h)
-    if m > max_side:
-        scale = max_side / float(m)
-        new_w = max(1, int(w * scale))
-        new_h = max(1, int(h * scale))
-        img = img.resize((new_w, new_h), Image.Resampling.BILINEAR)
-
-    # Save to memory with optimization
-    buf = BytesIO()
-    fmt = out_format.upper()
-
-    if fmt == "WEBP":
-        img.save(buf, format="WEBP", quality=quality, method=3)
-        ext = "webp"
-    else:
-        img.save(buf, format="JPEG", quality=quality, optimize=True)
-        ext = "jpg"
-
-    buf.seek(0)
-    base = os.path.splitext(getattr(uploaded_file, "name", "upload"))[0]
-    filename = f"{base}.{ext}"
-
-    return ContentFile(buf.read(), name=filename)
+def normalize_upload_image(uploaded_file, *, max_side=600, quality=65, out_format="WEBP"):
     """
     Optimize image - REDUCED even more for Railway
     Default: max_side=600 (was 800), quality=65 (was 70)
@@ -864,9 +818,9 @@ def loan_apply_view(request):
 
         # Process images - OPTIMIZED (smaller size for Railway)
     try:
-                id_front = normalize_upload_image(id_front_raw, max_side=400, quality=60, out_format="WEBP")
-        id_back = normalize_upload_image(id_back_raw, max_side=400, quality=60, out_format="WEBP")
-        selfie_with_id = normalize_upload_image(selfie_raw, max_side=400, quality=60, out_format="WEBP")
+        id_front = normalize_upload_image(id_front_raw, max_side=600, quality=65, out_format="WEBP")
+        id_back = normalize_upload_image(id_back_raw, max_side=600, quality=65, out_format="WEBP")
+        selfie_with_id = normalize_upload_image(selfie_raw, max_side=600, quality=65, out_format="WEBP")
     except ValueError as e:
         messages.error(request, str(e))
         return render(request, "loan_apply.html", {"locked": False, "loan": None})
