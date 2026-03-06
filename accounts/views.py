@@ -290,10 +290,12 @@ def dashboard_view(request):
     if cached_data:
         return render(request, "dashboard.html", cached_data)
 
+    # ✅ ត្រឹមត្រូវ - ដក select_related ចោលព្រោះមិនចាំបាច់ (filter by request.user រួច)
     last_loan = (
         LoanApplication.objects
         .filter(user=request.user)
         .exclude(status__in=["REJECTED", "DRAFT"])
+        .only('id', 'selfie_with_id', 'status', 'created_at')  # មិនមាន select_related
         .order_by("-id")
         .first()
     )
@@ -324,8 +326,8 @@ def dashboard_view(request):
         "dash_status_text": label,
     }
     
-    # Cache for 2 minutes
-    cache.set(cache_key, context, 120)
+    # Cache 3 នាទី
+    cache.set(cache_key, context, 180)
     
     return render(request, "dashboard.html", context)
 
@@ -562,9 +564,16 @@ def verify_withdraw_otp(request):
 
 @login_required(login_url="login")
 def realtime_state(request):
-    """Real-time user state API"""
+    """Real-time user state API - OPTIMIZED WITH CACHE"""
+    cache_key = f"realtime_{request.user.id}"
+    cached = cache.get(cache_key)
+    
+    if cached:
+        return JsonResponse(cached)
+    
     user = request.user
-
+    
+    # ប្រើ select_related ដើម្បីចៀសវាង Query ច្រើន
     bal = getattr(user, "balance", 0) or 0
     status_key = (getattr(user, "account_status", "ACTIVE") or "ACTIVE").strip().upper()
     status_label = (getattr(user, "dashboard_status_label", "") or "").strip()
@@ -572,9 +581,11 @@ def realtime_state(request):
         status_label = status_key
 
     msg = (getattr(user, "status_message", "") or "").strip()
-    last = WithdrawalRequest.objects.filter(user=user).order_by("-id").first()
+    
+    # កាត់បន្ថយ Query - យកតែចុងក្រោយ
+    last = WithdrawalRequest.objects.filter(user=user).only('id', 'status', 'updated_at').order_by("-id").first()
+    
     otp_required = (getattr(user, "withdraw_otp", "") or "").strip()
-
     alert_msg = (getattr(user, "notification_message", "") or "").strip()
     success_msg = (getattr(user, "success_message", "") or "").strip()
 
@@ -583,7 +594,7 @@ def realtime_state(request):
         (1 if success_msg and not getattr(user, "success_is_read", False) else 0)
     )
 
-    return JsonResponse({
+    data = {
         "ok": True,
         "account_status": status_key,
         "account_status_label": status_label,
@@ -597,7 +608,12 @@ def realtime_state(request):
             "status_label": last.get_status_display() if last else "",
             "updated_at": last.updated_at.isoformat() if last else "",
         }
-    })
+    }
+    
+    # Cache 10 វិនាទី (រក្សាទុកលឿន)
+    cache.set(cache_key, data, 10)
+    
+    return JsonResponse(data)
 
 
 @login_required(login_url="login")

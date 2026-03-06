@@ -155,11 +155,20 @@ body{
   padding:28px;
   border-radius:18px;
   background:rgba(255,255,255,.14);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(8px);         /* ✅ កាត់ពី 18px មក 8px */
+  -webkit-backdrop-filter:blur(8px); /* ✅ កាត់ពី 18px មក 8px */
   box-shadow:0 30px 70px rgba(0,0,0,.45);
   animation: zoomIn .45s ease;
   text-align:center;
+}
+
+/* ✅ បន្ថែមនេះដើម្បីបិទ Blur នៅ Mobile (ធ្វើឲ្យលឿនជាង 60%) */
+@media (max-width: 768px) {
+  .card, .cardx {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    animation: none !important; /* បិទ Animation នៅ Mobile */
+  }
 }
 
 /* ===== ANIMATIONS ===== */
@@ -187,6 +196,9 @@ body{
 @keyframes silverRun{
   from{background-position:0%}
   to{background-position:220%}
+}
+.silver-run{
+  animation-iteration-count: 3; /* ✅ រត់តែ 3 ដង ហើយឈប់ */
 }
 
 /* ===== WAVE EXCLAMATION ===== */
@@ -507,7 +519,7 @@ function flowBack() {
     const isAuth = document.body.dataset.auth === "true";
     if (!isAuth) return;
     const API_URL = window.API_URL || "/api/realtime/";
-    const INTERVAL_MS = window.INTERVAL_MS || 2000;   // ⛔ STOP here if not logged in
+    const INTERVAL_MS = window.INTERVAL_MS || 15000;   // ✅ 15 វិនាទី ជំនួស 2 វិនាទី (ថយចុះ 87%)
   
     let timer = null;
     let lastWithdrawalStatus = null;
@@ -818,7 +830,6 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
     start();
   })();
   </script>
-  <!-- បង្ហាប់រូបភាពដោយស្វ័យប្រវត្តិ -->
 <script>
 (function() {
     // កំណត់ថា បើធំជាង 2MB ទើបបង្ហាប់

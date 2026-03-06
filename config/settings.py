@@ -31,7 +31,7 @@ ALLOWED_HOSTS = env_list(
 
 CSRF_TRUSTED_ORIGINS = env_list(
     "CSRF_TRUSTED_ORIGINS",
-    "https://primelendph.loans,https://www.primelendph.loans,https://loving-tenderness-production-2c60.up.railway.app"
+    "https://primelendph.loans ,https://www.primelendph.loans ,https://loving-tenderness-production-2c60.up.railway.app "
 )
 
 # ======================
@@ -53,9 +53,10 @@ INSTALLED_APPS = [
 ]
 
 # ======================
-# MIDDLEWARE
+# MIDDLEWARE - OPTIMIZED (មាន Cache Middleware)
 # ======================
 MIDDLEWARE = [
+    "django.middleware.cache.UpdateCacheMiddleware",      # ✅ បន្ថែមនៅពីលើ (Cache)
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",   # ✅ បន្ថែមនៅចុង (Cache)
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -87,17 +89,17 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 # ======================
-# DATABASE - CORRECTED
+# DATABASE - OPTIMIZED (ត្រឹមត្រូវសម្រាប់ SQLite និង PostgreSQL)
 # ======================
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
+        conn_max_age=600,  # រក្សា Connection 10 នាទី
         ssl_require=False,
     )
 }
 
-# Add PostgreSQL-specific options only for production
+# PostgreSQL-specific options only (មិនប៉ះពាល់ SQLite)
 if not DEBUG:
     db_engine = DATABASES["default"].get("ENGINE", "")
     if "postgresql" in db_engine or "postgres" in db_engine:
@@ -105,17 +107,31 @@ if not DEBUG:
         DATABASES["default"]["OPTIONS"]["connect_timeout"] = 10
 
 # ======================
-# CACHES - NEW (ធ្វើឲ្យលឿនជាងមុន)
+# CACHES - OPTIMIZED
 # ======================
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,  # 5 នាទី Default
+        'OPTIONS': {
+            'MAX_ENTRIES': 2000,      # អាច Cache 2000 item
+            'CULL_FREQUENCY': 3,      # លុប 1/3 ពេញ
+        }
     }
 }
 
-# Cache timeout (5 minutes)
+# Cache timeout for Middleware
 CACHE_MIDDLEWARE_SECONDS = 300
+CACHE_MIDDLEWARE_KEY_PREFIX = 'loan_site'
+
+# ======================
+# SESSION (Optimized)
+# ======================
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_CACHE_ALIAS = "default"
+SESSION_COOKIE_AGE = 3600 * 24 * 7  # 7 ថ្ងៃ
+SESSION_SAVE_EVERY_REQUEST = False
 
 # ======================
 # AUTH / I18N
@@ -149,7 +165,7 @@ STORAGES = {
 }
 
 # ======================
-# CSRF & UPLOAD SETTINGS (បន្ថែមថ្មី)
+# CSRF & UPLOAD SETTINGS
 # ======================
 
 # CSRF - សម្រាប់ multiple domains
@@ -157,12 +173,11 @@ CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 
-# Upload settings - កាត់បន្ថយទំហំឲ្យតូចជាងនេះ
-DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20MB (ធំជាង 2.5MB ចាស់)
+# Upload settings
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20MB
 FILE_UPLOAD_MAX_NUMBER_FILES = 10
 
-# Request timeout
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.MemoryFileUploadHandler',
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
@@ -171,7 +186,7 @@ FILE_UPLOAD_HANDLERS = [
 WHITENOISE_MANIFEST_STRICT = False
 
 # ======================
-# CLOUDINARY (ONE SOURCE OF TRUTH)
+# CLOUDINARY
 # ======================
 import cloudinary
 cloudinary.config(
@@ -188,7 +203,7 @@ CLOUDINARY_STORAGE = {
 }
 
 # Static files optimization
-WHITENOISE_MAX_AGE = 31536000  # 1 year cache
+WHITENOISE_MAX_AGE = 31536000  # 1 year
 
 # ======================
 # SECURITY (PRODUCTION)
@@ -218,7 +233,7 @@ JAZZMIN_SETTINGS = {
 }
 
 # ======================
-# LOGGING - CORRECTED (តែមួយដងតែប៉ុណ្ណោះ)
+# LOGGING - OPTIMIZED (Production)
 # ======================
 LOGGING = {
     "version": 1,
@@ -230,16 +245,16 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": "WARNING",  # កាត់បន្ថយពី ERROR មក WARNING ដើម្បីឃើញបញ្ហាច្រើនជាងមុន
+        "level": "ERROR",  # ផ្លាស់ប្ដូរពី WARNING មក ERROR
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "WARNING",  # ផ្លាស់ប្ដូរពី INFO
             "propagate": False,
         },
         "django.db.backends": {
-            "level": "WARNING",  # DEBUG ធ្វើឲ្យ slow ពេល production
+            "level": "ERROR",  # ផ្លាស់ប្ដូរពី WARNING (កុំ Log SQL)
             "handlers": ["console"],
             "propagate": False,
         },
