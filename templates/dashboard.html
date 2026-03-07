@@ -136,12 +136,21 @@
 
   /* ===== Account Status Badge ===== */
 .status-badge{
-  display: inline-block;
-  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;              /* ✅ padding តូចជាង */
   border-radius: 999px;
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: .5px;
+  font-size: 10px;                /* ✅ font តូចជាង */
+  letter-spacing: .3px;           /* ✅ spacing តិចជាង */
+  
+  /* ✅ មិនកាត់អក្សរ */
+  white-space: nowrap;
+  
+  height: 28px;                   /* ✅ កម្ពស់តូចជាង */
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 /* ACTIVE */
@@ -372,7 +381,12 @@
   }
   .avatar svg{ width:22px; height:22px; opacity:.9; }
   .profile-main{ flex:1 1 auto; min-width:0; }
-  .row1{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .row1{ 
+    display:flex; 
+    align-items:center;           /* ✅ center ជំនួស flex-start */
+    justify-content:space-between; 
+    gap:10px; 
+  }
   .title{ color:#fff; font-weight:900; font-size:18px; line-height:1.1; }
   .subline{ color:rgba(255,255,255,.72); font-size:12px; margin-top:2px; }
   .pill{
