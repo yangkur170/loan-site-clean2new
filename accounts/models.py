@@ -87,6 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     register_country = models.CharField(max_length=80, blank=True, default="")
     register_city = models.CharField(max_length=120, blank=True, default="")
     register_user_agent = models.CharField(max_length=255, blank=True, default="")
+    off_reason = models.TextField(blank=True, default="")
 
     account_status = models.CharField(
         max_length=50,

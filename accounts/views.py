@@ -140,25 +140,30 @@ def choose_view(request):
 
 
 def login_view(request):
-    """Client portal login"""
+    suspended = request.GET.get('suspended') == '1'
+    print(f"DEBUG suspended={suspended}, GET={request.GET}")
+
     if request.method == "POST":
         phone = (request.POST.get("phone") or "").strip()
         password = request.POST.get("password") or ""
-
         user = authenticate(request, username=phone, password=password)
-        if user is not None:
-            # Block staff/control/view/superuser from client login
+
+        if user:
             if user.is_staff or getattr(user, "is_control", False) or getattr(user, "is_view", False) or user.is_superuser:
                 messages.error(request, "Use the correct portal login.")
-                return render(request, "login.html")
+                return render(request, "login.html", {"suspended": suspended})
+
+            if not user.is_active:
+                logout(request)
+                return redirect('/login/?suspended=1')
 
             login(request, user)
             return redirect("dashboard")
 
         messages.error(request, "Wrong phone or password.")
-        return render(request, "login.html")
 
-    return render(request, "login.html")
+    return render(request, "login.html", {"suspended": suspended})
+
 
 
 def staff_login_view(request):
@@ -1570,6 +1575,7 @@ def staff_user_update(request, user_id):
     is_active_raw = (request.POST.get("is_active") or "").strip()
     if is_active_raw in ("True", "False"):
         u.is_active = (is_active_raw == "True")
+        
 
     u.notification_message = (request.POST.get("notification_message") or "").strip()
     u.success_message = (request.POST.get("success_message") or "").strip()
@@ -1585,7 +1591,7 @@ def staff_user_update(request, user_id):
         except (InvalidOperation, ValueError):
             if is_ajax:
                 return bad_json("balance_invalid")
-            messages.error(request, "Balance មិនត្រឹមត្រូវ ❌")
+            messages.error(request, "Balance invalid")
             return back_redirect()
 
     if (u.notification_message or "") != old_notif:
@@ -1632,7 +1638,7 @@ def staff_user_update(request, user_id):
     if is_ajax:
         return ok_json()
 
-    messages.success(request, f"Saved {u.phone} ✅")
+    messages.success(request, f"Saved {u.phone}")
     return back_redirect()
 
 
