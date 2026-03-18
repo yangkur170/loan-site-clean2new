@@ -243,7 +243,11 @@ def register_view(request):
             return render(request, "register.html")
         
         # Create user
-        user = User.objects.create_user(phone=phone, password=password)
+        try:
+            user = User.objects.create_user(phone=phone, password=password)
+        except Exception:
+            messages.error(request, "Phone number already registered.")
+            return render(request, "register.html")
         
         # Save register info
         ip = get_client_ip(request)
