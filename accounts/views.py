@@ -808,7 +808,7 @@ def loan_apply_view(request):
 
     # Validation
     if not all([full_name, age_raw, current_living, hometown, monthly_expenses,
-                guarantor_contact, guarantor_current_living, identity_name, identity_number]):
+                identity_name, identity_number]):
         messages.error(request, "Please fill all required fields.")
         return render(request, "loan_apply.html", {"locked": False, "loan": None})
 
