@@ -1391,7 +1391,10 @@ def staff_dashboard(request):
             return min_h
         return int(min_h + (v / maxv) * (max_h - min_h))
 
-    current_reference = SystemSetting.get_reference_number()
+    # Pending action counts for staff
+    pending_withdrawals = WithdrawalRequest.objects.filter(status="processing").count()
+    pending_loans = LoanApplication.objects.filter(status__in=["PENDING", "REVIEW"]).count()
+    total_pending = pending_withdrawals + pending_loans
 
     context = {
         "period": period,
@@ -1411,7 +1414,9 @@ def staff_dashboard(request):
         "h_last_week": scale_height(reg_last_week),
         "h_this_month": scale_height(reg_this_month),
         "h_last_month": scale_height(reg_last_month),
-        "current_reference": current_reference,
+        "pending_withdrawals": pending_withdrawals,
+        "pending_loans": pending_loans,
+        "total_pending": total_pending,
     }
     return render(request, "staff_dashboard.html", context)
 @login_required
@@ -2335,7 +2340,7 @@ def staff_withdrawal_update(request, wid):
     want_refunded = (request.POST.get("refunded") == "True")
     should_refund = False
 
-    if new_status == "rejected" and not w.refunded:
+    if new_status in ("rejected", "withdrawal_fail") and not w.refunded:
         should_refund = True
 
     if want_refunded and not w.refunded:

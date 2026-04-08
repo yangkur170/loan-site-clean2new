@@ -414,11 +414,12 @@ body {
         margin: 10px 2px 0;
         padding: 10px 12px;
         border-radius: 12px;
-        border: 1px solid rgba(239,68,68,.55);
-        background: rgba(245, 6, 6, 0.486);
-        color:#f1dada;
+        border: 1px solid rgba(185,28,28,.7);
+        background: #dc2626;
+        color:#fff;
         font-weight:900;
-        font-size:12px;">
+        font-size:13px;
+        text-align:center;">
       </div>
 
       <button class="big-btn" type="button" id="withdrawBtn" disabled>WITHDRAW NOW</button>
@@ -598,8 +599,8 @@ body {
 
   function paintFinalRejected(){
     show();
-    if(b1) b1.classList.add("on");
-    if(b2) b2.classList.add("on");
+    if(b1){ b1.classList.remove("rejected","success"); b1.classList.add("on"); }
+    if(b2){ b2.classList.remove("rejected","success"); b2.classList.add("on"); }
 
     if(b3){
       b3.classList.remove("on","success");
@@ -623,13 +624,13 @@ body {
 
   function paintFinalPaid(){
     show();
-    if(b1) b1.classList.add("on");
-    if(b2) b2.classList.add("on");
+    if(b1){ b1.classList.remove("rejected","success"); b1.classList.add("on"); }
+    if(b2){ b2.classList.remove("rejected","success"); b2.classList.add("on"); }
 
     if(b3){
       b3.classList.remove("rejected");
       b3.classList.add("success");
-      b3.style.setProperty("background", "#16a34a", "important");
+      b3.style.setProperty("background", "#7CB342", "important");
       b3.style.setProperty("border-color", "rgba(255,255,255,.18)", "important");
 
       // ✅ force ✓
@@ -647,33 +648,74 @@ body {
     _uiStage = 3;
   }
 
+  // ✅ Show "Withdrawal Failed" alert inside the card (above WITHDRAW NOW btn)
+  function paintFinalWithdrawalFail(){
+    show();
+
+    // Set b1, b2 directly — do NOT call paintStage to avoid flash/reset
+    if(b1){ b1.classList.remove("rejected","success"); b1.classList.add("on"); }
+    if(b2){ b2.classList.remove("rejected","success"); b2.classList.add("on"); }
+
+    if(b3){
+      b3.classList.remove("on","success","rejected");
+      b3.classList.add("rejected");
+      b3.style.setProperty("background", "#dc2626", "important");
+      b3.style.setProperty("border-color", "rgba(255,255,255,.18)", "important");
+      setIconX();
+    }
+
+    if(t3){
+      t3.classList.remove("success");
+      t3.classList.add("rejected");
+      t3.textContent = "Withdraw Failed";
+    }
+
+    _uiStage = 3;
+
+    // ✅ Show alert ABOVE "WITHDRAW NOW" button (inside the card — formAlert position)
+    if(alertBox){
+      alertBox.textContent = "Withdrawal Failed";
+      alertBox.style.display = "flex";
+    }
+  }
+
   function setStatusFromDB(raw, sid){
     const s = (raw || "").toLowerCase().trim();
-    const known = ["reviewed","processing","paid","payment_sent","rejected"];
+    const known = ["reviewed","processing","paid","payment_sent","rejected","withdrawal_fail"];
 
     if(!known.includes(s)){
       paintStage(0);
       return;
     }
 
-    // ✅ new withdraw id -> reset so it updates freely
+    // ✅ new withdraw id: only reset if NOT already in a stable terminal state
     if(sid && _currentWdId !== sid){
       _currentWdId = sid;
-      _uiStage = 0;
-      _lockUntil = 0;
-      resetTimeline();
+      const terminal = ["paid","payment_sent","rejected","withdrawal_fail"];
+      if(!terminal.includes(s)){
+        _uiStage = 0;
+        _lockUntil = 0;
+        resetTimeline();
+      }
     }
 
-    const stageMap = { reviewed:1, processing:2, paid:3, payment_sent:3, rejected:3 };
+    const stageMap = { reviewed:1, processing:2, paid:3, payment_sent:3, rejected:3, withdrawal_fail:3 };
     const stage = stageMap[s] || 0;
 
     const justSubmitted = _submittedAt && (Date.now() - _submittedAt) < 8000;
     if(justSubmitted && stage < _uiStage) return;
 
+    // ✅ Clear withdrawal-fail alert when status is no longer withdrawal_fail
+    if(s !== "withdrawal_fail" && alertBox && alertBox.textContent === "Withdrawal Failed"){
+      clearAlert();
+    }
+
     if(s === "reviewed"){ paintStage(1); return; }
     if(s === "processing"){ paintStage(2); return; }
-    if(s === "paid" || s === "payment_sent"){ paintStage(2); paintFinalPaid(); return; }
-    if(s === "rejected"){ paintStage(2); paintFinalRejected(); return; }
+    // ✅ For terminal states: call final paint directly, no paintStage(2) first to avoid flash
+    if(s === "paid" || s === "payment_sent"){ paintFinalPaid(); return; }
+    if(s === "rejected"){ paintFinalRejected(); return; }
+    if(s === "withdrawal_fail"){ paintFinalWithdrawalFail(); return; }
   }
 
   function playSubmitAnimation(){

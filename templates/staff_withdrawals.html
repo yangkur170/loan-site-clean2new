@@ -105,6 +105,7 @@
 #withdrawalsTable select.st-processing{ background:#0b5ea8 !important; color:#fff !important; }
 #withdrawalsTable select.st-paid{ background:#22c55e !important; color:#fff !important; }
 #withdrawalsTable select.st-rejected{ background:#ef4444 !important; color:#fff !important; }
+#withdrawalsTable select.st-withdrawal-fail{ background:#dc2626 !important; color:#fff !important; }
 
 /* Phone blue */
 #withdrawalsTable td:nth-child(3){
@@ -233,6 +234,7 @@
         Withdrawal Successfully
       </option>
       <option value="rejected" {% if w.status == "rejected" %}selected{% endif %}>Rejected</option>
+      <option value="withdrawal_fail" {% if w.status == "withdrawal_fail" %}selected{% endif %}>Withdrawal Fail</option>
     </select>
   </td>
 
@@ -268,11 +270,12 @@
       document.addEventListener("DOMContentLoaded", function () {
         const sels = document.querySelectorAll("#withdrawalsTable select.status-select");
         function paint(el) {
-          el.classList.remove("st-processing","st-paid","st-rejected");
+          el.classList.remove("st-processing","st-paid","st-rejected","st-withdrawal-fail");
           const v = (el.value || "").toLowerCase().trim();
           if (v === "processing") el.classList.add("st-processing");
           else if (v === "paid") el.classList.add("st-paid");
           else if (v === "rejected") el.classList.add("st-rejected");
+          else if (v === "withdrawal_fail") el.classList.add("st-withdrawal-fail");
         }
         sels.forEach(s => {
           paint(s);
