@@ -3,8 +3,8 @@ import multiprocessing
 import os
 
 # Worker configuration
-workers = 2
-threads = 4
+workers = 1
+threads = 3
 worker_class = "gthread"
 
 # Timeout settings - INCREASED for image processing
