@@ -90,21 +90,23 @@ DATABASES = {
     )
 }
 
-# PostgreSQL specific options (Production only)
-if not DEBUG:
-    db_engine = DATABASES["default"].get("ENGINE", "")
-    if "postgresql" in db_engine:
-        DATABASES["default"].setdefault("OPTIONS", {})
-        # Fail fast instead of hanging if the DB is briefly unreachable.
-        DATABASES["default"]["OPTIONS"]["connect_timeout"] = 10
-        # Kill any runaway query at 30s instead of letting it block a worker.
-        DATABASES["default"]["OPTIONS"]["options"] = "-c statement_timeout=30000"
-        # TCP keepalives so a dead connection is detected at the socket level
-        # quickly rather than blocking on a read forever.
-        DATABASES["default"]["OPTIONS"]["keepalives"] = 1
-        DATABASES["default"]["OPTIONS"]["keepalives_idle"] = 30
-        DATABASES["default"]["OPTIONS"]["keepalives_interval"] = 10
-        DATABASES["default"]["OPTIONS"]["keepalives_count"] = 3
+# PostgreSQL safety options - applied ALWAYS for postgres (not gated behind
+# DEBUG). These timeouts are what prevent a request from hanging forever on a
+# slow/stuck database and tripping the gunicorn WORKER TIMEOUT crash loop, so
+# they must apply in every environment.
+db_engine = DATABASES["default"].get("ENGINE", "")
+if "postgresql" in db_engine:
+    DATABASES["default"].setdefault("OPTIONS", {})
+    # Fail fast instead of hanging if the DB is briefly unreachable.
+    DATABASES["default"]["OPTIONS"]["connect_timeout"] = 10
+    # Kill any runaway / blocked query at 30s instead of letting it hang a worker.
+    DATABASES["default"]["OPTIONS"]["options"] = "-c statement_timeout=30000"
+    # TCP keepalives so a dead connection is detected at the socket level
+    # quickly rather than blocking on a read forever.
+    DATABASES["default"]["OPTIONS"]["keepalives"] = 1
+    DATABASES["default"]["OPTIONS"]["keepalives_idle"] = 30
+    DATABASES["default"]["OPTIONS"]["keepalives_interval"] = 10
+    DATABASES["default"]["OPTIONS"]["keepalives_count"] = 3
 
 # ✅ CACHES - SIMPLE (No complex options)
 CACHES = {
