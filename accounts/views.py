@@ -949,12 +949,17 @@ def payment_method_view(request):
 # ======================
 @require_GET
 def fx_rates_api(request):
-    """Get FX rates"""
+    """Get FX rates (cached server-side so we don't hit the external API on every page load)"""
+    cache_key = "fx_rates_v1"
+    cached = cache.get(cache_key)
+    if cached:
+        return JsonResponse(cached)
+
     url = "https://open.er-api.com/v6/latest/USD"
     wanted = ["PHP", "SAR", "MYR", "INR", "PKR", "IDR", "VND", "OMR", "KES", "AFN"]
 
     try:
-        with urllib.request.urlopen(url, timeout=10) as r:
+        with urllib.request.urlopen(url, timeout=5) as r:
             data = json.loads(r.read().decode("utf-8"))
 
         rates = data.get("conversion_rates") or data.get("rates") or {}
@@ -967,12 +972,18 @@ def fx_rates_api(request):
             except Exception:
                 filtered[c] = None
 
-        return JsonResponse({
+        payload = {
             "base": "USD",
             "updated": data.get("time_last_update_utc") or data.get("date") or "",
             "rates": filtered,
-        })
+        }
+        cache.set(cache_key, payload, 21600)        # 6 hours
+        cache.set(cache_key + "_stale", payload, 604800)  # 7-day fallback
+        return JsonResponse(payload)
     except Exception:
+        stale = cache.get(cache_key + "_stale")
+        if stale:
+            return JsonResponse(stale)
         return JsonResponse({"base": "USD", "updated": "", "rates": {}}, status=200)
 
 

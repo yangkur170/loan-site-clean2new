@@ -7,9 +7,9 @@ workers = 1
 threads = 3
 worker_class = "gthread"
 
-# Timeout settings - INCREASED for image processing
-timeout = 120  # ពី 30 មក 120 វិនាទី
-graceful_timeout = 120
+# Timeout settings - bounded enough for image uploads, but recycles hung workers fast
+timeout = 45
+graceful_timeout = 45
 keep_alive = 5
 
 # Memory optimization
