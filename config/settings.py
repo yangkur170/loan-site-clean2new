@@ -84,7 +84,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=0,
+        # Reuse connections for 60s (fast, low DB load) but validate each one
+        # with conn_health_checks before reuse so a dropped/stale connection is
+        # discarded and reconnected instead of hanging on a dead socket.
+        conn_max_age=60,
         conn_health_checks=True,
         ssl_require=False,
     )

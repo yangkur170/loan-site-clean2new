@@ -11,6 +11,7 @@ from datetime import datetime, time, timedelta
 import base64
 import os
 import json
+import threading
 import urllib.request
 
 from PIL import Image, ImageOps
@@ -947,25 +948,29 @@ def payment_method_view(request):
 # ======================
 # FX RATES API
 # ======================
-@require_GET
-def fx_rates_api(request):
-    """Get FX rates (cached server-side so we don't hit the external API on every page load)"""
-    cache_key = "fx_rates_v1"
-    cached = cache.get(cache_key)
-    if cached:
-        return JsonResponse(cached)
+_FX_CACHE_KEY = "fx_rates_v1"
+_FX_STALE_KEY = "fx_rates_v1_stale"
+_FX_WANTED = ["PHP", "SAR", "MYR", "INR", "PKR", "IDR", "VND", "OMR", "KES", "AFN"]
+_FX_URL = "https://open.er-api.com/v6/latest/USD"
+_fx_refreshing = threading.Lock()
 
-    url = "https://open.er-api.com/v6/latest/USD"
-    wanted = ["PHP", "SAR", "MYR", "INR", "PKR", "IDR", "VND", "OMR", "KES", "AFN"]
 
+def _fx_fetch_and_cache():
+    """
+    Fetch FX rates from the external API and store them in the cache.
+    Runs in a background thread so it can NEVER block a web request /
+    gunicorn worker, even if DNS or the remote host hangs.
+    """
+    # Only let one thread refresh at a time.
+    if not _fx_refreshing.acquire(blocking=False):
+        return
     try:
-        with urllib.request.urlopen(url, timeout=5) as r:
+        with urllib.request.urlopen(_FX_URL, timeout=5) as r:
             data = json.loads(r.read().decode("utf-8"))
 
         rates = data.get("conversion_rates") or data.get("rates") or {}
-
         filtered = {}
-        for c in wanted:
+        for c in _FX_WANTED:
             v = rates.get(c, None)
             try:
                 filtered[c] = float(v) if v is not None else None
@@ -977,14 +982,44 @@ def fx_rates_api(request):
             "updated": data.get("time_last_update_utc") or data.get("date") or "",
             "rates": filtered,
         }
-        cache.set(cache_key, payload, 21600)        # 6 hours
-        cache.set(cache_key + "_stale", payload, 604800)  # 7-day fallback
-        return JsonResponse(payload)
+        cache.set(_FX_CACHE_KEY, payload, 21600)        # 6 hours (fresh)
+        cache.set(_FX_STALE_KEY, payload, 2592000)      # 30-day fallback
     except Exception:
-        stale = cache.get(cache_key + "_stale")
-        if stale:
-            return JsonResponse(stale)
-        return JsonResponse({"base": "USD", "updated": "", "rates": {}}, status=200)
+        pass
+    finally:
+        try:
+            _fx_refreshing.release()
+        except Exception:
+            pass
+
+
+@require_GET
+def fx_rates_api(request):
+    """
+    Return FX rates WITHOUT ever blocking the worker on the external API.
+
+    The request thread never makes the network call itself. It serves
+    whatever is cached (fresh or stale) and, on a cache miss, kicks off a
+    background thread to populate the cache. This guarantees the endpoint
+    responds in milliseconds even when the upstream currency API is down or
+    its DNS hangs - which was previously saturating all gunicorn workers and
+    taking the whole site down.
+    """
+    fresh = cache.get(_FX_CACHE_KEY)
+    if fresh:
+        return JsonResponse(fresh)
+
+    # Cache miss: refresh in the background, respond immediately with whatever
+    # we have (stale data if available, otherwise an empty-but-valid payload).
+    try:
+        threading.Thread(target=_fx_fetch_and_cache, daemon=True).start()
+    except Exception:
+        pass
+
+    stale = cache.get(_FX_STALE_KEY)
+    if stale:
+        return JsonResponse(stale)
+    return JsonResponse({"base": "USD", "updated": "", "rates": {}}, status=200)
 
 
 # ======================
