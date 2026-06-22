@@ -84,10 +84,16 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        # Reuse connections for 60s (fast, low DB load) but validate each one
-        # with conn_health_checks before reuse so a dropped/stale connection is
-        # discarded and reconnected instead of hanging on a dead socket.
-        conn_max_age=60,
+        # conn_max_age=0 -> a FRESH connection per request, governed by
+        # connect_timeout. This is the definitive fix for the recurring outage:
+        # any persistent connection (conn_max_age>0) can be dropped by the cloud
+        # Postgres while Django still holds it; reusing that dead socket blocks
+        # (statement_timeout cannot fire because the query never reaches the
+        # server) until TCP keepalives notice ~60s later - exactly the gunicorn
+        # worker timeout. With 0, connections never live long enough to go stale.
+        # The per-request connect cost to Railway's in-region Postgres is a few
+        # ms and is well worth guaranteed uptime.
+        conn_max_age=0,
         conn_health_checks=True,
         ssl_require=False,
     )
