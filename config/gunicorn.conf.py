@@ -3,8 +3,12 @@ import multiprocessing
 import os
 
 # Worker configuration
-workers = 1
-threads = 3
+# 2 workers x 4 threads = 8 concurrent requests, spread across 2 processes so
+# one stuck/slow request can't take the whole service down (the other worker
+# keeps serving). Fixes the "upstream concurrency limit reached" 503s caused by
+# a single worker saturating under the dashboard's background polling + traffic.
+workers = 2
+threads = 4
 worker_class = "gthread"
 
 # Timeout settings - bounded enough for image uploads, but recycles hung workers fast
