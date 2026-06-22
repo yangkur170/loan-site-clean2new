@@ -73,11 +73,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# ✅ DATABASE - FIXED (No connect_timeout for SQLite)
+# ✅ DATABASE
+# conn_max_age=0 -> fresh connection per request (cannot go stale / hang on a
+#   dead socket). This is the fix for the recurring "WORKER TIMEOUT" outages:
+#   a persistent connection (conn_max_age=600) was being dropped by the cloud
+#   Postgres while Django still thought it was alive, so every request blocked
+#   on a half-open socket until the gunicorn worker was killed.
+# conn_health_checks=True -> if any pooled connection is ever reused, validate
+#   it first and reconnect if dead (belt-and-suspenders).
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600 if not DEBUG else 0,  # Only persistent connections in production
+        conn_max_age=0,
+        conn_health_checks=True,
         ssl_require=False,
     )
 }
@@ -87,9 +95,16 @@ if not DEBUG:
     db_engine = DATABASES["default"].get("ENGINE", "")
     if "postgresql" in db_engine:
         DATABASES["default"].setdefault("OPTIONS", {})
+        # Fail fast instead of hanging if the DB is briefly unreachable.
         DATABASES["default"]["OPTIONS"]["connect_timeout"] = 10
-        # Connection pooling for PostgreSQL
+        # Kill any runaway query at 30s instead of letting it block a worker.
         DATABASES["default"]["OPTIONS"]["options"] = "-c statement_timeout=30000"
+        # TCP keepalives so a dead connection is detected at the socket level
+        # quickly rather than blocking on a read forever.
+        DATABASES["default"]["OPTIONS"]["keepalives"] = 1
+        DATABASES["default"]["OPTIONS"]["keepalives_idle"] = 30
+        DATABASES["default"]["OPTIONS"]["keepalives_interval"] = 10
+        DATABASES["default"]["OPTIONS"]["keepalives_count"] = 3
 
 # ✅ CACHES - SIMPLE (No complex options)
 CACHES = {
