@@ -4,45 +4,105 @@
 {% block nav %}{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --primary: #7CB342;
-    --dark-green: #4a7a1e;
-    --light-accent: #DCEDC8;
-    --page-bg: #F0F4EC;
+    --primary: #FF6B00;
+    --primary-light: #FF8A33;
+    --peach: #FFE9D6;
+    --peach-deep: #FFD4A3;
+    --page-bg: #FFF8F2;
     --card-bg: #ffffff;
     --text-primary: #1a1a1a;
-    --text-secondary: #3d6b1c;
-    --text-muted: #8a9a7a;
-    --border: #c8ddb0;
-    --input-bg: #f8fdf4;
+    --text-secondary: #6a6a6a;
+    --text-muted: #9a9a9a;
+    --border: #E6E6E6;
+    --input-bg: #FFFAF5;
     --error: #e53935;
   }
 
-  body {
-    background: var(--page-bg) !important;
+  body { background: var(--page-bg) !important; }
+
+  .wrap, .auth-card, .auth-title, .auth-sub, .field-tag, .field-input, .btn-main, .foot {
+    font-family: 'Outfit', sans-serif;
   }
 
   .center {
-    min-height: calc(100vh - 120px);
+    min-height: 100vh;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 22px 14px 40px;
+    padding: 28px 14px 40px;
     box-sizing: border-box;
     background: var(--page-bg);
   }
 
-  .glass-card {
+  @media (max-width: 480px) {
+    .center { padding-top: 14px; }
+  }
+
+  .auth-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: min(480px, 100%);
+  }
+
+  /* guide avatar */
+  .guide-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 -34px;
+    position: relative;
+    z-index: 2;
+  }
+  .guide-avatar {
+    width: 96px;
+    height: 96px;
+    filter: drop-shadow(0 8px 16px rgba(255,107,0,.22));
+    transition: transform .25s ease;
+  }
+  .guide-avatar .gaze {
+    transition: transform .25s ease;
+    transform-origin: center;
+  }
+  .guide-avatar[data-look="default"]  .gaze { transform: translateY(1.5px); }
+  .guide-avatar[data-look="phone"]    .gaze { transform: translate(0px, 2px); }
+  .guide-avatar[data-look="password"] .gaze { transform: translate(0px, 2.5px); }
+  .guide-avatar.bounce { animation: guideBounce .4s ease; }
+  @keyframes guideBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  @media (max-width: 480px) {
+    .guide-avatar { width: 84px; height: 84px; }
+  }
+
+  .glass-card {
+    width: 100%;
     margin-top: 10px;
     background: #ffffff;
-    border-radius: 20px;
-    border-top: 4px solid #7CB342;
-    box-shadow: 0 8px 32px rgba(74,122,30,.12), 0 2px 8px rgba(0,0,0,.06);
-    padding: 32px 28px;
+    border-radius: 24px;
+    border-top: 4px solid var(--primary);
+    box-shadow: 0 8px 32px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.05);
+    padding: 44px 28px 28px;
     box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
     animation: slideUp .35s ease-out both;
+  }
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--peach) 0%, transparent 70%);
+    z-index: 0;
   }
 
   @keyframes slideUp {
@@ -50,119 +110,164 @@
     to   { transform: translateY(0);    opacity: 1; }
   }
 
-  .title {
+  .auth-title {
     text-align: center;
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: .6px;
-    margin: 0 0 20px;
-    color: #2d5a0e;
-  }
-
-  .field { margin: 14px 0; }
-
-  .label {
-    display: block;
-    font-size: 13px;
+    font-size: 21px;
     font-weight: 700;
-    color: #3d6b1c;
-    margin-bottom: 6px;
+    margin: 0 0 4px;
+    color: var(--text-primary);
+    position: relative;
+    z-index: 1;
   }
 
-  .input-wrap {
+  .auth-sub {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* grouped field list */
+  .field-list {
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 2px 16px;
+    margin: 22px 0 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .field-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    background: #f8fdf4;
-    border: 1.5px solid #c8ddb0;
-    box-sizing: border-box;
-    transition: border-color .2s, box-shadow .2s, background .2s;
+    gap: 14px;
+    padding: 13px 0;
+    position: relative;
   }
 
-  .input-wrap:focus-within {
-    border-color: #7CB342;
-    box-shadow: 0 0 0 3px rgba(124,179,66,.18);
-    background: #ffffff;
+  .field-divider {
+    display: block;
+    height: 1px;
+    margin-left: 52px;
+    background: var(--border);
   }
 
-  .icon-box svg {
-    width: 18px;
-    height: 18px;
-    fill: #7CB342;
+  .field-icon {
     flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--peach), var(--peach-deep));
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s, color .2s;
+  }
+  .field-icon svg { width: 18px; height: 18px; }
+
+  .field-row:focus-within .field-icon {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
   }
 
-  .input {
+  .field-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 2px;
+  }
+
+  .field-input {
     width: 100%;
-    border: none;
+    border: 0;
     outline: none;
     background: transparent;
-    font-size: 14px;
-    color: #1a1a1a;
-    caret-color: #4a7a1e;
+    padding: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    caret-color: var(--primary);
   }
-
-  .input::placeholder {
-    color: #8a9a7a;
+  .field-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
     opacity: 1;
   }
 
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #1a1a1a !important;
-    box-shadow: 0 0 0px 1000px #f8fdf4 inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
     transition: background-color 9999s ease-in-out 0s;
   }
 
   .eye-btn {
-    border: none;
-    background: transparent;
-    cursor: pointer;
+    flex-shrink: 0;
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border: 0;
+    padding: 0;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 8px;
     transition: background .15s;
   }
-  .eye-btn:hover { background: rgba(124,179,66,.10); }
-  .eye-btn svg {
-    width: 18px;
-    height: 18px;
-    fill: #7CB342;
-  }
+  .eye-btn:hover { background: var(--peach); }
+  .eye-btn svg { width: 18px; height: 18px; fill: var(--primary); }
 
-  .btn {
+  .btn-main {
     width: 100%;
-    height: 48px;
-    border: none;
+    height: 50px;
+    margin-top: 18px;
+    border: 0;
     border-radius: 999px;
-    margin-top: 16px;
-    background: linear-gradient(135deg, #4a7a1e, #7CB342);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: #fff;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 15px;
-    letter-spacing: .5px;
-    box-shadow: 0 4px 14px rgba(74,122,30,.30);
+    letter-spacing: .4px;
     cursor: pointer;
-    transition: opacity .2s, transform .05s;
+    box-shadow: 0 8px 22px rgba(255,107,0,.32);
+    transition: all .25s ease;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
-  .btn:hover  { opacity: .93; }
-  .btn:active { transform: translateY(1px); }
+  .btn-main:hover  { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+  .btn-main:hover svg { transform: translateX(3px); }
+  .btn-main svg { transition: transform .2s ease; }
+  .btn-main:active { transform: translateY(1px); }
 
   .foot {
     text-align: center;
-    margin-top: 14px;
+    margin-top: 16px;
     font-size: 13px;
-    color: #5a6a4a;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
   }
   .foot a {
-    color: #4a7a1e;
+    color: var(--primary);
     font-weight: 700;
     text-decoration: none;
   }
@@ -171,12 +276,14 @@
   .err {
     background: #ffebee;
     color: #c62828;
-    border-left: 4px solid #e53935;
+    border-left: 4px solid var(--error);
     border-radius: 8px;
     padding: 12px;
     margin: 10px 0;
     font-size: 13px;
     font-weight: 600;
+    position: relative;
+    z-index: 1;
   }
 
   .suspended-box {
@@ -186,99 +293,316 @@
     text-align: center;
     padding: 12px;
     border-radius: 8px;
-    border-left: 4px solid #e53935;
+    border-left: 4px solid var(--error);
     margin-bottom: 14px;
     font-size: 14px;
     letter-spacing: .5px;
+    position: relative;
+    z-index: 1;
   }
 
   @media (max-width: 480px) {
-    .glass-card { padding: 24px 18px; border-radius: 16px; }
-    .btn { height: 46px; }
+    .glass-card { padding: 40px 18px 20px; border-radius: 18px; }
+    .btn-main { height: 46px; }
   }
 
-  @font-face {
-    font-family: 'Ovelion';
-    src: url("{% static 'fonts/Ovelion-Regular.ttf' %}") format('truetype');
+  /* ===== Onboarding coachmark tour ===== */
+  .tour-overlay { position: fixed; inset: 0; z-index: 2147483000; display: none; }
+  .tour-overlay.show { display: block; }
+  .tour-spot {
+    position: fixed; top: 0; left: 0; width: 0; height: 0;
+    border-radius: 16px;
+    box-shadow: 0 0 0 9999px rgba(17, 17, 17, .62);
+    transition: top .3s ease, left .3s ease, width .3s ease, height .3s ease;
+    pointer-events: none;
   }
-
-  body, body * {
-    font-family: 'Ovelion', sans-serif !important;
+  .tour-tip {
+    position: fixed; top: 50%; left: 50%;
+    width: min(300px, 86vw);
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .32);
+    transition: top .3s ease, left .3s ease;
+  }
+  .tour-caret {
+    position: absolute; left: 24px;
+    width: 14px; height: 14px;
+    background: #ffffff;
+    transform: rotate(45deg);
+  }
+  .tour-tip.tip-below .tour-caret { top: -7px; }
+  .tour-tip.tip-above .tour-caret { bottom: -7px; }
+  .tour-tip-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .tour-step { font-size: 11px; font-weight: 800; color: #FF6B00; letter-spacing: .06em; text-transform: uppercase; }
+  .tour-dots { display: flex; gap: 5px; }
+  .tour-dots i { width: 6px; height: 6px; border-radius: 50%; background: #FFD4A3; display: block; transition: all .2s ease; }
+  .tour-dots i.on { background: #FF6B00; width: 16px; border-radius: 3px; }
+  .tour-text { font-size: 14px; color: #1a1a1a; line-height: 1.5; font-weight: 500; margin: 0 0 14px; }
+  .tour-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .tour-actions-right { display: flex; align-items: center; gap: 8px; }
+  .tour-skip { background: none; border: 0; color: #9a9a9a; font-size: 13px; font-weight: 600; cursor: pointer; padding: 8px 4px; }
+  .tour-back { background: #FFF3E9; border: 1px solid #FFD4A3; color: #FF6B00; font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 999px; padding: 8px 14px; }
+  .tour-next {
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    color: #fff; border: 0; border-radius: 999px;
+    padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 6px 16px rgba(255, 107, 0, .32);
+  }
+  .tour-next:active, .tour-back:active { transform: scale(.97); }
+  @media (prefers-reduced-motion: reduce) {
+    .tour-spot, .tour-tip { transition: none; }
   }
 </style>
 
 <div class="center">
-  <div class="glass-card">
+  <div class="auth-stack">
 
-    <div class="title">Login</div>
+    <div class="guide-avatar-wrap">
+      <svg id="guideAvatar" class="guide-avatar" data-look="default" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" aria-label="Trusted lending">
+        <defs>
+          <linearGradient id="shieldGL" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF8A33"/>
+            <stop offset="100%" stop-color="#FF6B00"/>
+          </linearGradient>
+        </defs>
 
-    {% if suspended %}
-    <div class="suspended-box">
-       ACCOUNT SUSPENDED
+        <!-- peach backdrop -->
+        <circle cx="60" cy="60" r="56" fill="#FFE9D6"/>
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#FFD4A3" stroke-width="1.4" stroke-dasharray="2 6"/>
+
+        <!-- shield shadow -->
+        <path d="M60 27 L89 37 V61 C89 81 76 93 60 100 C44 93 31 81 31 61 V37 Z" fill="#E0590A" opacity=".22"/>
+        <!-- shield body -->
+        <path d="M60 24 L88 34 V60 C88 80 75 92 60 98 C45 92 32 80 32 60 V34 Z" fill="url(#shieldGL)"/>
+        <!-- inner outline -->
+        <path d="M60 31 L82 39 V60 C82 76 72 86 60 91 C48 86 38 76 38 60 V39 Z" fill="none" stroke="#fff" stroke-width="1.6" opacity=".4"/>
+        <!-- top sheen -->
+        <path d="M60 24 L88 34 V46 C72 40 48 40 32 46 V34 Z" fill="#fff" opacity=".13"/>
+
+        <!-- peso symbol (money / loan) -->
+        <text x="60" y="74" text-anchor="middle" font-family="'Inter', system-ui, sans-serif" font-weight="800" font-size="36" fill="#fff">&#8369;</text>
+
+        <!-- approved check badge (trusted lending) -->
+        <circle cx="87" cy="38" r="13.5" fill="#ffffff"/>
+        <circle cx="87" cy="38" r="13.5" fill="none" stroke="#FFD4A3" stroke-width="1.5"/>
+        <path d="M81 38.2 l4 4 l8 -8.4" stroke="#FF6B00" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
-    {% endif %}
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="err"><strong>Login failed:</strong> {{ message }}</div>
-      {% endfor %}
-    {% endif %}
+    <div class="glass-card">
 
-    {% if form.errors %}
-    <div class="err"> Phone or password incorrect. Please try again.</div>
-    {% endif %}
+      <div class="auth-title">Welcome Back</div>
+      <div class="auth-sub">Login to continue to your account</div>
 
-    <form method="post" autocomplete="off">
-      {% csrf_token %}
+      {% if suspended %}
+      <div class="suspended-box">
+         ACCOUNT SUSPENDED
+      </div>
+      {% endif %}
 
-      <div class="field">
-        <div class="label">Phone Number</div>
-        <div class="input-wrap">
-          <div class="icon-box" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M6.6 10.8c1.8 3.6 3.9 5.7 7.5 7.5l2.5-2.5c.3-.3.7-.4 1.1-.3 1.2.4 2.6.7 4 .7.6 0 1 .4 1 1V21c0 .6-.4 1-1 1C10.6 22 2 13.4 2 2c0-.6.4-1 1-1h3.1c.6 0 1 .4 1 1 0 1.4.2 2.8.7 4 .1.4 0 .8-.3 1.1L6.6 10.8z"/>
-            </svg>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="err"><strong>Login failed:</strong> {{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      {% if form.errors %}
+      <div class="err"> Phone or password incorrect. Please try again.</div>
+      {% endif %}
+
+      <form method="post" autocomplete="off">
+        {% csrf_token %}
+
+        <div class="field-list">
+
+          <div class="field-row" id="row_phone">
+            <div class="field-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.6 10.8c1.8 3.6 3.9 5.7 7.5 7.5l2.5-2.5c.3-.3.7-.4 1.1-.3 1.2.4 2.6.7 4 .7.6 0 1 .4 1 1V21c0 .6-.4 1-1 1C10.6 22 2 13.4 2 2c0-.6.4-1 1-1h3.1c.6 0 1 .4 1 1 0 1.4.2 2.8.7 4 .1.4 0 .8-.3 1.1L6.6 10.8z"/>
+              </svg>
+            </div>
+            <div class="field-body">
+              <label class="field-tag" for="id_phone">Phone Number</label>
+              <input class="field-input" id="id_phone" type="text" name="phone" placeholder="Phone number" required>
+            </div>
           </div>
-          <input class="input" type="text" name="phone" placeholder="Phone number" required>
-        </div>
-      </div>
 
-      <div class="field">
-        <div class="label">Password</div>
-        <div class="input-wrap">
-          <div class="icon-box" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 016 0v3H9z"/>
-            </svg>
+          <span class="field-divider"></span>
+
+          <div class="field-row" id="row_password">
+            <div class="field-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 016 0v3H9z"/>
+              </svg>
+            </div>
+            <div class="field-body">
+              <label class="field-tag" for="id_password">Password</label>
+              <input id="id_password" class="field-input" type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="button" class="eye-btn" id="togglePwd" aria-label="Show password">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+              </svg>
+            </button>
           </div>
 
-          <input id="pwd" class="input" type="password" name="password" placeholder="Password" required>
-
-          <button type="button" class="eye-btn" id="togglePwd" aria-label="Show password">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
-            </svg>
-          </button>
         </div>
-      </div>
 
-      <button class="btn" type="submit">→ LOGIN</button>
+        <button class="btn-main" type="submit" id="loginBtn">
+          <span>LOGIN</span>
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
 
-      <div class="foot">
-        No account? <a href="/register/">Register</a>
-      </div>
-    </form>
+        <div class="foot">
+          No account? <a href="/register/">Register</a>
+        </div>
+      </form>
 
+    </div>
   </div>
 </div>
 
 <script>
   (function(){
-    const pwd = document.getElementById("pwd");
+    const pwd = document.getElementById("id_password");
     const btn = document.getElementById("togglePwd");
     btn.addEventListener("click", () => {
       pwd.type = (pwd.type === "password") ? "text" : "password";
     });
+  })();
+</script>
+
+<!-- guide avatar reacts to active field -->
+<script>
+  (function () {
+    const avatar = document.getElementById('guideAvatar');
+    if (!avatar) return;
+
+    const lookMap = {
+      id_phone: 'phone',
+      id_password: 'password'
+    };
+
+    Object.keys(lookMap).forEach((inputId) => {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      input.addEventListener('focus', () => {
+        avatar.setAttribute('data-look', lookMap[inputId]);
+        avatar.classList.remove('bounce');
+        void avatar.offsetWidth;
+        avatar.classList.add('bounce');
+      });
+
+      input.addEventListener('blur', () => {
+        avatar.setAttribute('data-look', 'default');
+      });
+    });
+  })();
+</script>
+
+<!-- ===== Onboarding coachmark tour ===== -->
+<div class="tour-overlay" id="tourOverlay" aria-hidden="true">
+  <div class="tour-spot" id="tourSpot"></div>
+  <div class="tour-tip" id="tourTip" role="dialog" aria-modal="true" aria-label="Getting started guide">
+    <span class="tour-caret" id="tourCaret"></span>
+    <div class="tour-tip-head">
+      <span class="tour-step" id="tourStep">Step 1 of 3</span>
+      <span class="tour-dots" id="tourDots"></span>
+    </div>
+    <p class="tour-text" id="tourText"></p>
+    <div class="tour-actions">
+      <button type="button" class="tour-skip" id="tourSkip">Skip</button>
+      <div class="tour-actions-right">
+        <button type="button" class="tour-back" id="tourBack" style="display:none;">Back</button>
+        <button type="button" class="tour-next" id="tourNext">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const KEY = 'login_tour_v1';
+    const overlay = document.getElementById('tourOverlay');
+    if(!overlay) return;
+    const spot = document.getElementById('tourSpot');
+    const tip = document.getElementById('tourTip');
+    const textEl = document.getElementById('tourText');
+    const stepEl = document.getElementById('tourStep');
+    const dotsWrap = document.getElementById('tourDots');
+    const btnNext = document.getElementById('tourNext');
+    const btnBack = document.getElementById('tourBack');
+    const btnSkip = document.getElementById('tourSkip');
+    const caret = document.getElementById('tourCaret');
+
+    const steps = [
+      { sel: '#row_phone',    text: 'Enter the mobile number you registered with.' },
+      { sel: '#row_password', text: 'Type your password to access your account.' },
+      { sel: '#loginBtn',     text: 'Tap LOGIN to continue to your dashboard.' }
+    ];
+    let i = 0;
+
+    steps.forEach((_, idx) => {
+      const d = document.createElement('i');
+      if (idx === 0) d.className = 'on';
+      dotsWrap.appendChild(d);
+    });
+
+    function place(){
+      const el = document.querySelector(steps[i].sel);
+      if(!el){ next(); return; }
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(() => {
+        const r = el.getBoundingClientRect();
+        const pad = 8;
+        spot.style.top = (r.top - pad) + 'px';
+        spot.style.left = (r.left - pad) + 'px';
+        spot.style.width = (r.width + pad * 2) + 'px';
+        spot.style.height = (r.height + pad * 2) + 'px';
+
+        textEl.textContent = steps[i].text;
+        stepEl.textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
+        btnNext.textContent = (i === steps.length - 1) ? 'Got it' : 'Next';
+        btnBack.style.display = (i === 0) ? 'none' : 'inline-block';
+        Array.prototype.forEach.call(dotsWrap.children, (d, idx) => { d.className = (idx === i) ? 'on' : ''; });
+
+        const tipW = tip.offsetWidth, tipH = tip.offsetHeight;
+        const gap = 16;
+        let below = true;
+        let top = r.bottom + pad + gap;
+        if (top + tipH > window.innerHeight - 10) { below = false; top = r.top - pad - gap - tipH; }
+        if (top < 10) top = 10;
+        let left = r.left + r.width / 2 - tipW / 2;
+        left = Math.max(10, Math.min(left, window.innerWidth - tipW - 10));
+        tip.style.top = top + 'px';
+        tip.style.left = left + 'px';
+
+        // caret points to the spotlight
+        tip.classList.toggle('tip-below', below);
+        tip.classList.toggle('tip-above', !below);
+        let caretLeft = (r.left + r.width / 2) - left - 7;
+        caretLeft = Math.max(18, Math.min(caretLeft, tipW - 32));
+        caret.style.left = caretLeft + 'px';
+      }, 180);
+    }
+    function start(){ overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); i = 0; place(); }
+    function end(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); try { localStorage.setItem(KEY, '1'); } catch(e){} }
+    function next(){ if (i >= steps.length - 1){ end(); return; } i++; place(); }
+    function back(){ if (i > 0){ i--; place(); } }
+
+    btnNext.addEventListener('click', next);
+    btnBack.addEventListener('click', back);
+    btnSkip.addEventListener('click', end);
+    window.addEventListener('resize', () => { if (overlay.classList.contains('show')) place(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('show')) end(); });
+
+    let seen = false;
+    try { seen = localStorage.getItem(KEY) === '1'; } catch(e){}
+    if (!seen) setTimeout(start, 600);
+
+    window.__startTour = start;
   })();
 </script>
 {% endblock %}

@@ -2,100 +2,107 @@
 {% block title %}Payment Schedule{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   .pm-page, .pm-page *{
-  font-family: "Ovelion", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
-.wrap{ align-items:flex-start; justify-content:center; padding-top:92px; padding-bottom:40px; }
-@media(max-width:480px){ .wrap{ padding-top:78px; } }
+.wrap{ align-items:flex-start; justify-content:center; padding-top:28px; padding-bottom:40px; }
+@media(max-width:480px){ .wrap{ padding-top:18px; } }
 
-/* ✅ main container = white luxury */
+/* ✅ main container */
 .ps-card{
-  width:min(560px, 94vw);
-  border-radius: 18px;
-  padding: 14px;
+  width:min(480px, 94vw);
+  border-radius: 22px;
+  padding: 20px;
   text-align:left;
 
   position: relative;
   overflow: hidden;
 
-  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 45%,#eef2f7 75%,#ffffff 100%);
-  border: 2px solid rgba(212,175,55,.85);
+  background: #ffffff;
+  border: 1.5px solid #FFD4A3;
+  border-top: 4px solid #FF6B00;
 
-  box-shadow: 0 20px 45px rgba(0,0,0,.12),
-              0 0 0 1px rgba(255,255,255,.9) inset;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-.ps-card::before{
-  content:"";
-  position:absolute; inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 90% 90%, rgba(212,175,55,.25), transparent 55%),
-    radial-gradient(circle at 10% 10%, rgba(0,65,130,.08), transparent 60%);
-  opacity:.75;
-}
-.ps-card::after{
-  content:"";
-  position:absolute; inset:0;
-  pointer-events:none;
-  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,0) 55%);
-  opacity:.6;
+  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
 }
 .ps-card > *{ position:relative; z-index:1; }
 
-.head{ display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; align-items:flex-start; }
-.title{ font-size:18px; font-weight:950; color:#0b2f55; line-height:1.1; }
-.sub{ font-size:12px; color: rgba(11,47,85,.65); margin-top:2px; }
+.head{ display:flex; justify-content:space-between; gap:10px; margin-bottom:16px; align-items:flex-start; }
+.title{ font-size:18px; font-weight:800; color:#1a1a1a; line-height:1.1; }
+.sub{ font-size:12px; color: #9a9a9a; margin-top:2px; }
 
 .pill{
-  padding:6px 12px; border-radius:999px;
-  border:1px solid rgba(11,47,85,.14);
-  background: rgba(11,47,85,.06);
-  color:#0b2f55;
-  font-weight:900;
+  padding:7px 14px; border-radius:999px;
+  border:1px solid #FFD4A3;
+  background: #FFE9D6;
+  color:#b8530a;
+  font-weight:800;
   font-size:12px;
   white-space:nowrap;
 }
 
-/* ✅ each item also white */
+/* ✅ each schedule item */
 .item{
   border-radius:16px;
-  border:1px solid rgba(11,47,85,.14);
-  background: rgba(255,255,255,.65);
-  padding:12px 12px;
+  border:1.5px solid #FFE9D6;
+  background: #FFFAF5;
+  padding:14px 16px;
   margin-bottom:10px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
 }
-.row{ display:flex; justify-content:space-between; gap:10px; }
-.kv{ line-height:1.25; }
-.kv b{ color:#0b2f55; font-weight:950; }
-.kv span{ color: rgba(11,47,85,.65); font-weight:800; }
+.item-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-bottom:10px;
+  margin-bottom:10px;
+  border-bottom:1px solid #FFE9D6;
+}
+.item-icon{
+  flex:0 0 auto;
+  width:32px; height:32px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#FFE9D6,#FFD4A3);
+  color:#FF6B00;
+  display:flex; align-items:center; justify-content:center;
+}
+.item-icon svg{ width:16px; height:16px; }
 
-.repay{ color:#dc2626; font-weight:950; }
+.row{ display:flex; justify-content:space-between; gap:10px; }
+.kv{ line-height:1.3; }
+.kv b{ color:#1a1a1a; font-weight:800; }
+.kv span{ display:block; color: #9a9a9a; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.03em; margin-bottom:2px; }
+
+.repay{ color:#FF6B00; font-weight:800; }
+
+.actions{ margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
 
 .btn-primary{
+  display:inline-flex; align-items:center; gap:6px;
   border:0 !important;
-  background: linear-gradient(90deg, #4a7a1e, #7CB342d0) !important;
+  background: linear-gradient(135deg, #FF6B00, #FF8A33) !important;
   color:#fff !important;
-  box-shadow: 0 12px 30px rgba(0,0,0,.35) !important;
+  box-shadow: 0 8px 22px rgba(255,107,0,.32) !important;
 }
-.btn-primary:active{ transform: scale(.98); }
-.actions{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-/* ✅ Back button on WHITE card (visible, not blending) */
+.btn-primary svg{ width:15px; height:15px; }
+.btn-primary:hover{ transform: translateY(-2px); }
+.btn-primary:active{ transform: translateY(1px); }
+
+/* ✅ Back button */
 .btn-ghost{
+  display:inline-flex; align-items:center; gap:6px;
   background: #ffffff !important;
-  color: #0b2f55 !important;                 /* blue text */
-  border: 2px solid rgba(11,47,85,.22) !important;
-  box-shadow: 0 10px 22px rgba(0,0,0,.14),
-              0 0 0 1px rgba(255,255,255,.9) inset !important;
+  color: #FF6B00 !important;
+  border: 1px solid #FFD4A3 !important;
+  box-shadow: 0 2px 10px rgba(255,107,0,.12) !important;
 }
+.btn-ghost svg{ width:15px; height:15px; }
 
 .btn-ghost:hover{
   transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(0,0,0,.16),
-              0 0 0 1px rgba(255,255,255,.9) inset !important;
+  box-shadow: 0 4px 14px rgba(255,107,0,.20) !important;
 }
 
 .btn-ghost:active{
@@ -115,30 +122,39 @@
   {% if latest_loan %}
     {% for s in schedules %}
       <div class="item">
-        <div class="row">
-          <div class="kv"><span>Date:</span> <b>{{ s.due_date }}</b></div>
+        <div class="item-head">
+          <div class="item-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </div>
+          <b>{{ s.due_date }}</b>
         </div>
 
         <div class="row" style="margin-top:8px;">
-          <div class="kv"><span>Loan Amount:</span> <b>PHP {{ s.loan_amount }}</b></div>
-          <div class="kv"><span>Loan Period:</span> <b>{{ s.term_months }} months</b></div>
+          <div class="kv"><span>Loan Amount</span> <b>PHP {{ s.loan_amount }}</b></div>
+          <div class="kv"><span>Loan Period</span> <b>{{ s.term_months }} months</b></div>
         </div>
 
-        <div class="row" style="margin-top:8px;">
-          <div class="kv"><span>Repayment Amount:</span> <b class="repay">PHP {{ s.repayment }}</b></div>
-          <div class="kv"><span>Interest Rate:</span> <b>{{ s.interest_rate }}</b></div>
+        <div class="row" style="margin-top:10px;">
+          <div class="kv"><span>Repayment Amount</span> <b class="repay">PHP {{ s.repayment }}</b></div>
+          <div class="kv"><span>Interest Rate</span> <b>{{ s.interest_rate }}</b></div>
         </div>
       </div>
     {% endfor %}
   {% else %}
-    <div class="item" style="text-align:center; opacity:.85;">
+    <div class="item" style="text-align:center; color:#9a9a9a;">
       No approved loan found yet.
     </div>
   {% endif %}
 
   <div class="actions">
-    <a class="btn btn-ghost" href="/profile/">Back</a>
-    <a class="btn btn-primary" href="/dashboard/">Dashboard</a>
+    <a class="btn btn-ghost" href="/profile/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+      Back
+    </a>
+    <a class="btn btn-primary" href="/dashboard/">
+      Dashboard
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+    </a>
   </div>
 </div>
 {% endblock %}

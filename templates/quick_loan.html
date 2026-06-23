@@ -2,18 +2,22 @@
 {% block title %}Quick Loan{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ===== GreenLeaf Design System — quick_loan.html ===== */
+  /* ===== Quick Loan — orange/peach brand ===== */
 
-  html, body {
+  .page, .page * {
+    font-family: 'Outfit', sans-serif;
   }
 
   .wrap { align-items: flex-start; }
 
   .page {
-    width: min(520px, 94vw);
+    width: min(480px, 94vw);
     margin: 0 auto;
-    padding: 16px 16px 100px;
+    padding: 28px 16px 60px;
     box-sizing: border-box;
   }
 
@@ -21,25 +25,28 @@
   .back-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    height: 40px;
-    padding: 8px 18px;
+    gap: 6px;
+    height: 38px;
+    padding: 0 16px 0 12px;
     border-radius: 999px;
-    background: rgba(124,179,66,.12);
-    color: #4a7a1e;
-    font-weight: 800;
-    font-size: 14px;
+    background: #ffffff;
+    color: #FF6B00;
+    font-weight: 700;
+    font-size: 13px;
     text-decoration: none;
-    border: 1px solid rgba(124,179,66,.3);
-    transition: transform .15s ease, background .15s ease;
+    border: 1px solid #FFD4A3;
+    box-shadow: 0 2px 10px rgba(255,107,0,.12);
+    transition: transform .15s ease, box-shadow .15s ease;
+    margin-bottom: 18px;
   }
-  .back-btn:hover { transform: translateY(-1px); background: rgba(124,179,66,.20); }
+  .back-btn svg{ width: 16px; height: 16px; }
+  .back-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
   .back-btn:active { transform: translateY(0); opacity: .9; }
 
   /* ===== Page title ===== */
   .page-title {
-    color: #2d5a0e;
-    font-weight: 900;
+    color: #1a1a1a;
+    font-weight: 800;
     font-size: 20px;
     margin-bottom: 20px;
   }
@@ -47,10 +54,10 @@
   /* ===== Cards ===== */
   .cardx {
     background: #ffffff;
-    border-radius: 18px;
-    border-top: 3px solid #7CB342;
-    border-left: none;
-    box-shadow: 0 3px 16px rgba(74,122,30,.08), 0 8px 32px rgba(0,0,0,.04);
+    border-radius: 20px;
+    border: 1.5px solid #FFD4A3;
+    border-top: 4px solid #FF6B00;
+    box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
     padding: 20px;
     color: #1a1a1a;
     margin-bottom: 16px;
@@ -64,30 +71,70 @@
   .cardx label,
   .field > label {
     display: block;
-    color: #3d6b1c;
+    color: #9a9a9a;
     font-weight: 700;
-    font-size: 13px;
-    margin-bottom: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 8px;
+  }
+
+  /* ===== Amount field (icon badge + input) ===== */
+  .amount-field-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FFFAF5;
+    border: 1.5px solid #E6E6E6;
+    border-radius: 14px;
+    padding: 6px 14px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .amount-field-wrap:focus-within {
+    border-color: #FF6B00;
+    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+    background: #fff;
+  }
+  .amount-field-wrap.is-invalid {
+    border-color: #e53935;
+    box-shadow: 0 0 0 3px rgba(229,57,53,.14);
+  }
+  .field-alert {
+    margin-top: 8px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: #ffebee;
+    border-left: 4px solid #e53935;
+    color: #c62828;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .amount-icon {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 17px;
   }
 
   /* ===== Amount input ===== */
   input[type="number"] {
     width: 100%;
-    background: #f8fdf4;
-    border: 2px solid #c8ddb0;
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 20px;
+    background: transparent;
+    border: 0;
+    padding: 12px 0;
+    font-size: 19px;
     font-weight: 800;
-    color: #2d5a0e;
-    text-align: center;
+    color: #1a1a1a;
+    text-align: left;
     box-sizing: border-box;
     outline: none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  input[type="number"]:focus {
-    border-color: #7CB342;
-    box-shadow: 0 0 0 3px rgba(124,179,66,.18);
   }
   input[readonly] { opacity: .9; cursor: default; }
 
@@ -104,22 +151,22 @@
 
   .term-btn {
     padding: 12px 8px;
-    border-radius: 12px;
-    border: 2px solid #c8ddb0;
-    background: #f8fdf4;
-    color: #4a7a1e;
+    border-radius: 999px;
+    border: 1.5px solid #E6E6E6;
+    background: #FFFAF5;
+    color: #1a1a1a;
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     transition: all .2s ease;
   }
-  .term-btn:hover { border-color: #7CB342; background: #f1f8e9; }
+  .term-btn:hover { border-color: #FFD4A3; background: #FFF3E9; }
   .term-btn:active { transform: scale(.97); }
   .term-btn.active {
-    background: #7CB342;
-    border-color: #7CB342;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(124,179,66,.35);
+    box-shadow: 0 6px 16px rgba(255,107,0,.35);
   }
   .term-btn:disabled {
     opacity: .55;
@@ -128,13 +175,15 @@
   }
 
   /* ===== Hint ===== */
-  .hint { margin-top: 8px; color: #5a6a4a; font-size: 13px; }
+  .hint { margin-top: 8px; color: #9a9a9a; font-size: 13px; }
 
   /* ===== Summary ===== */
   .summary {
-    margin-top: 14px;
-    border-top: 1px solid #f0f4ec;
-    padding-top: 6px;
+    margin-top: 16px;
+    background: #FFFAF5;
+    border: 1px solid #FFE9D6;
+    border-radius: 14px;
+    padding: 4px 14px;
     display: grid;
     gap: 0;
     font-size: 14px;
@@ -144,41 +193,47 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    border-bottom: 1px solid #f0f4ec;
-    padding: 10px 0;
+    border-bottom: 1px solid #FFE9D6;
+    padding: 12px 0;
   }
   .summary .row:last-child {
     border-bottom: none;
-    border-top: 2px solid #DCEDC8;
-    margin-top: 4px;
+    margin-top: 2px;
     font-size: 16px;
   }
-  .summary .k { color: #5a6a4a; }
-  .summary .v { color: #2d5a0e; font-weight: 800; }
+  .summary .k { color: #9a9a9a; }
+  .summary .v { color: #1a1a1a; font-weight: 800; }
+  .summary .row:last-child .v { color: #FF6B00; }
 
   /* ===== CTA button ===== */
-  .cta { margin-top: 12px; width: 100%; }
+  .cta { margin-top: 14px; width: 100%; }
 
   #goApply {
     width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #4a7a1e, #7CB342);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
     color: #fff;
     border: none;
     border-radius: 999px;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 15px;
-    box-shadow: 0 4px 16px rgba(74,122,30,.30);
+    letter-spacing: .02em;
+    box-shadow: 0 8px 22px rgba(255,107,0,.32);
     cursor: pointer;
-    transition: opacity .2s, transform .15s;
+    transition: opacity .2s, transform .15s, box-shadow .2s;
   }
-  #goApply:hover { transform: translateY(-1px); }
-  #goApply:active { transform: translateY(0); }
-  #goApply:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+  #goApply svg{ width: 16px; height: 16px; }
+  #goApply:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+  #goApply:active { transform: translateY(1px); }
+  #goApply:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 
   /* ===== Status card (warning top border) ===== */
   #statusCard {
-    border-top-color: #f9a825;
+    border-top-color: #eab308;
   }
 
   .status-head {
@@ -190,13 +245,13 @@
   }
   .status-title {
     font-size: 18px;
-    font-weight: 900;
+    font-weight: 800;
     margin: 0;
     color: #1a1a1a;
   }
   .status-sub {
     margin-top: 6px;
-    color: #5a6a4a;
+    color: #9a9a9a;
     line-height: 1.35;
     font-size: 13px;
   }
@@ -210,8 +265,8 @@
     border-radius: 999px;
     font-weight: 800;
     font-size: 12px;
-    background: #f1f8e9;
-    color: #2e7d32;
+    background: #FFE9D6;
+    color: #b8530a;
     white-space: nowrap;
     border: none;
   }
@@ -229,15 +284,15 @@
     gap: 8px;
     padding: 10px 16px;
     border-radius: 999px;
-    border: 1px solid rgba(124,179,66,.35);
-    background: rgba(124,179,66,.10);
-    color: #4a7a1e;
-    font-weight: 800;
+    border: 1px solid #FFD4A3;
+    background: #FFF3E9;
+    color: #FF6B00;
+    font-weight: 700;
     font-size: 13px;
     cursor: pointer;
     transition: background .2s;
   }
-  .status-btn:hover { background: rgba(124,179,66,.20); }
+  .status-btn:hover { background: #FFE9D6; }
 
   /* ===== Progress timeline ===== */
   .step-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
@@ -245,20 +300,20 @@
     width: 34px; height: 34px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-weight: 800; font-size: 13px;
-    background: #d8e8c0;
-    color: #3d6b1c;
+    background: #FFE9D6;
+    color: #b8530a;
     flex-shrink: 0;
   }
   .dot.active {
-    background: #7CB342;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
     color: #fff;
-    box-shadow: 0 0 8px rgba(124,179,66,.45);
+    box-shadow: 0 0 8px rgba(255,107,0,.45);
   }
   .line {
     flex: 1; height: 3px; border-radius: 999px;
-    background: #d8e8c0;
+    background: #FFE9D6;
   }
-  .line.active { background: #7CB342; }
+  .line.active { background: #FF6B00; }
 
   .step-labels {
     display: grid;
@@ -266,7 +321,7 @@
     gap: 10px;
     margin-top: 10px;
     font-size: 12px;
-    color: #5a6a4a;
+    color: #9a9a9a;
   }
   .step-labels.three {
     grid-template-columns: repeat(3, 1fr);
@@ -287,38 +342,34 @@
   .reject-alert .ra-title { font-weight: 900; }
   .reject-alert .ra-text { margin-top: 6px; opacity: .9; }
 
-  /* ===== Top actions ===== */
-  .top-actions { padding: 4px 0 12px; }
-  .top-actions-line { margin: 0 0 14px; border: 0; }
-
-  @media (max-width: 520px) {
-    .top-actions { padding: 4px 0 10px; }
-  }
 </style>
 
 <div class="page">
 
+  <a class="back-btn" href="{% url 'dashboard' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+    Back
+  </a>
+
   <!-- ===== Card 1: Amount/Term ===== -->
   <div class="cardx">
-    <div class="top-actions">
-      <a class="back-btn" href="{% url 'dashboard' %}">
-        Back
-      </a>
-    </div>
-    <div class="top-actions-line"></div>
     <div class="field">
-      <label>Loan amount (Min 80,000 • Max 5,000,000)</label>
-      <input
-        type="number"
-        id="qAmount"
-        min="80000"
-        max="5000000"
-        placeholder="Enter amount"
-        {% if loan %}readonly{% endif %}
-      >
+      <label>Loan amount (Min 80,000 &middot; Max 5,000,000)</label>
+      <div class="amount-field-wrap">
+        <span class="amount-icon" aria-hidden="true">₱</span>
+        <input
+          type="number"
+          id="qAmount"
+          min="80000"
+          max="5000000"
+          placeholder="Enter amount"
+          {% if loan %}readonly{% endif %}
+        >
+      </div>
+      <div class="field-alert" id="qAmountAlert" style="display:none;"></div>
     </div>
 
-    <div class="field" style="margin-top:12px;">
+    <div class="field" style="margin-top:18px;">
       <label>Loan terms</label>
       <input type="hidden" id="qTerm">
 
@@ -340,7 +391,8 @@
     </div>
 
     <button class="btn btn-primary cta" type="button" id="goApply" style="opacity:.65" disabled>
-      Continue to Application
+      <span>Continue to Application</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
     </button>
   </div>
 
@@ -384,6 +436,8 @@
   const amountEl = document.getElementById("qAmount");
   const termEl = document.getElementById("qTerm");
   const hint = document.getElementById("qHint");
+  const amountWrap = amountEl ? amountEl.closest(".amount-field-wrap") : null;
+  const amountAlert = document.getElementById("qAmountAlert");
 
   const outAmount = document.getElementById("qSumAmount");
   const outTerm = document.getElementById("qSumTerm");
@@ -392,19 +446,38 @@
   const btns = document.querySelectorAll(".term-btn");
   const goBtn = document.getElementById("goApply");
 
+  const AMOUNT_MIN = Number(amountEl?.min || 0);
+  const AMOUNT_MAX = Number(amountEl?.max || Infinity);
+
   function fmt(n){
     try { return Number(n).toLocaleString(); } catch (e) { return String(n); }
+  }
+
+  function amountOutOfRange(amount){
+    return amount > 0 && (amount < AMOUNT_MIN || amount > AMOUNT_MAX);
   }
 
   function update(){
     const amount = Number(amountEl?.value || 0);
     const term = Number(termEl?.value || 0);
+    const outOfRange = amountOutOfRange(amount);
+
+    if (outOfRange){
+      if (amountAlert){
+        amountAlert.textContent = "Loan amount must be between PHP " + fmt(AMOUNT_MIN) + " and PHP " + fmt(AMOUNT_MAX) + ".";
+        amountAlert.style.display = "block";
+      }
+      if (amountWrap) amountWrap.classList.add("is-invalid");
+    } else {
+      if (amountAlert) amountAlert.style.display = "none";
+      if (amountWrap) amountWrap.classList.remove("is-invalid");
+    }
 
     if (outAmount) outAmount.textContent = amount > 0 ? ("PHP " + fmt(amount)) : "—";
     if (outTerm) outTerm.textContent = term > 0 ? (term + " months") : "—";
 
     const rate = 0.005; // 0.5%
-    if(amount > 0 && term > 0){
+    if(amount > 0 && term > 0 && !outOfRange){
       const total = amount + (amount * rate * term);
       const monthly = total / term;
       if (outMonthly) outMonthly.textContent = "PHP " + fmt(Math.round(monthly));
@@ -462,6 +535,10 @@
       const amount = amountEl?.value || "";
       const term = termEl?.value || "";
       if(!amount || !term) return;
+      if(amountOutOfRange(Number(amount))){
+        update();
+        return;
+      }
       window.location.href = "{% url 'loan_apply' %}?amount=" + encodeURIComponent(amount) + "&term=" + encodeURIComponent(term);
     });
   {% endif %}

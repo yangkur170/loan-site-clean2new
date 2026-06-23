@@ -2,18 +2,19 @@
 {% block title %}Notifications{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ===== GreenLeaf Design System — Notifications ===== */
-
-body{
+/* ===== Notifications — orange/peach brand ===== */
+.dash-wrap, .notif-title, .notif-head-text, .notif-text, .back-btn{
+  font-family: 'Outfit', sans-serif;
 }
 
-/* ===== Page wrapper ===== */
 .dash-wrap{
-  width: min(520px, 94vw);
-  max-width: 520px;
+  width: min(480px, 94vw);
   margin: 0 auto;
-  padding: 80px 16px 100px;
+  padding: 28px 16px 40px;
   box-sizing: border-box;
 }
 
@@ -21,207 +22,195 @@ body{
 .back-btn{
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  height: 40px;
-  padding: 0 18px;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px 0 12px;
   border-radius: 999px;
-  background: rgba(124,179,66,.12);
-  color: #4a7a1e;
+  background: #ffffff;
+  color: #FF6B00;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   text-decoration: none;
-  border: 1px solid rgba(124,179,66,.3);
-  transition: background .18s ease, transform .14s ease;
-  margin-bottom: 16px;
-  position: relative;
+  border: 1px solid #FFD4A3;
+  box-shadow: 0 2px 10px rgba(255,107,0,.12);
+  transition: transform .15s ease, box-shadow .15s ease;
+  margin-bottom: 18px;
 }
-.back-btn:hover{ background: rgba(124,179,66,.20); transform: translateY(-1px); }
+.back-btn svg{ width: 16px; height: 16px; }
+.back-btn:hover{ transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
 .back-btn:active{ transform: translateY(0); opacity: .9; }
 
-@media (max-width:520px){
-  .back-btn{ height: 38px; padding: 0 16px; font-size: 13px; }
-}
-
 /* ===== Main card ===== */
-.cardx{
-  position: relative;
+.notif-card{
   background: #ffffff;
-  border-radius: 18px;
-  border: none;
-  border-top: 4px solid #7CB342;
-  box-shadow: 0 4px 20px rgba(74,122,30,.10);
+  border-radius: 22px;
+  border: 1.5px solid #FFD4A3;
+  border-top: 4px solid #FF6B00;
+  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+  padding: 4px 18px;
   overflow: hidden;
-  padding: 20px;
-  color: #1a1a1a;
 }
 
-/* ===== Page title ===== */
+.notif-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 2px 14px;
+  border-bottom: 1.5px solid #FFE9D6;
+}
 .notif-title{
-  color: #2d5a0e;
-  font-weight: 900;
-  font-size: 18px;
-  margin: 0 0 16px;
-}
-
-/* ===== Muted text ===== */
-.muted{
-  color: #3d3d3d;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-/* ===== Message boxes ===== */
-.msg-box{
-  background: #f8fdf4;
-  border-radius: 12px;
-  border-left: 4px solid #c8ddb0;
-  padding: 14px;
-  margin-bottom: 10px;
-  margin-top: 0;
-  position: relative;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
   color: #1a1a1a;
-  box-shadow: none;
 }
-
-.msg-box.success{
-  border-left-color: #7CB342;
-  background: #f1f8e9;
-}
-
-.msg-box.info{
-  border-left-color: #7CB342;
-  background: #f1f8e9;
-}
-
-.msg-box.danger{
-  border-left-color: #e53935;
-  background: #ffebee;
-  color: #c62828;
-}
-
-/* ===== Message icon ===== */
-.msg-ico{
-  width: 32px;
-  height: 32px;
+.notif-count{
+  font-size: 11px;
+  font-weight: 700;
+  color: #b8530a;
+  background: #FFE9D6;
+  padding: 4px 10px;
   border-radius: 999px;
+}
+
+/* ===== Notification rows ===== */
+.notif-row{
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  padding: 16px 2px;
+  border-bottom: 1px solid #FFE9D6;
+}
+.notif-row:last-child{ border-bottom: 0; }
+
+.notif-ico{
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  float: left;
-  margin-right: 12px;
-  margin-top: 2px;
-  flex-shrink: 0;
-  background: rgba(124,179,66,.15);
-  border: 1px solid rgba(124,179,66,.25);
+  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+  color: #FF6B00;
 }
-.msg-box.danger .msg-ico{
-  background: rgba(229,57,53,.12);
-  border-color: rgba(229,57,53,.25);
+.notif-row.danger .notif-ico{
+  background: #ffebee;
+  color: #e53935;
 }
-.msg-ico svg{ width: 16px; height: 16px; }
-.msg-box.danger .msg-ico svg{ fill: #e53935; }
-.msg-box:not(.danger) .msg-ico svg{ fill: #4a7a1e; }
+.notif-ico svg{ width: 18px; height: 18px; }
 
-/* ===== Message body ===== */
-.msg-body{
-  text-align: left;
-  padding: 0;
-  overflow: hidden;
-}
-.msg-head{
+.notif-body{ flex: 1; min-width: 0; }
+.notif-head-text{
   font-weight: 800;
-  font-size: 15px;
-  color: #2d5a0e;
-  letter-spacing: .01em;
-  margin: 0 0 4px;
-  text-align: left;
+  font-size: 14.5px;
+  color: #1a1a1a;
+  margin: 0 0 3px;
 }
-.msg-box.danger .msg-head{
-  color: #c62828;
-}
+.notif-row.danger .notif-head-text{ color: #c62828; }
 
-.msg-text{
+.notif-text{
   margin: 0;
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.45;
-  text-align: left;
-  padding: 0;
-  color: #3d3d3d;
   font-size: 13px;
+  color: #6a6a6a;
+  line-height: 1.45;
+  word-break: break-word;
 }
-.msg-box.danger .msg-text{
-  color: #b71c1c;
-}
+.notif-row.danger .notif-text{ color: #b71c1c; }
 
-.msg-meta{
-  margin-top: 8px;
+.notif-meta{
+  margin-top: 6px;
   font-size: 11px;
-  color: #8a9a7a;
-  text-align: left;
+  color: #9a9a9a;
 }
-.msg-box.danger .msg-meta{
-  color: #c17070;
-}
+.notif-row.danger .notif-meta{ color: #c17070; }
 
 /* ===== Empty state ===== */
-.empty-note{
-  margin-top: 14px;
-  padding: 40px 20px;
-  border-radius: 12px;
-  background: transparent;
-  border: none;
-  color: #8a9a7a;
+.empty-state{
   text-align: center;
-  font-size: 14px;
+  padding: 52px 20px 44px;
+}
+.empty-icon{
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FF6B00;
+}
+.empty-title{
+  font-weight: 800;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+.empty-sub{
+  margin-top: 6px;
+  font-size: 13px;
+  color: #9a9a9a;
 }
 </style>
 
 <div class="dash-wrap">
-  <div class="cardx">
+
+  <a class="back-btn" href="{% url 'dashboard' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+    Back
+  </a>
+
+  <div class="notif-card">
 
     {% if items %}
+      <div class="notif-head">
+        <h3 class="notif-title">Notifications</h3>
+        <span class="notif-count">{{ items|length }}</span>
+      </div>
+
       {% for n in items %}
         {% if n.kind == "success" %}
-          <div class="msg-box success">
-            <div class="msg-body">
-              <div class="msg-head">{{ n.title }}</div>
-              <div class="muted msg-text">{{ n.msg }}</div>
+          <div class="notif-row">
+            <div class="notif-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            </div>
+            <div class="notif-body">
+              <div class="notif-head-text">{{ n.title }}</div>
+              <div class="notif-text">{{ n.msg }}</div>
               {% if n.at %}
-                <div class="muted msg-meta">Updated: {{ n.at }}</div>
+                <div class="notif-meta">{{ n.at }}</div>
               {% endif %}
             </div>
           </div>
         {% else %}
-          <div class="msg-box danger">
-            <div class="msg-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
+          <div class="notif-row danger">
+            <div class="notif-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/>
               </svg>
             </div>
-
-            <div class="msg-body">
-              <div class="msg-head">{{ n.title }}</div>
-              <div class="muted msg-text">{{ n.msg }}</div>
+            <div class="notif-body">
+              <div class="notif-head-text">{{ n.title }}</div>
+              <div class="notif-text">{{ n.msg }}</div>
               {% if n.at %}
-                <div class="muted msg-meta">Updated: {{ n.at }}</div>
+                <div class="notif-meta">{{ n.at }}</div>
               {% endif %}
             </div>
           </div>
         {% endif %}
       {% endfor %}
     {% else %}
-      <div class="empty-note">
-        <div class="muted" style="font-weight:900; color:#2d5a0e;">No notifications</div>
-        <div class="muted" style="margin-top:4px;">You don't have any new messages right now.</div>
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 1 0-12 0v5L4 18v1h16v-1l-2-2z"/>
+          </svg>
+        </div>
+        <div class="empty-title">No notifications</div>
+        <div class="empty-sub">You don't have any new messages right now.</div>
       </div>
     {% endif %}
 
   </div>
-
-  <div class="top-actions">
-    <a class="back-btn" href="{% url 'dashboard' %}">Back</a>
-  </div>
-  <div class="top-actions-line"></div>
 </div>
 {% endblock %}

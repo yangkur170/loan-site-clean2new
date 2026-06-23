@@ -3,27 +3,75 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  body, body * {
-    font-family: "Ovelion", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
+  .p-wrap, .p-wrap * {
+    font-family: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   }
 
-  body {
+  html, body{
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+  .wrap{
+    height: 100vh;
+    overflow: hidden;
   }
 
   /* ── Wrapper ── */
   .p-wrap {
-    width: min(520px, 94vw);
-    max-width: 520px;
+    width: min(480px, 94vw);
+    max-width: 480px;
     margin: 0 auto;
-    padding: 16px 16px 100px;
+    height: 100vh;
+    padding: 28px 16px 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
   }
+
+  /* ── Scrollable content (page itself never scrolls) ── */
+  .p-scroll{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 2px;
+    padding-bottom: 20px;
+  }
+  .p-scroll::-webkit-scrollbar{ width: 6px; }
+  .p-scroll::-webkit-scrollbar-thumb{ background: rgba(255,107,0,.20); border-radius: 99px; }
+
+  /* ── Back button ── */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 16px 0 12px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #FF6B00 !important;
+    border: 1px solid #FFD4A3;
+    box-shadow: 0 2px 10px rgba(255,107,0,.12);
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+    margin-bottom: 18px;
+    flex: 0 0 auto;
+  }
+  .back-btn svg{ width: 16px; height: 16px; }
+  .back-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
+  .back-btn:active { transform: scale(.98); }
 
   /* ── Status alert banner ── */
   .status-alert {
     width: 100%;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
     padding: 12px 16px;
     border-radius: 999px;
     text-align: center;
@@ -35,214 +83,185 @@
   .status-success { background: #16a34a; color: #fff; }
   .status-warn    { background: #eab308; color: #111; }
 
-  /* ── Hero / Diamond card ── */
-  .cardx.card-diamond {
-    background: linear-gradient(135deg, #1e4a06 0%, #2d6b0a 50%, #7CB342 100%) !important;
-    border-radius: 20px !important;
-    border: 1px solid rgba(124,179,66,.35) !important;
-    border-top: 1px solid rgba(124,179,66,.35) !important;
-    box-shadow: 0 8px 32px rgba(74,122,30,.35) !important;
-    padding: 24px 20px;
-    color: #ffffff !important;
-    margin-bottom: 20px;
-    overflow: hidden;
-    position: relative;
+  /* ── Profile header card ── */
+  .profile-head {
+    background: #ffffff;
+    border-radius: 22px;
+    border: 1.5px solid #FFD4A3;
+    border-top: 4px solid #FF6B00;
+    box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+    padding: 20px;
+    margin-bottom: 18px;
   }
-
-  .cardx.card-diamond::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.10) 50%, transparent 100%);
-    transform: translateX(-120%);
-    animation: heroShine 4s ease-in-out infinite;
-  }
-  @keyframes heroShine {
-    0%, 55% { transform: translateX(-120%); }
-    100%     { transform: translateX(120%); }
-  }
-
-  .cardx.card-diamond > * { position: relative; z-index: 2; }
-
-  .cardx.card-diamond,
-  .cardx.card-diamond * {
-    color: #fff !important;
-  }
-
-  /* ── Card head row ── */
-  .head {
+  .ph-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 14px;
   }
-  .h-title {
-    font-weight: 950;
-    font-size: 18px;
-    letter-spacing: .02em;
-    color: #fff !important;
+  .ph-avatar {
+    flex: 0 0 auto;
+    width: 56px; height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    box-shadow: 0 6px 16px rgba(255,107,0,.30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .h-sub {
+  .ph-avatar svg{ width: 28px; height: 28px; fill: #fff; }
+  .ph-main{ flex: 1; min-width: 0; }
+  .ph-name{
+    font-weight: 800;
+    font-size: 17px;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ph-sub{
     font-size: 12px;
-    color: rgba(255,255,255,.80) !important;
+    color: #9a9a9a;
     margin-top: 2px;
   }
 
-  /* Balance amount on hero card */
-  .amount {
-    font-size: 26px;
-    font-weight: 950;
-    color: #DCEDC8 !important;
-    margin-top: 4px;
-  }
-
-  /* Status badge inside hero card */
+  /* Status badge */
   .status-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 14px;
+    padding: 6px 13px;
     border-radius: 999px;
     font-weight: 800;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: .3px;
     white-space: nowrap;
+    flex: 0 0 auto;
   }
-  .status-active  { background: rgba(255,255,255,.20); color: #fff !important; border: 1px solid rgba(255,255,255,.30); }
-  .status-warn    { background: rgba(234,179,8,.30);   color: #ffe082 !important; border: 1px solid rgba(234,179,8,.40); }
-  .status-danger  { background: rgba(220,38,38,.30);   color: #ffcdd2 !important; border: 1px solid rgba(220,38,38,.40); }
+  .status-active  { background: #22c55e; color: #fff !important; }
+  .status-warn    { background: #eab308; color: #111 !important; }
+  .status-danger  { background: #dc2626; color: #fff !important; }
 
-  /* ── Section title ── */
-  .menu-label {
-    color: #2d5a0e;
-    font-weight: 900;
-    font-size: 14px;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    margin: 16px 0 8px;
-  }
-
-  /* ── Menu grid ── */
-  .menu { display: grid; gap: 0; }
-
-  /* ── Menu buttons ── */
-  .p-btn {
+  /* Balance strip */
+  .ph-balance {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #FFE9D6;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
-    gap: 12px;
-    padding: 14px 16px;
+  }
+  .ph-balance-label{
+    font-size: 11px;
+    font-weight: 700;
+    color: #9a9a9a;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .ph-balance-amount{
+    font-size: 22px;
+    font-weight: 900;
+    color: #FF6B00;
+  }
+
+  /* ── Section label ── */
+  .menu-label {
+    color: #9a9a9a;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 4px 4px 10px;
+  }
+
+  /* ── Icon tile grid (genuinely different from the old row list) ── */
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 420px){
+    .tile-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 16px 8px;
     text-decoration: none;
     background: #ffffff;
+    border-radius: 18px;
+    border: 2px solid #FFA64D;
+    box-shadow: 0 6px 16px rgba(255,107,0,.14), 0 2px 6px rgba(0,0,0,.04);
+    color: #1a1a1a;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    border-color: #FF6B00;
+    box-shadow: 0 12px 26px rgba(255,107,0,.22), 0 2px 6px rgba(0,0,0,.04);
+  }
+  .tile:active { transform: translateY(0); }
+
+  .tile-icon {
+    width: 44px; height: 44px;
     border-radius: 14px;
-    border: 1px solid #e0eed0;
-    box-shadow: 0 2px 8px rgba(74,122,30,.06);
-    color: #1a1a1a;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: background .15s ease, border-color .15s ease, transform .08s ease;
-    overflow: hidden;
-  }
-  .p-btn:hover {
-    background: #f1f8e9;
-    border-color: #7CB342;
-  }
-  .p-btn:active { transform: scale(.99); }
-
-  /* ── Left cluster ── */
-  .left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-  }
-
-  /* ── Icon container ── */
-  .ico {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: rgba(124,179,66,.12);
+    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+    color: #FF6B00;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
   }
-  .ico svg {
-    width: 20px;
-    height: 20px;
-    fill: #4a7a1e;
-    opacity: .95;
+  .tile-icon svg{ width: 22px; height: 22px; }
+  .tile:hover .tile-icon{
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    color: #fff;
   }
 
-  /* ── Text block ── */
-  .txt { min-width: 0; }
-  .t1 {
-    font-weight: 950;
-    font-size: 14px;
-    letter-spacing: .02em;
-    color: #1a1a1a;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .tile-title{
+    font-weight: 700;
+    font-size: 12.5px;
+    line-height: 1.25;
   }
-  .t2 {
-    font-size: 12px;
-    color: #8a9a7a;
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .tile-sub{
+    font-size: 10.5px;
+    color: #9a9a9a;
+    line-height: 1.25;
   }
 
-  /* ── Chevron ── */
-  .chev {
-    width: 28px;
-    height: 28px;
+  /* ── Logout button (separate, distinct from navigation tiles) ── */
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 50px;
     border-radius: 999px;
-    background: rgba(124,179,66,.10);
-    border: 1px solid rgba(124,179,66,.20);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-  }
-  .chev svg {
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: rgba(74,122,30,.60);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  /* ── Back button ── */
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 38px;
-    padding: 0 18px;
-    border-radius: 999px;
-    background: rgba(124,179,66,.12);
-    color: #4a7a1e !important;
-    border: 1px solid rgba(124,179,66,.30);
-    font-weight: 800;
+    border: 1.5px solid #ffcdd2;
+    background: #ffebee;
+    color: #c62828;
+    font-weight: 700;
     font-size: 14px;
     text-decoration: none;
+    cursor: pointer;
     transition: background .15s ease, transform .08s ease;
   }
-  .back-btn:hover  { background: rgba(124,179,66,.20); transform: translateY(-1px); }
-  .back-btn:active { transform: scale(.98); }
+  .logout-btn svg{ width: 18px; height: 18px; }
+  .logout-btn:hover { background: #ffd9dc; }
+  .logout-btn:active { transform: scale(.99); }
 
-  /* ── Top actions row ── */
-  .top-actions {
-    margin-top: 16px;
-    display: flex;
-    justify-content: flex-start;
+  /* ── App version footer ── */
+  .app-version {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #c9b8a8;
+    letter-spacing: .03em;
   }
 
   /* ── Logout modal overlay ── */
@@ -270,7 +289,7 @@
     text-align: center;
   }
   .logout-title {
-    font-weight: 900;
+    font-weight: 800;
     font-size: 18px;
     color: #1a1a1a !important;
     margin-bottom: 8px;
@@ -278,7 +297,7 @@
   }
   .logout-text {
     font-size: 14px;
-    color: #5a6a4a !important;
+    color: #9a9a9a !important;
     line-height: 1.5;
     margin-bottom: 20px;
   }
@@ -291,15 +310,15 @@
     height: 44px;
     padding: 0 24px;
     border-radius: 999px;
-    border: 2px solid #c8ddb0;
+    border: 1.5px solid #E6E6E6;
     background: #ffffff;
-    color: #5a6a4a !important;
-    font-weight: 900;
+    color: #6a6a6a !important;
+    font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     transition: background .15s ease;
   }
-  .btn-cancel:hover { background: #f1f8e9; }
+  .btn-cancel:hover { background: #FFFAF5; }
 
   .btn-confirm {
     height: 44px;
@@ -308,7 +327,7 @@
     border: 0;
     background: linear-gradient(135deg, #c62828, #e53935);
     color: #fff !important;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     box-shadow: 0 4px 16px rgba(198,40,40,.30);
@@ -316,206 +335,161 @@
   }
   .btn-confirm:hover  { opacity: .92; }
   .btn-confirm:active { transform: scale(.98); }
-
-  @media (max-width: 520px) {
-    .top-actions { padding: 0; }
-  }
 </style>
 
 <div class="p-wrap">
+
+  <a class="back-btn" href="{% url 'dashboard' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+    Back
+  </a>
+
+ <div class="p-scroll">
+
   <div id="statusAlert"
      class="status-alert"
      style="display:none;"
      data-msg="{{ request.user.status_message|default:''|escapejs }}"
      {% if request.user.status_message %}data-lock="1"{% endif %}></div>
 
-    <div class="cardx card-diamond" id="profile-currency-section">
-      <div class="head">
-        <div>
-          <div class="h-title">Profile</div>
-          <div class="h-sub">Account: {{ request.user.phone }}</div>
-        </div>
-
-        {% with color_key=request.user.account_status|default:"ACTIVE"|upper display_text=request.user.dashboard_status_label|default:request.user.account_status|default:"ACTIVE" %}
-          <span id="accStatusBadge"
-            class="status-badge
-            {% if color_key == 'ACTIVE' or color_key == 'APPROVED' or color_key == 'LOAN_PAID' or color_key == 'WITHDRAWAL_SUCCESSFUL' or color_key == 'ACCOUNT_UPDATED' %}status-active
-            {% elif color_key == 'APP_MAINTENANCE' or color_key == 'INVALID_DETAIL' or color_key == 'RENEW_DOCUMENT_REQUIRED' %}status-warn
-            {% else %}status-danger{% endif %}">
-            {{ display_text }}
-          </span>
-        {% endwith %}
+  <!-- Profile header -->
+  <div class="profile-head" id="profile-currency-section">
+    <div class="ph-row">
+      <div class="ph-avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14z"/></svg>
+      </div>
+      <div class="ph-main">
+        <div class="ph-name">{{ request.user.phone }}</div>
+        <div class="ph-sub">Account holder</div>
       </div>
 
-      <div style="font-size:12px; opacity:.85;">
-        <div class="amount">₱ <span data-balance>{{ request.user.balance|default:"0.00" }}</span></div>
+      {% with color_key=request.user.account_status|default:"ACTIVE"|upper display_text=request.user.dashboard_status_label|default:request.user.account_status|default:"ACTIVE" %}
+        <span id="accStatusBadge"
+          class="status-badge
+          {% if color_key == 'ACTIVE' or color_key == 'APPROVED' or color_key == 'LOAN_PAID' or color_key == 'WITHDRAWAL_SUCCESSFUL' or color_key == 'ACCOUNT_UPDATED' %}status-active
+          {% elif color_key == 'APP_MAINTENANCE' or color_key == 'INVALID_DETAIL' or color_key == 'RENEW_DOCUMENT_REQUIRED' %}status-warn
+          {% else %}status-danger{% endif %}">
+          {{ display_text }}
+        </span>
+      {% endwith %}
+    </div>
+
+    <div class="ph-balance">
+      <span class="ph-balance-label">Wallet Balance</span>
+      <span class="ph-balance-amount">₱ <span data-balance>{{ request.user.balance|default:"0.00" }}</span></span>
+    </div>
+  </div>
+
+  <div class="menu-label">Account</div>
+  <div class="tile-grid">
+    <a class="tile" href="/credit-score/">
+      <div class="tile-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 19h16v2H4zM6 17V7h3v10H6zm5 0V4h3v13h-3zm5 0v-9h3v9h-3z"/></svg>
       </div>
-    </div>
+      <div class="tile-title">Credit Score</div>
+      <div class="tile-sub">Score &amp; level</div>
+    </a>
 
-    <div class="menu" id="menu">
-      <a class="p-btn" href="/credit-score/">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M4 19h16v2H4zM6 17V7h3v10H6zm5 0V4h3v13h-3zm5 0v-9h3v9h-3z"/></svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Credit Score</div>
-            <div class="t2">View your score & level</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
+    <a class="tile" href="/loan-apply/">
+      <div class="tile-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l3 3v17H6V2zm9 1.5V6h2.5L15 3.5zM8 9h8v2H8V9zm0 4h8v2H8v-2zm0 4h6v2H8v-2z"/></svg>
+      </div>
+      <div class="tile-title">Loan Application</div>
+      <div class="tile-sub">Apply &amp; track</div>
+    </a>
 
-      <a class="p-btn" href="/loan-apply/">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M6 2h9l3 3v17H6V2zm9 1.5V6h2.5L15 3.5zM8 9h8v2H8V9zm0 4h8v2H8v-2zm0 4h6v2H8v-2z"/></svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Loan Application</div>
-            <div class="t2">Apply & track your status</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
+    <a class="tile" href="/transactions/">
+      <div class="tile-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h14v4H7V7zM3 6h3v6H3V6zm4 9h14v4H7v-4zM3 14h3v6H3v-6z"/></svg>
+      </div>
+      <div class="tile-title">Transactions</div>
+      <div class="tile-sub">Deposits &amp; withdrawals</div>
+    </a>
 
-      <a class="p-btn" href="/transactions/">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M7 7h14v4H7V7zM3 6h3v6H3V6zm4 9h14v4H7v-4zM3 14h3v6H3v-6z"/></svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Transactions</div>
-            <div class="t2">History of deposits & withdrawals</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
+    <a class="tile" href="{% url 'payment_method' %}">
+      <div class="tile-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 7h18v10H3V7zm2 2v2h14V9H5zm0 4v2h6v-2H5z"/></svg>
+      </div>
+      <div class="tile-title">Payment Method</div>
+      <div class="tile-sub">Payout details</div>
+    </a>
 
-      <a class="p-btn" href="{% url 'payment_method' %}">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M3 7h18v10H3V7zm2 2v2h14V9H5zm0 4v2h6v-2H5z"/></svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Payment Method</div>
-            <div class="t2">Add payout details</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
+    <a class="tile" href="{% url 'agreement' %}">
+      <div class="tile-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l3 3v17H6V2zm9 1.5V6h2.5L15 3.5zM8 9h8v2H8V9zm0 4h8v2H8v-2zm0 4h6v2H8v-2z"/></svg>
+      </div>
+      <div class="tile-title">Agreement</div>
+      <div class="tile-sub">Terms &amp; disclosures</div>
+    </a>
 
-      <a class="p-btn" href="{% url 'agreement' %}">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M6 2h9l3 3v17H6V2zm9 1.5V6h2.5L15 3.5zM8 9h8v2H8V9zm0 4h8v2H8v-2zm0 4h6v2H8v-2z"/>
-            </svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Agreement</div>
-            <div class="t2">Terms, conditions & disclosures</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
+    <a class="tile" href="/payment-schedule/">
+      <div class="tile-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm14 8H3V8h18v2z"/></svg>
+      </div>
+      <div class="tile-title">Payment Schedule</div>
+      <div class="tile-sub">Installments</div>
+    </a>
+  </div>
 
-      <a class="p-btn" href="/payment-schedule/">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm14 8H3V8h18v2z"/></svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Payment Schedule</div>
-            <div class="t2">Installments & due dates</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
+  <!-- ✅ Logout button => open confirm modal -->
+  <a class="logout-btn" href="#" id="logoutBtn" aria-label="Logout">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+    Logout
+  </a>
 
-      <!-- ✅ Logout button => open confirm modal -->
-      <a class="p-btn" href="#" id="logoutBtn" aria-label="Logout">
-        <div class="left">
-          <div class="ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M10 17l1.4-1.4-2.6-2.6H20v-2H8.8l2.6-2.6L10 7l-7 7 7 7zM4 4h7V2H4a2 2 0 0 0-2 2v6h2V4zm0 18h7v-2H4v-6H2v6a2 2 0 0 0 2 2z"/></svg>
-          </div>
-          <div class="txt">
-            <div class="t1">Logout</div>
-            <div class="t2">Securely exit your account</div>
-          </div>
-        </div>
-        <div class="chev" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </a>
-    </div>
+  <div class="app-version">App Version 1.0.0</div>
 
-    <!-- TOP ACTIONS -->
-    <div class="top-actions">
-      <a class="back-btn" href="{% url 'dashboard' %}">Back</a>
-    </div>
-    <div class="top-actions-line"></div>
+ </div>
 
-    <!-- ✅ Logout Confirm Modal -->
-    <div id="logoutModal" class="logout-modal" aria-hidden="true">
-      <div class="logout-box" role="dialog" aria-modal="true" aria-label="Confirm Logout">
-        <div class="logout-title">Confirm Logout</div>
-        <div class="logout-text">Are you sure you want to logout?</div>
+  <!-- ✅ Logout Confirm Modal -->
+  <div id="logoutModal" class="logout-modal" aria-hidden="true">
+    <div class="logout-box" role="dialog" aria-modal="true" aria-label="Confirm Logout">
+      <div class="logout-title">Confirm Logout</div>
+      <div class="logout-text">Are you sure you want to logout?</div>
 
-        <div class="logout-actions">
-          <button type="button" class="btn-cancel" id="logoutCancel">Cancel</button>
+      <div class="logout-actions">
+        <button type="button" class="btn-cancel" id="logoutCancel">Cancel</button>
 
-          <form method="post" action="/logout/" style="margin:0;">
-            {% csrf_token %}
-            <button type="submit" class="btn-confirm" id="logoutConfirm">Logout</button>
-          </form>
-        </div>
+        <form method="post" action="/logout/" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="btn-confirm" id="logoutConfirm">Logout</button>
+        </form>
       </div>
     </div>
   </div>
 
-  <script>
-    (function(){
-      const btn = document.getElementById("logoutBtn");
-      const modal = document.getElementById("logoutModal");
-      const cancel = document.getElementById("logoutCancel");
-      if(!btn || !modal) return;
+</div>
 
-      function openModal(e){
-        if(e) e.preventDefault();
-        modal.classList.add("show");
-        modal.setAttribute("aria-hidden","false");
-      }
-      function closeModal(){
-        modal.classList.remove("show");
-        modal.setAttribute("aria-hidden","true");
-      }
+<script>
+  (function(){
+    const btn = document.getElementById("logoutBtn");
+    const modal = document.getElementById("logoutModal");
+    const cancel = document.getElementById("logoutCancel");
+    if(!btn || !modal) return;
 
-      btn.addEventListener("click", openModal);
-      if(cancel) cancel.addEventListener("click", closeModal);
+    function openModal(e){
+      if(e) e.preventDefault();
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+    }
+    function closeModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+    }
 
-      modal.addEventListener("click", (e) => {
-        if(e.target === modal) closeModal();
-      });
+    btn.addEventListener("click", openModal);
+    if(cancel) cancel.addEventListener("click", closeModal);
 
-      document.addEventListener("keydown", (e) => {
-        if(e.key === "Escape") closeModal();
-      });
-    })();
-  </script>
-  <script>
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeModal();
+    });
+  })();
+</script>
+<script>
 (function(){
   const el = document.getElementById("statusAlert");
   if(!el) return;
@@ -539,4 +513,4 @@
   else el.classList.add("status-danger");
 })();
 </script>
-  {% endblock %}
+{% endblock %}

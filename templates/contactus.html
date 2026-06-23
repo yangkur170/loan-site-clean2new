@@ -3,87 +3,58 @@
 {% block title %}Contact{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
-
 .page, .page * {
-  font-family: "Ovelion", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 .wrap {
   align-items: flex-start !important;
   justify-content: center !important;
-  padding-top: 72px !important;
+  padding-top: 28px !important;
 }
 
 .page {
-  width: min(520px, 94vw);
+  width: min(480px, 94vw);
   margin: 0 auto;
-  padding: 16px 16px 100px;
+  padding: 0 16px 60px;
   box-sizing: border-box;
 }
 
 /* Back button */
-.top-actions {
-  margin-top: 12px;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.top-actions-line { margin: 0; }
-
 .back-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  height: 40px;
-  padding: 0 22px;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px 0 12px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #4a7a1e, #7CB342);
-  color: #fff;
-  font-weight: 800;
+  background: #ffffff;
+  color: #FF6B00;
+  font-weight: 700;
   font-size: 13px;
   text-decoration: none;
-  border: none;
-  box-shadow: 0 4px 12px rgba(74,122,30,.25);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #FFD4A3;
+  box-shadow: 0 2px 10px rgba(255,107,0,.12);
+  transition: transform .15s ease, box-shadow .15s ease;
+  margin-bottom: 18px;
 }
+.back-btn svg{ width: 16px; height: 16px; }
+.back-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
+.back-btn:active { transform: scale(.98); }
 
-.back-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(74,122,30,.32);
-}
-
-.back-btn:active {
-  transform: scale(.98);
-}
-
-/* Page title */
-.page-title {
-  color: #2d5a0e;
-  font-weight: 900;
-  font-size: 20px;
-  margin: 0 0 14px;
-}
-
-
-.tg-text {
-  line-height: 1;
-}
-
-/* Main form card */
+/* Main card */
 .cardx {
   background: #ffffff;
-  border-radius: 18px;
-  border-top: 4px solid #7CB342;
-  box-shadow: 0 4px 20px rgba(74,122,30,.10);
-  padding: 24px;
+  border-radius: 20px;
+  border: 1.5px solid #FFD4A3;
+  border-top: 4px solid #FF6B00;
+  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+  padding: 22px;
   color: #1a1a1a;
   margin-bottom: 16px;
   position: relative;
@@ -91,92 +62,126 @@ body {
 }
 
 .title {
-  font-weight: 900;
-  font-size: 18px;
-  letter-spacing: .04em;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: .02em;
   margin: 0 0 6px;
   color: #1a1a1a;
 }
 
 .sub {
-  font-size: 12px;
-  color: #5a6a4a;
+  font-size: 13px;
+  color: #9a9a9a;
   margin: 0;
 }
+
+/* Field rows (icon badge + input) */
+.field-row-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-top: 16px;
+}
+.field-row-wrap:first-of-type{ margin-top: 0; }
+.field-icon {
+  flex: 0 0 auto;
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+  color: #FF6B00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.field-icon svg{ width: 18px; height: 18px; }
+.field-row-wrap:focus-within .field-icon {
+  background: linear-gradient(135deg, #FF6B00, #FF8A33);
+  color: #fff;
+}
+.field-main { flex: 1; min-width: 0; }
 
 /* Labels */
 label {
   display: block;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  color: #3d6b1c;
-  margin: 12px 0 6px;
+  color: #9a9a9a;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0 0 6px;
 }
 
 /* Inputs and textarea */
 input, textarea {
   width: 100%;
   box-sizing: border-box;
-  border-radius: 10px;
-  border: 1.5px solid #c8ddb0;
-  background: #f8fdf4;
+  border-radius: 12px;
+  border: 1.5px solid #E6E6E6;
+  background: #FFFAF5;
   color: #1a1a1a;
-  padding: 12px 14px;
+  padding: 11px 14px;
   outline: none;
   font-size: 14px;
+  font-weight: 500;
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input::placeholder, textarea::placeholder {
-  color: rgba(61,107,28,.45);
+  color: #9a9a9a;
 }
 
 textarea {
-  min-height: 110px;
+  min-height: 100px;
   resize: none;
 }
 
 input:focus, textarea:focus {
-  border-color: #7CB342;
-  box-shadow: 0 0 0 3px rgba(124,179,66,.18);
-  background: #f8fdf4;
+  border-color: #FF6B00;
+  box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+  background: #fff;
 }
 
 /* Send button */
 .btn {
   width: 100%;
-  margin-top: 14px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border: none;
   border-radius: 999px;
-  padding: 14px 16px;
-  font-weight: 800;
+  padding: 15px 16px;
+  font-weight: 700;
   font-size: 14px;
-  letter-spacing: .08em;
+  letter-spacing: .04em;
   text-transform: uppercase;
   color: #fff;
   cursor: pointer;
-  background: linear-gradient(135deg, #4a7a1e, #7CB342);
-  box-shadow: 0 6px 20px rgba(74,122,30,.28);
+  background: linear-gradient(135deg, #FF6B00, #FF8A33);
+  box-shadow: 0 8px 22px rgba(255,107,0,.32);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+.btn svg{ width: 16px; height: 16px; }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(74,122,30,.36);
+  box-shadow: 0 12px 26px rgba(255,107,0,.40);
 }
 
 .btn:active {
-  transform: scale(.99);
+  transform: translateY(1px);
 }
 
 /* Success alert */
 .alert-success {
-  background: #f1f8e9;
-  border-left: 4px solid #7CB342;
-  border-radius: 10px;
+  background: #FFE9D6;
+  border-left: 4px solid #FF6B00;
+  border-radius: 12px;
   padding: 14px;
-  color: #2e7d32;
+  color: #b8530a;
   font-weight: 700;
   font-size: 14px;
   margin-bottom: 14px;
@@ -184,32 +189,27 @@ input:focus, textarea:focus {
 
 .muted {
   font-size: 12px;
-  color: #8a9a7a;
+  color: #9a9a9a;
   margin-top: 10px;
 }
 
 /* Mobile adjustments */
 @media (max-width: 520px) {
-  .page { padding: 12px 12px 100px; }
+  .page { padding: 0 12px 60px; }
 }
 </style>
 
 <div class="page">
-  <!-- TOP ACTIONS -->
-  <div class="top-actions">
-    <a class="back-btn" href="javascript:history.back()">
-      Back
-    </a>
-  </div>
-  <div class="top-actions-line"></div>
+
+  <a class="back-btn" href="javascript:history.back()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+    Back
+  </a>
 
   <div class="cardx">
-    <div class="title">CONTACT US</div>
+    <div class="title">Contact Us</div>
     <p class="sub">Send us a message — we will contact you soon.</p>
   </div>
-  <!-- TELEGRAM CONTACT CARD -->
-
-
 
   {% if sent %}
     <div class="alert-success">
@@ -221,19 +221,50 @@ input:focus, textarea:focus {
     <form method="POST" action="/contact/">
       {% csrf_token %}
 
-      <label>Full name</label>
-      <input type="text" name="full_name" required>
+      <div class="field-row-wrap">
+        <div class="field-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="field-main">
+          <label>Full name</label>
+          <input type="text" name="full_name" required>
+        </div>
+      </div>
 
-      <label>Phone / WhatsApp</label>
-      <input type="tel" name="phone" required>
+      <div class="field-row-wrap">
+        <div class="field-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div class="field-main">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" name="phone" required>
+        </div>
+      </div>
 
-      <label>Subject (optional)</label>
-      <input type="text" name="subject">
+      <div class="field-row-wrap">
+        <div class="field-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+        </div>
+        <div class="field-main">
+          <label>Subject (optional)</label>
+          <input type="text" name="subject">
+        </div>
+      </div>
 
-      <label>Message</label>
-      <textarea name="message" required></textarea>
+      <div class="field-row-wrap">
+        <div class="field-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="field-main">
+          <label>Message</label>
+          <textarea name="message" required></textarea>
+        </div>
+      </div>
 
-      <button class="btn" type="submit">Send Message</button>
+      <button class="btn" type="submit">
+        <span>Send Message</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+      </button>
     </form>
   </div>
 

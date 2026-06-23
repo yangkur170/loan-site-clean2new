@@ -4,18 +4,22 @@
 {% block title %}Loan Application{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ===== GreenLeaf Design System — loan_apply.html ===== */
+  /* ===== Loan Apply — orange/peach brand ===== */
 
-  html, body {
+  .page, .page * {
+    font-family: 'Outfit', sans-serif;
   }
 
   .wrap { align-items: flex-start; }
 
   .page {
-    width: min(520px, 94vw);
+    width: min(480px, 94vw);
     margin: 0 auto;
-    padding: 16px 16px 100px;
+    padding: 28px 16px 60px;
     box-sizing: border-box;
   }
 
@@ -23,34 +27,34 @@
   .back-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    height: 40px;
-    padding: 8px 18px;
+    gap: 6px;
+    height: 38px;
+    padding: 0 16px 0 12px;
     border-radius: 999px;
-    background: rgba(124,179,66,.12);
-    color: #4a7a1e;
-    font-weight: 800;
-    font-size: 14px;
+    background: #ffffff;
+    color: #FF6B00;
+    font-weight: 700;
+    font-size: 13px;
     text-decoration: none;
-    border: 1px solid rgba(124,179,66,.3);
-    transition: transform .15s ease, background .15s ease;
+    border: 1px solid #FFD4A3;
+    box-shadow: 0 2px 10px rgba(255,107,0,.12);
+    transition: transform .15s ease, box-shadow .15s ease;
+    margin-bottom: 18px;
   }
-  .back-btn:hover { transform: translateY(-1px); background: rgba(124,179,66,.20); }
-  .back-btn:active { transform: translateY(0); opacity: .9; }
+  .back-btn svg{ width: 16px; height: 16px; }
+  .back-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
   .back-btn::before { display: none; }
 
   /* ===== Cards ===== */
   .cardx {
     background: #ffffff;
-    border-radius: 18px;
-    border-top: 3px solid #7CB342;
-    border-left: none;
-    box-shadow: 0 3px 16px rgba(74,122,30,.08), 0 8px 32px rgba(0,0,0,.04);
+    border-radius: 20px;
+    border: 1.5px solid #FFD4A3;
+    border-top: 4px solid #FF6B00;
+    box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
     padding: 20px;
     color: #1a1a1a;
     margin-bottom: 16px;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
     overflow: visible;
     position: relative;
   }
@@ -58,24 +62,48 @@
 
   /* ===== Section titles ===== */
   .section-title {
-    color: #2d5a0e;
-    font-weight: 900;
-    font-size: 14px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #DCEDC8;
-    margin-bottom: 14px;
-    letter-spacing: .04em;
-    text-transform: none;
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid #FFE9D6;
+    margin-bottom: 16px;
+    letter-spacing: .01em;
   }
 
-  /* ===== Form fields ===== */
-  .field { margin-bottom: 12px; }
+  /* ===== Form fields (icon row pattern) ===== */
+  .field { margin-bottom: 14px; }
+
+  .field-row-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .field-icon {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .field-icon svg{ width: 17px; height: 17px; }
+  .field-row-wrap:focus-within .field-icon {
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    color: #fff;
+  }
+  .field-main { flex: 1; min-width: 0; }
 
   label {
     display: block;
-    color: #3d6b1c;
+    color: #9a9a9a;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
     margin-bottom: 6px;
   }
 
@@ -86,15 +114,16 @@
   input[type="password"],
   textarea {
     width: 100%;
-    height: 44px;
-    min-height: 44px;
-    max-height: 44px;
-    background: #f8fdf4;
-    border: 1.5px solid #c8ddb0;
-    border-radius: 10px;
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    background: #FFFAF5;
+    border: 1.5px solid #E6E6E6;
+    border-radius: 11px;
     color: #1a1a1a;
-    padding: 12px 14px;
+    padding: 11px 13px;
     font-size: 14px;
+    font-weight: 500;
     box-sizing: border-box;
     outline: none;
     resize: none;
@@ -103,9 +132,9 @@
     -webkit-appearance: none;
   }
   textarea {
-    height: 44px;
-    min-height: 44px;
-    max-height: 44px;
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
     overflow: hidden;
   }
 
@@ -114,14 +143,14 @@
   input[type="tel"]::placeholder,
   input[type="email"]::placeholder,
   textarea::placeholder {
-    color: #a0b488;
+    color: #9a9a9a;
   }
 
   input:focus,
   textarea:focus {
     outline: none;
-    border-color: #7CB342;
-    box-shadow: 0 0 0 3px rgba(124,179,66,.18);
+    border-color: #FF6B00;
+    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
     background: #fff;
   }
 
@@ -135,7 +164,7 @@
   .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 4px 12px;
   }
   @media (max-width: 520px) {
     .grid-2 { grid-template-columns: 1fr; }
@@ -156,6 +185,50 @@
     }
   }
 
+  /* ===== Amount field (icon badge + input) ===== */
+  .amount-field-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FFFAF5;
+    border: 1.5px solid #E6E6E6;
+    border-radius: 14px;
+    padding: 6px 14px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .amount-field-wrap:focus-within {
+    border-color: #FF6B00;
+    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+    background: #fff;
+  }
+  .amount-icon {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+  }
+  .amount-field-wrap input[type="number"]{
+    border: 0;
+    background: transparent;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    padding: 11px 0;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .amount-field-wrap input[type="number"]:focus{
+    box-shadow: none;
+    background: transparent;
+  }
+
   /* ===== Term grid ===== */
   .term-grid {
     display: grid;
@@ -169,22 +242,22 @@
 
   .term-btn {
     padding: 12px 8px;
-    border-radius: 12px;
-    border: 2px solid #c8ddb0;
-    background: #f8fdf4;
-    color: #4a7a1e;
+    border-radius: 999px;
+    border: 1.5px solid #E6E6E6;
+    background: #FFFAF5;
+    color: #1a1a1a;
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     transition: all .2s ease;
   }
-  .term-btn:hover { border-color: #7CB342; background: #f1f8e9; }
+  .term-btn:hover { border-color: #FFD4A3; background: #FFF3E9; }
   .term-btn:active { transform: scale(.97); }
   .term-btn.active {
-    background: #7CB342;
-    border-color: #7CB342;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(124,179,66,.35);
+    box-shadow: 0 6px 16px rgba(255,107,0,.35);
   }
 
   /* ===== Loan purpose pills ===== */
@@ -205,9 +278,9 @@
     gap: 10px;
     padding: 12px 14px;
     border-radius: 999px;
-    border: 1.5px solid #c8ddb0;
-    background: #f8fdf4;
-    color: #3d6b1c;
+    border: 1.5px solid #E6E6E6;
+    background: #FFFAF5;
+    color: #6a6a6a;
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;
@@ -218,7 +291,7 @@
   .purpose-pill input {
     width: 18px; height: 18px;
     margin: 0;
-    accent-color: #7CB342;
+    accent-color: #FF6B00;
     flex: 0 0 auto;
   }
   .purpose-pill span {
@@ -229,18 +302,20 @@
     text-overflow: ellipsis;
   }
   .purpose-pill:has(input:checked) {
-    background: linear-gradient(135deg, #4a7a1e, #7CB342);
-    border-color: #4a7a1e;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    border-color: transparent;
     color: #fff;
-    box-shadow: 0 4px 14px rgba(74,122,30,.28);
+    box-shadow: 0 4px 14px rgba(255,107,0,.30);
   }
   .purpose-pill:has(input:checked) * { color: #fff; }
 
   /* ===== Summary section ===== */
   .summary {
-    margin-top: 14px;
-    border-top: 1px solid #f0f4ec;
-    padding-top: 6px;
+    margin-top: 16px;
+    background: #FFFAF5;
+    border: 1px solid #FFE9D6;
+    border-radius: 14px;
+    padding: 4px 14px;
     display: grid;
     gap: 0;
     font-size: 14px;
@@ -250,42 +325,48 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    border-bottom: 1px solid #f0f4ec;
-    padding: 10px 0;
+    border-bottom: 1px solid #FFE9D6;
+    padding: 12px 0;
   }
   .summary .row:last-child {
     border-bottom: none;
-    border-top: 2px solid #DCEDC8;
-    margin-top: 4px;
+    margin-top: 2px;
     font-size: 16px;
   }
-  .summary .k { color: #5a6a4a; }
-  .summary .v { color: #2d5a0e; font-weight: 800; }
+  .summary .k { color: #9a9a9a; }
+  .summary .v { color: #1a1a1a; font-weight: 800; }
+  .summary .row:last-child .v { color: #FF6B00; }
 
-  .cta { margin-top: 12px; width: 100%; }
+  .cta { margin-top: 14px; width: 100%; }
 
   /* ===== Submit / CTA button ===== */
   .btn.btn-primary {
     width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #4a7a1e, #7CB342);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
     color: #fff;
     border: none;
     border-radius: 999px;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 15px;
-    box-shadow: 0 4px 16px rgba(74,122,30,.30);
+    letter-spacing: .02em;
+    box-shadow: 0 8px 22px rgba(255,107,0,.32);
     cursor: pointer;
-    transition: opacity .2s, transform .15s;
+    transition: opacity .2s, transform .15s, box-shadow .2s;
   }
-  .btn.btn-primary:hover { transform: translateY(-1px); }
-  .btn.btn-primary:active { transform: translateY(0); }
-  .btn.btn-primary:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+  .btn.btn-primary svg{ width: 16px; height: 16px; }
+  .btn.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+  .btn.btn-primary:active { transform: translateY(1px); }
+  .btn.btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
   /* ===== HR divider ===== */
   hr {
     border: 0;
-    border-top: 1px solid #DCEDC8;
+    border-top: 1px solid #FFE9D6;
     margin: 14px 0;
   }
 
@@ -302,16 +383,16 @@
   }
   @media (max-width: 520px) {
     .id-grid { grid-template-columns: 1fr; }
-    .idbox { height: 240px; }
+    .idbox { height: 220px; }
   }
 
   /* ===== ID upload boxes ===== */
   .idbox {
-    height: 240px;
+    height: 220px;
     padding: 16px 10px;
-    border-radius: 14px;
-    border: 2px dashed #c8ddb0;
-    background: #f8fdf4;
+    border-radius: 16px;
+    border: 2px dashed #FFA64D;
+    background: #FFF3E9;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -322,23 +403,40 @@
     position: relative;
     overflow: hidden;
     transition: border-color .2s, background .2s;
-    color: #5a6a4a;
+    color: #6a6a6a;
   }
-  .idbox:hover { border-color: #7CB342; background: #f1f8e9; }
-  .idbox small { opacity: .85; font-weight: 700; color: #5a6a4a; font-size: 12px; }
-  .idbox strong { font-weight: 900; letter-spacing: .02em; color: #2d5a0e; }
-  .id-text strong { font-weight: 900; letter-spacing: .04em; color: #2d5a0e; }
-  .id-text small { opacity: .85; color: #5a6a4a; }
-  .id-ico { color: #7CB342; font-size: 22px; }
+  .idbox:hover { border-color: #FF6B00; background: #FFE9D6; }
+  .idbox small { opacity: .85; font-weight: 700; color: #9a9a9a; font-size: 12px; }
+  .idbox strong { font-weight: 800; letter-spacing: .02em; color: #1a1a1a; }
+  .id-text { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .id-text strong { font-weight: 800; letter-spacing: .02em; color: #1a1a1a; }
+  .id-text small { opacity: .85; color: #9a9a9a; }
+  .id-ico {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 4px;
+  }
+  .id-ico svg { width: 22px; height: 22px; }
 
   .id-guide {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .id-guide svg {
+    width: 86px;
+    height: auto;
+    animation: idFloat 3s ease-in-out infinite;
+  }
+  @keyframes idFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
   }
   .id-preview {
     position: absolute;
@@ -346,44 +444,61 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 14px;
     z-index: 2;
     display: none;
   }
+  .idbox.has-img { border-style: solid; border-color: #FF6B00; }
   .idbox.has-img .id-preview { display: block; }
   .idbox.has-img .id-guide { display: none; }
   .idbox.has-img .id-text { display: none; }
+  .idbox.has-img::after {
+    content: "✓ Uploaded";
+    position: absolute;
+    top: 8px; right: 8px;
+    z-index: 3;
+    background: #FF6B00;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 9px;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
 
   .choose-btn {
     margin-top: 8px;
     display: inline-block;
     padding: 8px 12px;
     border-radius: 8px;
-    background: rgba(124,179,66,.10);
-    border: 1px solid rgba(124,179,66,.30);
-    color: #4a7a1e;
+    background: #FFE9D6;
+    border: 1px solid #FFD4A3;
+    color: #FF6B00;
     font-weight: 700;
     font-size: 12px;
     transition: background .2s;
   }
-  .choose-btn:hover { background: rgba(124,179,66,.20); }
+  .choose-btn:hover { background: #FFD4A3; }
 
   /* ===== Signature box ===== */
   #sigBox {
-    height: 240px;
+    height: 220px;
     padding: 12px;
     justify-content: flex-start !important;
     align-items: stretch !important;
     text-align: left !important;
     gap: 10px !important;
+    border-style: solid;
+    border-color: #FFD4A3;
+    background: #ffffff;
   }
 
   .sig-canvas {
     width: 100%;
-    height: 150px;
+    height: 140px;
     border-radius: 12px;
-    border: 2px dashed #c8ddb0;
-    background: #f8fdf4;
+    border: 2px dashed #FFA64D;
+    background: #FFFAF5;
     box-sizing: border-box;
     display: block;
     position: relative;
@@ -392,7 +507,7 @@
   }
   #sigBox { position: relative; }
   #sigBox .sig-canvas { position: relative; z-index: 2; }
-  #sigBox img#sigPreviewImg { background: #f8fdf4; }
+  #sigBox img#sigPreviewImg { background: #FFFAF5; }
 
   .sig-clear-wrap {
     width: 100%;
@@ -402,133 +517,189 @@
   }
   .sig-clear-wrap .sig-btn {
     padding: 8px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(124,179,66,.3);
-    background: rgba(124,179,66,.10);
-    color: #4a7a1e;
+    border-radius: 999px;
+    border: 1px solid #FFD4A3;
+    background: #FFE9D6;
+    color: #FF6B00;
     font-weight: 800;
     font-size: 12px;
     cursor: pointer;
     transition: background .2s, color .2s;
   }
   .sig-clear-wrap .sig-btn:hover {
-    background: rgba(255,44,44,.12);
+    background: #ffebee;
     color: #c62828;
     border-color: rgba(198,40,40,.3);
   }
   .sig-clear-wrap .sig-btn:active { transform: scale(.97); }
 
   /* ===== muted text ===== */
-  .muted { color: #5a6a4a; font-size: 13px; }
-
-  /* ===== Top actions ===== */
-  .top-actions { padding: 4px 0 12px; }
-  .top-actions-line { margin: 0; border: 0; }
+  .muted { color: #9a9a9a; font-size: 13px; }
 </style>
 <div class="page">
-<div class="top-actions-line"></div>
 
-  <div class="cardx">
+  <a class="back-btn" href="javascript:history.back()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+    Back
+  </a>
+
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
+  <!-- ===== Section 1: Personal Information ===== -->
+  <div class="cardx">
+    <div class="section-title">Personal Information</div>
+
       <div class="grid-2">
         <div class="field">
-          <label>Full name</label>
-          <input
-  type="text"
-  name="full_name"
-  id="fullName"
-  value="{{ loan.full_name|default:'' }}"
-  {% if locked %}readonly{% endif %}
-  required
-  pattern="[A-Za-z ]+"
-  title="Letters and spaces only">
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Full name</label>
+              <input
+        type="text"
+        name="full_name"
+        id="fullName"
+        value="{{ loan.full_name|default:'' }}"
+        {% if locked %}readonly{% endif %}
+        required
+        pattern="[A-Za-z ]+"
+        title="Letters and spaces only">
+            </div>
+          </div>
         </div>
         <div class="field">
-          <label>Age</label>
-          <input type="number" name="age" min="18" max="90"
-                 value="{{ loan.age|default:'' }}"
-                 {% if locked %}readonly{% endif %}
-                 required>
-        </div>        
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Age</label>
+              <input type="number" name="age" min="18" max="90"
+                     value="{{ loan.age|default:'' }}"
+                     {% if locked %}readonly{% endif %}
+                     required>
+            </div>
+          </div>
+        </div>
 
         <div class="field">
-          <label>Current living</label>
-          <textarea
-  name="current_living"
-  id="currentLiving"
-  rows="2"
-  required
-  {% if locked %}readonly{% endif %}
-  pattern="[A-Za-z0-9 ]+"
-  title="Letters, numbers and spaces only"
->{{ loan.current_living|default:'' }}</textarea>
-        </div>        
-        <div class="field">
-          <label>Hometown</label>
-          <textarea name="hometown" rows="2" required {% if locked %}readonly{% endif %}>{{ loan.hometown|default:'' }}</textarea>
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Current living</label>
+              <textarea
+        name="current_living"
+        id="currentLiving"
+        rows="2"
+        required
+        {% if locked %}readonly{% endif %}
+        pattern="[A-Za-z0-9 ]+"
+        title="Letters, numbers and spaces only"
+      >{{ loan.current_living|default:'' }}</textarea>
+            </div>
+          </div>
         </div>
-        
+        <div class="field">
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.6-7-11a7 7 0 0114 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Hometown</label>
+              <textarea name="hometown" rows="2" required {% if locked %}readonly{% endif %}>{{ loan.hometown|default:'' }}</textarea>
+            </div>
+          </div>
+        </div>
 
         <div class="field">
-          <label>Income (optional)</label>
-          <input
-  type="text"
-  name="income"
-  id="incomeInput"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  value="{{ loan.income|default:'' }}"
-  {% if locked %}readonly{% endif %}>
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Income (optional)</label>
+              <input
+        type="text"
+        name="income"
+        id="incomeInput"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        value="{{ loan.income|default:'' }}"
+        {% if locked %}readonly{% endif %}>
+            </div>
+          </div>
         </div>
-        
-        <div class="field">
-          <label>Monthly expenses</label>
-          <input
-  type="text"
-  name="monthly_expenses"
-  id="expensesInput"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  value="{{ loan.monthly_expenses|default:'' }}"
-  {% if locked %}readonly{% endif %}
-  required>
-        </div>
-        
 
-        
         <div class="field">
-  <label>Identify name</label>
-  <input
-    type="text"
-    name="identity_name"
-    id="identityName"
-    value="{{ loan.identity_name|default:'' }}"
-    placeholder="Identify Name"
-    {% if locked %}readonly{% endif %}
-    required
-    pattern="[A-Za-z0-9 ]+"
-    title="Letters, numbers and spaces only">
-</div>
-        
-        <div class="field">
-          <label>Identify numbers</label>
-<input
-  type="text"
-  name="identity_number"
-  id="identityNumber"
-  value="{{ loan.identity_number|default:'' }}"
-  placeholder="Identify Number"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  {% if locked %}readonly{% endif %}
-  required>
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v10H3V7zm2 2v2h14V9H5zm0 4v2h6v-2H5z"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Monthly expenses</label>
+              <input
+        type="text"
+        name="monthly_expenses"
+        id="expensesInput"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        value="{{ loan.monthly_expenses|default:'' }}"
+        {% if locked %}readonly{% endif %}
+        required>
+            </div>
+          </div>
         </div>
-        
+
+        <div class="field">
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="10" r="1.8"/><path d="M5 17l3.5-3.5L11 16l4-4 4 4"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Identify name</label>
+              <input
+          type="text"
+          name="identity_name"
+          id="identityName"
+          value="{{ loan.identity_name|default:'' }}"
+          placeholder="Identify Name"
+          {% if locked %}readonly{% endif %}
+          required
+          pattern="[A-Za-z0-9 ]+"
+          title="Letters, numbers and spaces only">
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-row-wrap">
+            <div class="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10v4M9 10v4M12 10v4M16 10v4M19 10v4"/></svg>
+            </div>
+            <div class="field-main">
+              <label>Identify numbers</label>
+      <input
+        type="text"
+        name="identity_number"
+        id="identityNumber"
+        value="{{ loan.identity_number|default:'' }}"
+        placeholder="Identify Number"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        {% if locked %}readonly{% endif %}
+        required>
+            </div>
+          </div>
+        </div>
+
         <div class="field" style="grid-column: 1 / -1;">
           <label>Loan purposes (optional)</label>
-        
+
           <div class="purpose-grid">
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Business"
@@ -536,49 +707,49 @@
               {% if locked %}disabled{% endif %}>
               <span>Business</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Medical"
               {% if loan and "Medical" in loan.loan_purposes %}checked{% endif %}
               {% if locked %}disabled{% endif %}>
               <span>Medical</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Education"
               {% if loan and "Education" in loan.loan_purposes %}checked{% endif %}
               {% if locked %}disabled{% endif %}>
               <span>Education</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Home repair"
               {% if loan and "Home repair" in loan.loan_purposes %}checked{% endif %}
               {% if locked %}disabled{% endif %}>
               <span>Home repair</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Debt consolidation"
               {% if loan and "Debt consolidation" in loan.loan_purposes %}checked{% endif %}
               {% if locked %}disabled{% endif %}>
               <span>Debt consolidation</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Emergency"
               {% if loan and "Emergency" in loan.loan_purposes %}checked{% endif %}
               {% if locked %}disabled{% endif %}>
               <span>Emergency</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Shopping"
               {% if loan and "Shopping" in loan.loan_purposes %}checked{% endif %}
               {% if locked %}disabled{% endif %}>
               <span>Personal Loan</span>
             </label>
-        
+
             <label class="purpose-pill">
               <input type="checkbox" name="loan_purposes" value="Other"
               {% if loan and "Other" in loan.loan_purposes %}checked{% endif %}
@@ -586,14 +757,16 @@
               <span>Other</span>
             </label>
           </div>
-        
+
           <div class="muted" style="margin-top:8px;">Choose one or more (optional)</div>
         </div>
-        
-      </div>
 
-      <div style="margin-top:12px;">
-        <div class="section-title" style="margin:0 0 10px;">ID Required (Upload)</div>
+      </div>
+  </div>
+
+  <!-- ===== Section 2: ID Upload + Signature ===== -->
+  <div class="cardx">
+        <div class="section-title">ID Required (Upload)</div>
 
         <div class="id-grid">
 
@@ -602,60 +775,106 @@
             <img class="id-preview" id="prevFront"
                  {% if loan and loan.id_front %}src="{{ loan.id_front.url }}"{% endif %}
                  alt="ID Front preview">
-        
-            <img class="id-guide"
-                 src="{% static 'img/id_front.webp' %}"
-                 alt="ID Front guide">
-        
+
+            <div class="id-guide" aria-hidden="true">
+              <svg viewBox="0 0 120 80" fill="none">
+                <rect x="3" y="3" width="114" height="74" rx="12" fill="#FFE9D6" stroke="#FFA64D" stroke-width="2.5"/>
+                <circle cx="32" cy="33" r="13" fill="#FFD4A3"/>
+                <path d="M16 58c0-9 7.2-13 16-13s16 4 16 13" fill="#FFD4A3"/>
+                <rect x="58" y="22" width="46" height="6" rx="3" fill="#FF8A33"/>
+                <rect x="58" y="36" width="38" height="6" rx="3" fill="#FFD4A3"/>
+                <rect x="58" y="50" width="30" height="6" rx="3" fill="#FFD4A3"/>
+              </svg>
+            </div>
+            <div class="id-text">
+              <strong>Front of ID</strong>
+              <small>Click to upload</small>
+            </div>
+
             <input type="file" name="id_front" accept="image/*"
                  class="compress-img"
                  {% if not locked %}required{% endif %}
                  {% if locked %}disabled{% endif %}
                  hidden>
           </label>
-        
-        
+
+
           <!-- BACK -->
           <label class="idbox {% if loan and loan.id_back %}has-img{% endif %}" id="boxBack">
             <img class="id-preview" id="prevBack"
                  {% if loan and loan.id_back %}src="{{ loan.id_back.url }}"{% endif %}
                  alt="ID Back preview">
-        
-            <img class="id-guide"
-                 src="{% static 'img/id_back.webp' %}"
-                 alt="ID Back guide">
-        
+
+            <div class="id-guide" aria-hidden="true">
+              <svg viewBox="0 0 120 80" fill="none">
+                <rect x="3" y="3" width="114" height="74" rx="12" fill="#FFE9D6" stroke="#FFA64D" stroke-width="2.5"/>
+                <rect x="16" y="18" width="3" height="22" fill="#FF8A33"/>
+                <rect x="22" y="18" width="2" height="22" fill="#FFA64D"/>
+                <rect x="27" y="18" width="4" height="22" fill="#FF8A33"/>
+                <rect x="34" y="18" width="2" height="22" fill="#FFA64D"/>
+                <rect x="39" y="18" width="3" height="22" fill="#FF8A33"/>
+                <rect x="45" y="18" width="2" height="22" fill="#FFA64D"/>
+                <rect x="50" y="18" width="4" height="22" fill="#FF8A33"/>
+                <rect x="86" y="14" width="22" height="22" rx="3" fill="#FFD4A3"/>
+                <rect x="16" y="50" width="60" height="6" rx="3" fill="#FFD4A3"/>
+                <rect x="16" y="60" width="40" height="6" rx="3" fill="#FFD4A3"/>
+              </svg>
+            </div>
+            <div class="id-text">
+              <strong>Back of ID</strong>
+              <small>Click to upload</small>
+            </div>
+
             <input type="file" name="id_back" accept="image/*"
        class="compress-img"
        {% if not locked %}required{% endif %}
        {% if locked %}disabled{% endif %}
        hidden>
           </label>
-        
-        
+
+
           <!-- SELFIE -->
           <label class="idbox {% if loan and loan.selfie_with_id %}has-img{% endif %}" id="boxSelfie">
             <img class="id-preview" id="prevSelfie"
                  {% if loan and loan.selfie_with_id %}src="{{ loan.selfie_with_id.url }}"{% endif %}
                  alt="Selfie preview">
-        
-            <img class="id-guide"
-                 src="{% static 'img/id_selfie.webp' %}"
-                 alt="Selfie + ID guide">
-        
+
+            <div class="id-guide" aria-hidden="true">
+              <svg viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="46" fill="#FFE9D6"/>
+                <path d="M27 93 Q27 68 50 64 Q73 68 73 93 Z" fill="#FF8A33"/>
+                <circle cx="50" cy="42" r="19" fill="#FFD4A3"/>
+                <circle cx="43.5" cy="40" r="2.4" fill="#1a1a1a"/>
+                <circle cx="56.5" cy="40" r="2.4" fill="#1a1a1a"/>
+                <path d="M42 49q8 6 16 0" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                <rect x="63" y="56" width="17" height="27" rx="4" fill="#FF6B00"/>
+                <rect x="66" y="60" width="11" height="15" rx="1.5" fill="#FFE9D6"/>
+                <circle cx="71.5" cy="78" r="1.6" fill="#FFE9D6"/>
+              </svg>
+            </div>
+            <div class="id-text">
+              <strong>Selfie + ID</strong>
+              <small>Click to upload</small>
+            </div>
+
             <input type="file" name="selfie_with_id" accept="image/*"
                 class="compress-img"
                 {% if not locked %}required{% endif %}
                 {% if locked %}disabled{% endif %}
                 hidden>
           </label>
-        
+
         </div>
-                    
+
           <!-- SIGNATURE (DRAW) -->
-<div class="idbox" id="sigBox">
+<div class="idbox" id="sigBox" style="margin-top:14px;">
   <div class="id-text" style="position:relative; z-index:2;">
-    <div class="id-ico">✍️</div>
+    <div class="id-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 17l4.5-1.2L18.8 4.5a1.7 1.7 0 0 1 2.4 0l.3.3a1.7 1.7 0 0 1 0 2.4L10.2 18.5 9 19l-6 1z"/>
+        <path d="M3 21h18"/>
+      </svg>
+    </div>
     <strong>Signature</strong>
     <small>Draw your signature</small>
   </div>
@@ -681,32 +900,34 @@
     Clear
   </button>
 </div>
-        </div>
-        
+  </div>
 
-      <hr style="border:0;border-top:1px solid rgba(255,255,255,.16); margin:14px 0;">
-
-      <div class="section-title" style="margin:0 0 10px;">Apply Loan</div>
+  <!-- ===== Section 3: Apply Loan ===== -->
+  <div class="cardx">
+      <div class="section-title">Apply Loan</div>
 
       <div class="field">
-        <label>Loan amount (Min 80,000 • Max 5,000,000)</label>
-        <input type="number" name="loan_amount" id="loanAmount" min="80000" max="5000000" required>
+        <label>Loan amount (Min 80,000 &middot; Max 5,000,000)</label>
+        <div class="amount-field-wrap">
+          <span class="amount-icon" aria-hidden="true">₱</span>
+          <input type="number" name="loan_amount" id="loanAmount" min="80000" max="5000000" required>
+        </div>
       </div>
 
-      <div class="field">
+      <div class="field" style="margin-top:16px;">
         <label>Loan terms</label>
-      
+
         <input type="hidden" name="loan_terms" id="loanTerms" required>
-      
+
         <div class="term-grid">
           <button type="button" class="term-btn" data-term="6">6</button>
           <button type="button" class="term-btn" data-term="12">12</button>
           <button type="button" class="term-btn" data-term="24">24</button>
           <button type="button" class="term-btn" data-term="36">36</button>
       </div>
-      
+
         <div class="muted" id="termHint" style="margin-top:8px;">Choose months</div>
-      </div>      
+      </div>
 
       <div class="summary" aria-live="polite">
         <div class="row"><div class="k">Amount of loan</div><div class="v" id="sumAmount">—</div></div>
@@ -721,12 +942,14 @@
   </button>
 {% else %}
   <button class="btn btn-primary cta" type="submit" name="action" value="apply_loan">
-    Confirm Apply
+    <span>Confirm Apply</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
   </button>
 {% endif %}
 
-    </form>
   </div>
+
+    </form>
 </div>
 
 <script>
@@ -760,14 +983,14 @@
   function fmt(x){
     try{ return new Intl.NumberFormat().format(x); }catch(e){ return String(x); }
   }
-  
+
 </script>
 <script>
   (function(){
     const hidden = document.getElementById("loanTerms");
     const hint = document.getElementById("termHint");
     const btns = document.querySelectorAll(".term-btn");
-  
+
     btns.forEach(b=>{
       b.addEventListener("click", ()=>{
         btns.forEach(x=>x.classList.remove("active"));
@@ -783,20 +1006,20 @@
     function updateSummary(){
       const amountEl = document.getElementById("loanAmount");
       const termEl   = document.getElementById("loanTerms");
-    
+
       const outAmount = document.getElementById("sumAmount");
       const outTerm   = document.getElementById("sumTerm");
       const outMonthly= document.getElementById("sumMonthly");
-    
+
       if(!amountEl || !termEl || !outAmount || !outTerm || !outMonthly) return;
-    
+
       const amount = Number(amountEl.value || 0);
       const term   = Number(termEl.value || 0);
-    
+
       // show amount + term
       outAmount.textContent = amount ? amount.toLocaleString() : "—";
       outTerm.textContent   = term ? (term + " months") : "—";
-    
+
       // monthly repayment (simple)
       const rate = 0.005; // 0.5%
       if(amount > 0 && term > 0){
@@ -807,12 +1030,12 @@
         outMonthly.textContent = "—";
       }
     }
-    
+
     // update when user types amount
     document.addEventListener("input", (e)=>{
       if(e.target && e.target.id === "loanAmount") updateSummary();
     });
-    
+
     // run once on load
     document.addEventListener("DOMContentLoaded", updateSummary);
     </script>
@@ -821,27 +1044,27 @@
         const qs = new URLSearchParams(window.location.search);
         const a = qs.get("amount");
         const t = qs.get("term");
-    
+
         const amountEl = document.getElementById("loanAmount");
         const termHidden = document.getElementById("loanTerms");
         const hint = document.getElementById("termHint");
         const btns = document.querySelectorAll(".term-btn");
-    
+
         if(a && amountEl) amountEl.value = a;
-    
+
         if(t && termHidden){
           termHidden.value = t;
-    
+
           btns.forEach(b=>{
             if(b.dataset.term === String(t)){
               btns.forEach(x=>x.classList.remove("active"));
               b.classList.add("active");
             }
           });
-    
+
           if(hint) hint.textContent = t + " months";
         }
-    
+
         if(window.updateSummary) window.updateSummary();
       })();
     </script>
@@ -849,7 +1072,7 @@
       (function(){
         const full = document.getElementById("fullName");
         if(!full) return;
-    
+
         full.addEventListener("input", function(){
           this.value = this.value.replace(/[^A-Za-z ]+/g, "");
         });
@@ -869,7 +1092,7 @@
       (function(){
         const el = document.getElementById("identityNumber");
         if(!el) return;
-    
+
         el.addEventListener("input", function(){
           this.value = this.value.replace(/[^0-9]/g, "");
         });
@@ -879,7 +1102,7 @@
       (function(){
         const living = document.getElementById("currentLiving");
         if(!living) return;
-    
+
         living.addEventListener("input", function(){
           this.value = this.value.replace(/[^A-Za-z0-9 ]+/g, "");
         });
@@ -893,7 +1116,7 @@
             this.value = this.value.replace(/[^0-9]/g, "");
           });
         }
-    
+
         onlyNumber(document.getElementById("incomeInput"));
         onlyNumber(document.getElementById("expensesInput"));
       })();
@@ -904,31 +1127,31 @@
         const hidden = document.getElementById("signatureData");
         const clearBtn = document.getElementById("sigClear");
         const form = document.querySelector("form");
-      
+
         if(!canvas || !hidden) return;
-      
+
         const ctx = canvas.getContext("2d");
-      
+
         // resize to match CSS size (important for crisp drawing)
         function resizeCanvas(){
           const rect = canvas.getBoundingClientRect();
           const ratio = window.devicePixelRatio || 1;
-      
+
           canvas.width  = Math.floor(rect.width * ratio);
           canvas.height = Math.floor(rect.height * ratio);
-      
+
           ctx.setTransform(ratio,0,0,ratio,0,0);
-      
+
           ctx.lineWidth = 3;
           ctx.lineCap = "round";
           ctx.lineJoin = "round";
           ctx.strokeStyle = "#3b82f6";
         }
-      
+
         let drawing = false;
         let hasInk = false;
         let lastX = 0, lastY = 0;
-      
+
         function getPos(e){
           const rect = canvas.getBoundingClientRect();
           const touch = e.touches && e.touches[0];
@@ -936,7 +1159,7 @@
           const clientY = touch ? touch.clientY : e.clientY;
           return { x: clientX - rect.left, y: clientY - rect.top };
         }
-      
+
         function start(e){
           if(canvas.hasAttribute("disabled")) return;
           drawing = true;
@@ -944,7 +1167,7 @@
           lastX = p.x; lastY = p.y;
           e.preventDefault();
         }
-      
+
         function move(e){
           if(!drawing) return;
           const p = getPos(e);
@@ -956,17 +1179,17 @@
           hasInk = true;
           e.preventDefault();
         }
-      
+
         function end(){
           if(!drawing) return;
           drawing = false;
-      
+
           // save base64 to hidden input
           if(hasInk){
             hidden.value = canvas.toDataURL("image/png");
           }
         }
-      
+
         function clear(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         hidden.value = "";
@@ -974,28 +1197,28 @@
 }
 
 clearBtn && clearBtn.addEventListener("click", clear);
-      
+
         // init
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
-      
+
         // mouse
         canvas.addEventListener("mousedown", start);
         canvas.addEventListener("mousemove", move);
         window.addEventListener("mouseup", end);
-      
+
         // touch
         canvas.addEventListener("touchstart", start, {passive:false});
         canvas.addEventListener("touchmove", move, {passive:false});
         canvas.addEventListener("touchend", end);
-      
+
         clearBtn && clearBtn.addEventListener("click", clear);
-      
+
         // REQUIRED: block submit if no signature (only when not locked)
         form && form.addEventListener("submit", (e)=>{
           // if field disabled/locked -> don't validate
           if(hidden.disabled) return;
-      
+
           if(!hidden.value){
             e.preventDefault();
             alert("Please draw your signature first.");
@@ -1027,6 +1250,6 @@ clearBtn && clearBtn.addEventListener("click", clear);
       }
     });
   });
-</script>    
-  
+</script>
+
 {% endblock %}

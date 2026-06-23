@@ -3,23 +3,45 @@
 {% block title %}Wallet{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 
-body, .w-wrap, .w-wrap * {
-  font-family: "Ovelion", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
-
-body {
+.w-wrap, .w-wrap * {
+  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* ── Wrapper ── */
 .w-wrap {
-  width: min(520px, 94vw);
-  max-width: 520px;
+  width: min(480px, 94vw);
+  max-width: 480px;
   margin: 0 auto;
-  padding: 16px 16px 100px;
+  padding: 28px 16px 60px;
   box-sizing: border-box;
 }
+
+/* ── Back button ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px 0 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #FF6B00 !important;
+  border: 1px solid #FFD4A3;
+  box-shadow: 0 2px 10px rgba(255,107,0,.12);
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+  margin-bottom: 18px;
+}
+.back-btn svg{ width: 16px; height: 16px; }
+.back-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
+.back-btn:active { transform: translateY(0); opacity: .9; }
 
 /* ── Status alert banner ── */
 .status-alert {
@@ -49,27 +71,36 @@ body {
   letter-spacing: .4px;
   margin-bottom: 12px;
 }
-.status-active { background: #16a34a; color: #fff; }
+.status-active { background: #22c55e; color: #fff; }
 
 /* ── Hero balance card ── */
 .cardx.card-diamond {
-  background: linear-gradient(135deg, #1e4a06, #2d6b0a, #7CB342) !important;
-  border-radius: 20px !important;
-  border: 1px solid rgba(124,179,66,.35) !important;
-  border-top: 1px solid rgba(124,179,66,.35) !important;
+  background: linear-gradient(135deg, #FF6B00 0%, #FF8A33 55%, #FFA64D 100%) !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  border-top: 1px solid rgba(255,255,255,.25) !important;
   color: #fff !important;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(74,122,30,.35) !important;
+  box-shadow: 0 10px 32px rgba(255,107,0,.32) !important;
   margin-bottom: 16px;
   overflow: hidden;
   position: relative;
+}
+.cardx.card-diamond::before {
+  content: "";
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.22), transparent 70%);
+  pointer-events: none;
 }
 .cardx.card-diamond::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.10) 50%, transparent 100%);
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.14) 50%, transparent 100%);
   transform: translateX(-120%);
   animation: walletShine 4s ease-in-out infinite;
 }
@@ -85,9 +116,9 @@ body {
 /* ── Standard info / action cards ── */
 .cardx {
   background: #ffffff;
-  border-radius: 16px;
-  border-left: 4px solid #7CB342;
-  box-shadow: 0 2px 12px rgba(74,122,30,.10);
+  border-radius: 18px;
+  border-left: 4px solid #FF6B00;
+  box-shadow: 0 2px 16px rgba(255,107,0,.10), 0 6px 24px rgba(0,0,0,.05);
   color: #1a1a1a;
   padding: 18px;
   margin-bottom: 16px;
@@ -105,18 +136,18 @@ body {
 
 /* ── Titles ── */
 .title {
-  font-weight: 950;
+  font-weight: 800;
   font-size: 18px;
   color: #1a1a1a;
 }
 .sub {
   font-size: 12px;
-  color: rgba(255,255,255,.75);
+  color: rgba(255,255,255,.78);
   margin-top: 2px;
 }
 /* sub on white cards */
 .cardx:not(.card-diamond) .sub {
-  color: #5a6a4a;
+  color: #9a9a9a;
 }
 
 /* ── Balance amount ── */
@@ -131,38 +162,83 @@ body {
 .pill {
   padding: 5px 12px;
   border-radius: 999px;
-  font-weight: 900;
+  font-weight: 800;
   font-size: 12px;
   white-space: nowrap;
   background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(255,255,255,.28);
   color: #fff;
 }
 /* pill on white cards */
 .cardx:not(.card-diamond) .pill {
-  background: #f1f8e9;
-  border: 1px solid rgba(124,179,66,.30);
-  color: #3d6b1c;
+  background: #FFE9D6;
+  border: 1px solid #FFD4A3;
+  color: #b8530a;
+}
+
+/* ── Field row (icon badge + input) ── */
+.field-row-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+.field-icon {
+  flex: 0 0 auto;
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+  color: #FF6B00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.field-icon svg{ width: 18px; height: 18px; }
+.field-icon-peso{
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 19px;
+  line-height: 1;
+}
+.field-row-wrap:focus-within .field-icon {
+  background: linear-gradient(135deg, #FF6B00, #FF8A33);
+  color: #fff;
+}
+.field-main { flex: 1; min-width: 0; }
+.field-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.field-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9a9a9a;
+  text-transform: uppercase;
+  letter-spacing: .04em;
 }
 
 /* ── Inputs ── */
 .num-input {
   width: 100%;
-  margin-top: 10px;
-  padding: 12px 14px;
+  margin-top: 6px;
+  padding: 11px 14px;
   border-radius: 12px;
-  border: 1px solid #d0e8b8;
-  background: #f8fdf4;
+  border: 1.5px solid #E6E6E6;
+  background: #FFFAF5;
   color: #1a1a1a;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
   box-sizing: border-box;
   transition: border-color .15s ease, box-shadow .15s ease;
 }
-.num-input::placeholder { color: #a0b48a; }
+.num-input::placeholder { color: #9a9a9a; font-weight: 400; }
 .num-input:focus {
-  border-color: #7CB342;
-  box-shadow: 0 0 0 3px rgba(124,179,66,.20);
+  border-color: #FF6B00;
+  box-shadow: 0 0 0 3px rgba(255,107,0,.16);
   background: #fff;
 }
 
@@ -170,14 +246,7 @@ body {
 .hint {
   margin-top: 8px;
   font-size: 12px;
-  color: #8a9a7a;
-}
-
-/* ── Action labels ── */
-.action-label {
-  color: #3d6b1c;
-  font-weight: 700;
-  font-size: 13px;
+  color: #9a9a9a;
 }
 
 /* ── Withdraw NOW button ── */
@@ -185,37 +254,29 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  height: 54px;
+  gap: 8px;
+  height: 52px;
   border-radius: 999px;
   text-decoration: none;
-  font-weight: 800;
-  letter-spacing: .08em;
+  font-weight: 700;
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: #fff;
-  background: linear-gradient(135deg, #4a7a1e, #7CB342);
-  box-shadow: 0 6px 20px rgba(74,122,30,.30);
+  background: linear-gradient(135deg, #FF6B00, #FF8A33);
+  box-shadow: 0 8px 22px rgba(255,107,0,.32);
   border: 0;
   width: 100%;
   cursor: pointer;
-  transition: opacity .2s ease, transform .08s ease;
+  transition: opacity .2s ease, transform .15s ease, box-shadow .2s ease;
 }
-.big-btn:hover  { opacity: .92; }
-.big-btn:active { transform: scale(.99); }
+.big-btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+.big-btn:active { transform: translateY(1px); }
 .big-btn[disabled] {
   opacity: .45;
   cursor: not-allowed;
+  transform: none;
 }
-.big-btn .dot {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: rgba(0,0,0,.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255,255,255,.15);
-}
+.big-btn svg{ width: 16px; height: 16px; }
 
 /* ── Form alert box ── */
 #formAlert {
@@ -230,17 +291,17 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f4ec;
+  padding: 12px 2px;
+  border-top: 1px solid #FFE9D6;
   font-size: 13px;
   color: #1a1a1a;
 }
-.list-row:last-child { border-bottom: none; }
+.list-row:first-of-type { border-top: 0; }
 
 /* ── Muted secondary text ── */
 .muted {
   font-size: 12px;
-  color: #8a9a7a;
+  color: #9a9a9a;
   margin-top: 2px;
 }
 
@@ -252,8 +313,8 @@ body {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #d8e8c0;
-  border: 1px solid rgba(124,179,66,.20);
+  background: #FFE9D6;
+  border: 1px solid rgba(255,107,0,.20);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -261,9 +322,9 @@ body {
   transition: background .25s ease;
 }
 .tl-bullet.on {
-  background: #7CB342;
+  background: #FF6B00;
   border-color: rgba(255,255,255,.20);
-  box-shadow: 0 0 8px rgba(124,179,66,.50);
+  box-shadow: 0 0 8px rgba(255,107,0,.50);
 }
 .tl-bullet.rejected,
 .tl-bullet.on.rejected {
@@ -272,7 +333,7 @@ body {
   box-shadow: none !important;
 }
 .tl-bullet.success {
-  background: #7CB342;
+  background: #22c55e;
 }
 .tl-bullet svg {
   width: 18px;
@@ -295,44 +356,21 @@ body {
 #b3.success .ico-x  { display: none !important; }
 
 .tl-text {
-  font-weight: 900;
+  font-weight: 800;
   color: #1a1a1a;
   font-size: 14px;
 }
-.tl-text.rejected { color: #e53935; font-weight: 950; }
-.tl-text.success  { color: #2e7d32; }
-
-/* ── Back / top actions ── */
-.top-actions {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-start;
-}
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
-  padding: 0 18px;
-  border-radius: 999px;
-  background: rgba(124,179,66,.12);
-  color: #4a7a1e !important;
-  border: 1px solid rgba(124,179,66,.30);
-  font-weight: 800;
-  font-size: 14px;
-  text-decoration: none;
-  transition: background .15s ease, transform .08s ease;
-}
-.back-btn:hover  { background: rgba(124,179,66,.22); transform: translateY(-1px); }
-.back-btn:active { transform: scale(.98); }
-
-@media (max-width: 520px) {
-  .top-actions { padding: 0; }
-}
+.tl-text.rejected { color: #e53935; font-weight: 850; }
+.tl-text.success  { color: #16a34a; }
 
 </style>
 
-<div class="w-wrap ovelion">
+<div class="w-wrap">
+
+  <a class="back-btn" href="{% url 'dashboard' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+    Back
+  </a>
 
   <!-- Card 1: Balance -->
 
@@ -350,54 +388,58 @@ body {
       <div class="pill">Last transaction - Today</div>
     </div>
 
-    <div style="margin-top:12px; font-size:28px; font-weight:950;">
+    <div style="margin-top:12px; font-size:28px; font-weight:900;">
   <span style="font-family:'Inter', system-ui, sans-serif; font-weight:700;">₱</span> <span data-balance>{{ request.user.balance|default:"0.00" }}</span>
 </div>
   </div>
 
   <!-- ✅ NEW Card: Withdrawal Amount (above OTP) -->
   <div class="cardx currency-style">
-    <div class="row">
-      <div>
-        <div class="title" style="font-size:16px;">Withdrawal amount</div>
-        <div class="sub">Enter amount you want to withdraw</div>
+    <div class="field-row-wrap">
+      <div class="field-icon field-icon-peso" aria-hidden="true">₱</div>
+      <div class="field-main">
+        <div class="field-top-row">
+          <span class="field-tag">Withdrawal Amount</span>
+          <span class="pill">PHP</span>
+        </div>
+        <input
+          id="amountInput"
+          class="num-input"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          autocomplete="off"
+        />
       </div>
-      <div class="pill">PHP</div>
     </div>
-
-    <input
-      id="amountInput"
-      class="num-input"
-      type="number"
-      inputmode="decimal"
-      min="0"
-      step="0.01"
-      placeholder="0.00"
-      autocomplete="off"
-    />
     <div class="hint" id="amountHint">Max: PHP 0.00</div>
   </div>
 
   <!-- ✅ UPDATED Card: OTP Code (now input number) -->
   <div class="cardx currency-style">
-    <div class="row">
-      <div>
-        <div class="title" style="font-size:16px;">OTP Code</div>
-        <div class="sub"></div>
+    <div class="field-row-wrap">
+      <div class="field-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
       </div>
-      <div class="pill">OTP</div>
+      <div class="field-main">
+        <div class="field-top-row">
+          <span class="field-tag">OTP Code</span>
+          <span class="pill">OTP</span>
+        </div>
+        <input
+          id="otpInput"
+          class="num-input"
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          placeholder="Enter OTP"
+          autocomplete="one-time-code"
+        />
+      </div>
     </div>
-
-    <input
-      id="otpInput"
-      class="num-input"
-      type="number"
-      inputmode="numeric"
-      min="0"
-      step="1"
-      placeholder="Enter OTP"
-      autocomplete="one-time-code"
-    />
     <div class="hint">OTP is required to confirm withdrawal.</div>
   </div>
 
@@ -422,7 +464,10 @@ body {
         text-align:center;">
       </div>
 
-      <button class="big-btn" type="button" id="withdrawBtn" disabled>WITHDRAW NOW</button>
+      <button class="big-btn" type="button" id="withdrawBtn" disabled>
+        <span>WITHDRAW NOW</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+      </button>
       <div class="hint" id="btnHint">Enter a valid amount to enable withdraw.</div>
     </form>
 
@@ -470,7 +515,7 @@ body {
     {% for w in withdrawals %}
       <div class="list-row">
         <div>
-          <div style="font-weight:900;">PHP {{ w.amount }} {{ w.currency }}</div>
+          <div style="font-weight:800;">PHP {{ w.amount }} {{ w.currency }}</div>
           <div class="muted">{{ w.created_at }}</div>
         </div>
 
@@ -484,12 +529,6 @@ body {
       <div class="muted">No withdrawals yet.</div>
     {% endfor %}
   </div>
-
-  <!-- Back -->
-  <div class="top-actions">
-    <a class="back-btn" href="{% url 'dashboard' %}">Back</a>
-  </div>
-  <div class="top-actions-line"></div>
 
 </div> <!-- ✅ close .w-wrap -->
 
@@ -630,7 +669,7 @@ body {
     if(b3){
       b3.classList.remove("rejected");
       b3.classList.add("success");
-      b3.style.setProperty("background", "#7CB342", "important");
+      b3.style.setProperty("background", "#22c55e", "important");
       b3.style.setProperty("border-color", "rgba(255,255,255,.18)", "important");
 
       // ✅ force ✓

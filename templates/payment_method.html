@@ -2,19 +2,17 @@
 {% block title %}Payment Method{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ===== GreenLeaf Design System — payment_method.html ===== */
-
-  html, body {
-  }
-
   /* ===== Layout wrapper ===== */
   .wrap { display: block !important; }
 
   .dash-wrap {
-    width: min(520px, 94vw);
+    width: min(480px, 94vw);
     margin: 0 auto;
-    padding: 16px 16px 100px;
+    padding: 28px 16px 60px;
     box-sizing: border-box;
   }
 
@@ -22,31 +20,29 @@
   .cardx {
     position: relative;
     background: #ffffff;
-    border-radius: 18px;
-    border-top: 4px solid #7CB342;
-    border-left: none;
-    box-shadow: 0 4px 20px rgba(74,122,30,.10);
-    padding: 24px;
+    border-radius: 22px;
+    border: 1.5px solid #FFD4A3;
+    border-top: 4px solid #FF6B00;
+    box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+    padding: 22px;
     color: #1a1a1a;
     margin-bottom: 16px;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
     overflow: visible;
   }
   .cardx::before, .cardx::after { display: none; }
 
   /* ===== Typography ===== */
-  .pm-page {
-    font-family: "Ovelion", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  .pm-page, .pm-page * {
+    font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
-  .muted { color: #5a6a4a; font-size: 13px; }
+  .muted { color: #9a9a9a; font-size: 13px; }
 
   /* ===== Card header title ===== */
   h2 {
-    color: #2d5a0e;
-    font-weight: 900;
-    font-size: 18px;
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 20px;
     margin: 0;
   }
 
@@ -58,29 +54,58 @@
     border-radius: 999px;
     font-weight: 800;
     font-size: 12px;
-    background: #f1f8e9;
-    color: #2d5a0e;
-    border: 1px solid rgba(124,179,66,.3);
+    background: #FFE9D6;
+    color: #b8530a;
+    border: 1px solid #FFD4A3;
+    white-space: nowrap;
   }
 
   /* ===== Section container ===== */
   .pm-section {
-    margin: 14px 0;
-    padding: 14px;
-    border-radius: 14px;
-    border: 1px solid #DCEDC8;
-    background: #f8fdf4;
+    margin: 18px 0 6px;
+    padding: 6px 16px;
+    border-radius: 16px;
+    border: 1.5px solid #FFE9D6;
+    background: #FFFAF5;
   }
 
   /* ===== Section title ===== */
   .pm-title {
-    color: #3d6b1c;
+    color: #1a1a1a;
     font-weight: 800;
     font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    margin-bottom: 8px;
+    padding: 14px 0 12px;
+    border-bottom: 1px solid #FFE9D6;
   }
+
+  /* ===== Field row (icon badge + input) ===== */
+  .pm-field-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+  }
+  .pm-field-row + .pm-field-row {
+    border-top: 1px solid #FFE9D6;
+  }
+  .pm-field-icon {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .pm-field-icon svg { width: 17px; height: 17px; }
+  .pm-field-row:focus-within .pm-field-icon {
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    color: #fff;
+  }
+  .pm-field-main { flex: 1; min-width: 0; }
+  .pm-field-main .muted { display: block; margin-bottom: 6px; }
 
   /* ===== Inputs ===== */
   .pm-section input,
@@ -89,31 +114,32 @@
   .pm-section input[type="tel"],
   .pm-section input[type="email"] {
     width: 100%;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1.5px solid #c8ddb0;
-    background: #f8fdf4;
+    padding: 11px 13px;
+    border-radius: 11px;
+    border: 1.5px solid #E6E6E6;
+    background: #ffffff;
     color: #1a1a1a;
     font-size: 14px;
+    font-weight: 500;
     outline: none;
     box-sizing: border-box;
     transition: border-color .2s, box-shadow .2s, background .2s;
   }
   .pm-section input::placeholder {
-    color: #a0b488;
+    color: #9a9a9a;
   }
   .pm-section input:focus {
     outline: none;
-    border-color: #7CB342;
-    box-shadow: 0 0 0 3px rgba(124,179,66,.18);
+    border-color: #FF6B00;
+    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
     background: #fff;
   }
 
   /* ===== Locked / read-only inputs ===== */
   .pm-locked input {
-    background: #DCEDC8;
+    background: #FFE9D6;
     border-color: transparent;
-    color: #2d5a0e;
+    color: #b8530a;
     pointer-events: none;
     cursor: not-allowed;
     opacity: 1;
@@ -121,7 +147,7 @@
 
   /* ===== Bottom nav / save button ===== */
   .bottom-nav {
-    margin-top: 18px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
   }
@@ -132,21 +158,27 @@
   }
 
   .nav-btn {
-    width: 220px;
+    width: 100%;
+    max-width: 320px;
     height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     border-radius: 999px;
     border: none;
-    background: linear-gradient(135deg, #4a7a1e, #7CB342);
+    background: linear-gradient(135deg, #FF6B00, #FF8A33);
     color: #fff;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 15px;
-    letter-spacing: .04em;
-    box-shadow: 0 4px 14px rgba(74,122,30,.30);
+    letter-spacing: .02em;
+    box-shadow: 0 8px 22px rgba(255,107,0,.32);
     cursor: pointer;
-    transition: transform .15s, opacity .2s;
+    transition: transform .15s, box-shadow .2s;
   }
-  .nav-btn:hover { transform: translateY(-1px); }
-  .nav-btn:active { transform: translateY(0); }
+  .nav-btn svg{ width: 16px; height: 16px; }
+  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+  .nav-btn:active { transform: translateY(1px); }
   .nav-btn:disabled {
     opacity: .55;
     cursor: not-allowed;
@@ -162,7 +194,8 @@
     justify-content: center !important;
   }
   .pm-page .nav-btn {
-    width: 220px !important;
+    width: 100% !important;
+    max-width: 320px !important;
     flex: 0 0 auto !important;
   }
 </style>
@@ -170,14 +203,14 @@
 <div class="dash-wrap pm-page">
   <div class="cardx">
 
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
       <div>
-        <h2 style="margin:0;font-size:26px;font-weight:950;">Payment Method</h2>
-        <div class="muted">Add or update your payout details</div>
+        <h2>Payment Method</h2>
+        <div class="muted" style="margin-top:4px;">Add or update your payout details</div>
       </div>
 
       <span class="badge">
-        Status: {% if saved %}Saved{% else %}Not set{% endif %}
+        {% if saved %}Saved{% else %}Not set{% endif %}
       </span>
     </div>
 
@@ -187,13 +220,23 @@
       <!-- Bank -->
       <div class="pm-section {% if saved %}pm-locked{% endif %}">
         <div class="pm-title">Bank</div>
-        <div style="display:grid;gap:10px;">
-          <div>
-            <div class="muted" style="font-size:12px;margin-bottom:6px;">Account name</div>
+
+        <div class="pm-field-row">
+          <div class="pm-field-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="pm-field-main">
+            <span class="muted">Account name</span>
             {{ form.bank_name }}
           </div>
-          <div>
-            <div class="muted" style="font-size:12px;margin-bottom:6px;">Account number</div>
+        </div>
+
+        <div class="pm-field-row">
+          <div class="pm-field-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10v4M9 10v4M12 10v4M16 10v4M19 10v4"/></svg>
+          </div>
+          <div class="pm-field-main">
+            <span class="muted">Account number</span>
             {{ form.bank_account }}
           </div>
         </div>
@@ -207,7 +250,10 @@
         {% if locked %}
           <button class="nav-btn" type="button" disabled>Saved</button>
         {% else %}
-          <button class="nav-btn" type="submit">Save</button>
+          <button class="nav-btn" type="submit">
+            <span>Save</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+          </button>
         {% endif %}
       </div>
 
