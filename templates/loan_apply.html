@@ -697,7 +697,7 @@
           </div>
         </div>
 
-        <div class="field" style="grid-column: 1 / -1;">
+        <div class="field" id="purposeField" style="grid-column: 1 / -1;">
           <label>Loan purposes (optional)</label>
 
           <div class="purpose-grid">
@@ -902,32 +902,14 @@
 </div>
   </div>
 
-  <!-- ===== Section 3: Apply Loan ===== -->
+  <!-- ===== Section 3: Review & Confirm ===== -->
   <div class="cardx">
-      <div class="section-title">Apply Loan</div>
+      <div class="section-title">Review your loan</div>
 
-      <div class="field">
-        <label>Loan amount (Min 80,000 &middot; Max 5,000,000)</label>
-        <div class="amount-field-wrap">
-          <span class="amount-icon" aria-hidden="true">₱</span>
-          <input type="number" name="loan_amount" id="loanAmount" min="80000" max="5000000" required>
-        </div>
-      </div>
-
-      <div class="field" style="margin-top:16px;">
-        <label>Loan terms</label>
-
-        <input type="hidden" name="loan_terms" id="loanTerms" required>
-
-        <div class="term-grid">
-          <button type="button" class="term-btn" data-term="6">6</button>
-          <button type="button" class="term-btn" data-term="12">12</button>
-          <button type="button" class="term-btn" data-term="24">24</button>
-          <button type="button" class="term-btn" data-term="36">36</button>
-      </div>
-
-        <div class="muted" id="termHint" style="margin-top:8px;">Choose months</div>
-      </div>
+      <!-- amount & term are chosen on the Quick Loan page; carried here as hidden values -->
+      <input type="hidden" name="loan_amount" id="loanAmount" value="{{ loan.amount|default:'' }}">
+      <input type="hidden" name="loan_terms" id="loanTerms" value="{{ loan.term_months|default:'' }}">
+      <span id="termHint" style="display:none;"></span>
 
       <div class="summary" aria-live="polite">
         <div class="row"><div class="k">Amount of loan</div><div class="v" id="sumAmount">—</div></div>
@@ -1252,4 +1234,5 @@ clearBtn && clearBtn.addEventListener("click", clear);
   });
 </script>
 
+<script src="{% static 'js/loan_tour.js' %}?v=3"></script>
 {% endblock %}

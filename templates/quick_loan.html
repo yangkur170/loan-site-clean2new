@@ -639,4 +639,7 @@ if (pill) pill.classList.toggle("is-rejected", isRejected);
     applyStep(1, "PENDING");
   }
 </script>
+
+{% load static %}
+<script src="{% static 'js/loan_tour.js' %}?v=3"></script>
 {% endblock %}
