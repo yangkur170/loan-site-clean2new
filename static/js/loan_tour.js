@@ -303,10 +303,11 @@
       if (lsGet(ACTIVE_KEY) !== "1") return;
       pmSave.addEventListener("click", function(){ lsSet(ACTIVE_KEY, "1"); });
 
-      var nameInput = pmRows[0].querySelector("input");
-      var numInput = pmRows[1].querySelector("input");
-      if (nameInput && !nameInput.id) nameInput.id = "ltPmName";
-      if (numInput && !numInput.id) numInput.id = "ltPmNum";
+      var nameInput = pmRows[0].querySelector("input, textarea");
+      var numInput = pmRows[1].querySelector("input, textarea");
+      if (!nameInput || !numInput) return;
+      nameInput.id = "ltPmName";   // mark for targeting (POST uses name=, not id)
+      numInput.id = "ltPmNum";
 
       run([
         { sel: "#ltPmName", text: "Enter your bank/wallet account name.",
