@@ -535,6 +535,36 @@
 
   /* ===== muted text ===== */
   .muted { color: #9a9a9a; font-size: 13px; }
+
+  /* ===== Submitting state ===== */
+  .btn.btn-primary.is-loading { opacity: .85; pointer-events: none; }
+  .btn-spin {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2.5px solid rgba(255,255,255,.45); border-top-color: #fff;
+    animation: ltspin .7s linear infinite; display: inline-block;
+  }
+  .submit-overlay {
+    position: fixed; inset: 0; z-index: 99999; display: none;
+    align-items: center; justify-content: center; padding: 24px;
+    background: rgba(26,12,0,.45);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  }
+  .submit-overlay.show { display: flex; }
+  .submit-box {
+    width: min(320px,90vw); background: #fff; border-radius: 22px;
+    padding: 30px 24px 26px; text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,.3);
+    animation: popin .25s ease-out both;
+  }
+  @keyframes popin { from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
+  .submit-spin {
+    width: 54px; height: 54px; margin: 0 auto 16px; border-radius: 50%;
+    border: 5px solid #FFE9D6; border-top-color: #FF6B00;
+    animation: ltspin .8s linear infinite;
+  }
+  @keyframes ltspin { to { transform: rotate(360deg); } }
+  .submit-title { font-weight: 800; font-size: 17px; color: #1a1a1a; margin: 0 0 6px; }
+  .submit-sub { font-size: 13px; color: #9a9a9a; line-height: 1.5; margin: 0; }
 </style>
 <div class="page">
 
@@ -1232,6 +1262,34 @@ clearBtn && clearBtn.addEventListener("click", clear);
       }
     });
   });
+</script>
+
+<!-- Submitting overlay (prevents confusion / double submit) -->
+<div class="submit-overlay" id="submitOverlay">
+  <div class="submit-box">
+    <div class="submit-spin"></div>
+    <p class="submit-title">Submitting your application…</p>
+    <p class="submit-sub">Please wait a moment.<br>Do not close or refresh this page.</p>
+  </div>
+</div>
+<script>
+  (function(){
+    var form = document.querySelector("form");
+    var overlay = document.getElementById("submitOverlay");
+    if(!form || !overlay) return;
+    var btn = form.querySelector('button[name="action"][value="apply_loan"]');
+    var submitting = false;
+    form.addEventListener("submit", function(e){
+      if (submitting){ e.preventDefault(); return; }   // block double submit
+      if (e.defaultPrevented) return;                  // signature/native validation blocked it
+      submitting = true;
+      overlay.classList.add("show");
+      if (btn){
+        btn.classList.add("is-loading");
+        btn.innerHTML = '<span class="btn-spin"></span><span>Submitting…</span>';
+      }
+    });
+  })();
 </script>
 
 <script src="{% static 'js/loan_tour.js' %}?v=4"></script>
