@@ -25,10 +25,17 @@ if (-not $DatabaseUrl) {
     exit 1
 }
 
-# Make sure pg_dump is available.
+# Make sure pg_dump is available. Try PATH first, then the standard install
+# location (so this works inside Task Scheduler even if PATH isn't refreshed).
 if (-not (Get-Command pg_dump -ErrorAction SilentlyContinue)) {
-    Write-Error "pg_dump not found. Install PostgreSQL client tools: https://www.postgresql.org/download/windows/ (then reopen the terminal)."
-    exit 1
+    $bin = Get-ChildItem "C:\Program Files\PostgreSQL\*\bin\pg_dump.exe" -ErrorAction SilentlyContinue |
+           Sort-Object FullName -Descending | Select-Object -First 1
+    if ($bin) {
+        $env:Path = (Split-Path $bin.FullName) + ";" + $env:Path
+    } else {
+        Write-Error "pg_dump not found. Install PostgreSQL client tools: https://www.postgresql.org/download/windows/"
+        exit 1
+    }
 }
 
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null

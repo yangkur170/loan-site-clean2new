@@ -22,8 +22,14 @@ if (-not (Test-Path $DumpFile)) {
     exit 1
 }
 if (-not (Get-Command pg_restore -ErrorAction SilentlyContinue)) {
-    Write-Error "pg_restore not found. Install PostgreSQL client tools first."
-    exit 1
+    $bin = Get-ChildItem "C:\Program Files\PostgreSQL\*\bin\pg_restore.exe" -ErrorAction SilentlyContinue |
+           Sort-Object FullName -Descending | Select-Object -First 1
+    if ($bin) {
+        $env:Path = (Split-Path $bin.FullName) + ";" + $env:Path
+    } else {
+        Write-Error "pg_restore not found. Install PostgreSQL client tools first."
+        exit 1
+    }
 }
 
 Write-Host "Restoring $DumpFile -> target database ..." -ForegroundColor Yellow
