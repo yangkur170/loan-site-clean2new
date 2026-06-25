@@ -17,7 +17,7 @@ graceful_timeout = 45
 keep_alive = 5
 
 # Memory optimization
-max_requests = 500  # កាត់បន្ថយពី 1000 មក 500
+max_requests = 500  #  1000  500
 max_requests_jitter = 50
 preload_app = True
 

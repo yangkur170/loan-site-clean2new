@@ -30,10 +30,10 @@ def _validate_file(f, allowed_ext, max_mb, label="File"):
 
     # iPhone HEIC block (common issue)
     if ext == ".heic":
-        raise forms.ValidationError("iPhone HEIC មិន support។ សូម convert ទៅ JPG/PNG/WebP មុន upload.")
+        raise forms.ValidationError("iPhone HEIC is not supported. Please convert to JPG/PNG/WebP before uploading.")
 
     if ext not in allowed_ext:
-        raise forms.ValidationError(f"{label} type មិនត្រឹមត្រូវ: {ext}")
+        raise forms.ValidationError(f"{label} file type not allowed: {ext}")
 
     try:
         size_mb = (f.size or 0) / (1024 * 1024)
@@ -41,7 +41,7 @@ def _validate_file(f, allowed_ext, max_mb, label="File"):
         size_mb = 0
 
     if size_mb > max_mb:
-        raise forms.ValidationError(f"{label} ធំពេក ({size_mb:.1f}MB). Max {max_mb}MB.")
+        raise forms.ValidationError(f"{label} is too large ({size_mb:.1f}MB). Max {max_mb}MB.")
 
 
 # =========================

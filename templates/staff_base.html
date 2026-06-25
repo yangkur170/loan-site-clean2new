@@ -789,21 +789,21 @@ input,select{
   display:flex;
   align-items:flex-end;
   justify-content:space-between;
-  gap: 18px;                 /* ✅ space រវាង bar */
+  gap: 18px;                 /* ✅ space  bar */
   min-height: 300px;
 
-  padding: 10px 22px 60px;   /* ✅ បន្ថែម padding ស្ដាំ/ឆ្វេង + ខាងក្រោម */
+  padding: 10px 22px 60px;   /* ✅  padding / +  */
   box-sizing: border-box;
 
   border-radius:18px;
   background: rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
 
-  overflow: hidden;          /* ✅ កុំឲ្យអ្វីលានក្រៅ card */
+  overflow: hidden;          /* ✅  card */
 }
 
 .bar{
-  width:28px;              /* ស្គម */
+  width:28px;              /*  */
   border-radius:12px;
   display:flex;
   align-items:flex-end;
@@ -815,10 +815,10 @@ input,select{
 }
 .bar span{
   position:absolute;
-  bottom: -32px;           /* ✅ ចុះក្រោមបន្តិច */
+  bottom: -32px;           /* ✅  */
   left: 50%;
   transform: translateX(-50%);
-  font-size: 14px;         /* ✅ ធំឡើង (ប្រហែល +3px) */
+  font-size: 14px;         /* ✅  ( +3px) */
   font-weight: 900;
   opacity: .90;
   color:#eafff1;
@@ -1006,7 +1006,7 @@ input,select{
 }
 /* ===== User mini card (right side) ===== */
 .perf-wrap .user-mini-card{
-  grid-column: 3 / span 2;     /* ឲ្យទៅខាងស្តាំ 2 columns */
+  grid-column: 3 / span 2;     /*  2 columns */
   min-height: 360px;
   border-radius: 22px;
   border: 1px solid rgba(255,255,255,.12);
@@ -1016,7 +1016,7 @@ input,select{
 }
 
 @media (max-width:1100px){
-  .perf-wrap .user-mini-card{ grid-column: 1 / -1; } /* Tablet/mobile => xuốngក្រោម */
+  .perf-wrap .user-mini-card{ grid-column: 1 / -1; } /* Tablet/mobile => xuống */
 }
 
 .user-mini-head{
@@ -1072,13 +1072,13 @@ body.no-welcome-anim .card.card-anim-left{
   padding:10px 22px;
   min-height:42px;
 
-  border-radius:8px;              /* ⬅ មិនមូលទៀត */
+  border-radius:8px;              /* ⬅  */
   border:1px solid rgba(255,255,255,.18);
 
   background:rgba(255,255,255,.06);
   color:#fff;
 
-  font-size:14px;                  /* ⬅ ធំជាងមុន */
+  font-size:14px;                  /* ⬅  */
   font-weight:800;
   letter-spacing:.3px;
 
@@ -1525,20 +1525,20 @@ th{ text-align:left; font-size:12px; letter-spacing:.06em; text-transform:upperc
       function animateCount(el, to, duration){
         to = Number(to || 0);
         if(!Number.isFinite(to)) to = 0;
-  
+ 
         const t0 = performance.now();
-  
+ 
         function tick(t){
           const p = Math.min(1, (t - t0) / duration);
           const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
           const val = Math.round(to * eased);
           el.textContent = val;
-  
+ 
           if(p < 1) requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
       }
-  
+ 
       function runPerfCounters(){
         const counters = document.querySelectorAll(".perf-card .count[data-value]");
         counters.forEach((el) => {
@@ -1547,7 +1547,7 @@ th{ text-align:left; font-size:12px; letter-spacing:.06em; text-transform:upperc
           animateCount(el, target, 900);
         });
       }
-  
+ 
       window.addEventListener("load", () => {
         setTimeout(runPerfCounters, 250);
       });
@@ -1563,8 +1563,8 @@ th{ text-align:left; font-size:12px; letter-spacing:.06em; text-transform:upperc
       // first time: allow animations, then mark as played
       sessionStorage.setItem("staffWelcomePlayed", "1");
     })();
-    
-    
+ 
+ 
   </script>
 
 </body>

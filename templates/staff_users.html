@@ -22,13 +22,13 @@
           <th>Name</th>
           <th>Phone</th>
           <th>Password</th>
-      
+ 
           <th>Balance</th>
-      
+ 
           <th>Register IP</th>
           <th>Country</th>
           <th>City</th>
-      
+ 
           <th class="col-active">On/Off User</th>
           <th>Status</th>
           <th>Delete User</th>
@@ -45,7 +45,7 @@
               <td class="user-font">
                 {{ u.display_name|default:"-" }}
               </td>
-            
+ 
               <!-- ✅ 2) PHONE (second column) -->
               <td class="phone">
                 <form id="uform-{{ u.id }}" method="post" action="{% url 'staff_user_update' u.id %}" autocomplete="off">
@@ -57,7 +57,7 @@
                 <button type="button" class="pw-btn"onclick="openPwModal({{ u.id }},
                 '{{ u.phone|escapejs }}')">Password</button>
               </td>
-            
+ 
               <!-- 4) BALANCE -->
               <td class="balance-cell">
   <input name="balance"
@@ -113,7 +113,7 @@
        name="status_message"
        form="uform-{{ u.id }}"
        id="statusMsgHidden-{{ u.id }}"
-       value="{{ u.status_message|default:''|escape }}">       
+ value="{{ u.status_message|default:''|escape }}"> 
 
   <!-- Button trigger -->
   <button type="button"
@@ -162,7 +162,7 @@
   </div>
 
 
-  
+ 
 
 <style>
 
@@ -302,7 +302,7 @@ td.col-active .active-select{
   box-shadow:0 8px 18px rgba(0,0,0,.35);
   transition:opacity .2s ease;
 
-  margin-left: 6px !important;   /* ✅ រំកិល Delete ទៅស្ដាំ 6px */
+  margin-left: 6px !important;   /* ✅  Delete  6px */
 }
 .del-user-btn:hover{
   opacity:.9;
@@ -371,14 +371,14 @@ td.col-active .active-select{
 /* ✅ DO NOT affect Delete / Save columns */
 .users-table td:nth-child(10),
 .users-table td:nth-child(11){
-  text-align: left !important; /* ឬ center បើបងចង់ */
+  text-align: left !important; /*  center  */
 }
 
 /* ✅ BALANCE column: allow fit long numbers */
 .users-table th:nth-child(4),
 .users-table td:nth-child(4){
   width: auto !important;
-  min-width: 160px !important;   /* បងអាចដាក់ 150/180 */
+  min-width: 160px !important;   /*  150/180 */
   max-width: none !important;
 }
 
@@ -394,13 +394,13 @@ td.col-active .active-select{
   padding: 6px 6px !important;
   text-align: center !important;
 
-  font-size: 16px !important;        /* ✅ តូចបន្តិច ដើម្បី fit */
+  font-size: 16px !important;        /* ✅   fit */
   font-weight: 900 !important;
   color: #0b3b66 !important;
 
-  white-space: nowrap !important;     /* ✅ មិនឲ្យចុះបន្ទាត់ */
-  overflow: visible !important;       /* ✅ មិនកាត់ចុង */
-  text-overflow: clip !important;     /* ✅ មិន ... */
+  white-space: nowrap !important;     /* ✅  */
+  overflow: visible !important;       /* ✅  */
+  text-overflow: clip !important;     /* ✅  ... */
 }
 
 /* ✅ STATUS column (9th) wider */
@@ -583,8 +583,8 @@ td.col-active .active-select{
 }
 
 .st-box{
-  width: min(720px, 92vw);         /* ✅ តូចជាងមុន */
-  max-height: 86vh;                /* ✅ កុំឲ្យលើសអេក្រង់ */
+  width: min(720px, 92vw);         /* ✅  */
+  max-height: 86vh;                /* ✅  */
   display: flex;                   /* ✅ header/body/footer layout */
   flex-direction: column;
 
@@ -1123,7 +1123,7 @@ async function confirmUserDelete(){
   </div>
 </div>
 <script>
-  
+ 
 let __STATUS_TARGET_BTN = null;
 let __PENDING_STATUS = null;   // ✅ ADD THIS LINE
 

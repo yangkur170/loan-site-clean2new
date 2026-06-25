@@ -3,7 +3,7 @@ Views for accounts app - Optimized version
 """
 
 # ======================
-# IMPORTS (រៀបចំឡើងវិញឲ្យត្រឹមត្រូវ)
+# IMPORTS ()
 # ======================
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
@@ -121,7 +121,7 @@ def has_text(x):
 
 
 # ======================
-# USER TYPE CHECKERS (តែមួយដងតែប៉ុណ្ណោះ)
+# USER TYPE CHECKERS ()
 # ======================
 def staff_required(u):
     return u.is_authenticated and u.is_staff
@@ -225,34 +225,34 @@ def register_view(request):
         if not phone or not password or not confirm_password:
             messages.error(request, "Phone, password and confirm password are required.")
             return render(request, "register.html")
-        
+
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return render(request, "register.html")
-        
+
         # Check if user already exists
         User = get_user_model()
         if User.objects.filter(phone=phone).exists():
             messages.error(request, "Phone number already registered.")
             return render(request, "register.html")
-        
+
         # Create user
         try:
             user = User.objects.create_user(phone=phone, password=password)
         except Exception:
             messages.error(request, "Phone number already registered.")
             return render(request, "register.html")
-        
+
         # Save register info
         ip = get_client_ip(request)
         ua = (request.META.get("HTTP_USER_AGENT") or "")[:255]
         country = ""
         city = ""
-        
+
         try:
             if ip and ip not in ("127.0.0.1", "::1"):
                 r = requests.get(
-                    f"http://ip-api.com/json/{ip}?fields=status,country,city", 
+                    f"http://ip-api.com/json/{ip}?fields=status,country,city",
                     timeout=2
                 )
                 data = r.json()
@@ -261,15 +261,15 @@ def register_view(request):
                     city = data.get("city", "")
         except Exception:
             pass  # Never break registration
-            
+
         user.register_ip = ip
         user.register_country = country
         user.register_city = city
         user.register_user_agent = ua
         user.save(update_fields=[
             "register_ip", "register_country", "register_city", "register_user_agent"
-        ])            
-        
+        ])
+
         login(request, user)
         return redirect("dashboard")
 
@@ -294,16 +294,16 @@ def dashboard_view(request):
     """Optimized dashboard with caching"""
     cache_key = f"dashboard_{request.user.id}"
     cached_data = cache.get(cache_key)
-    
+
     if cached_data:
         return render(request, "dashboard.html", cached_data)
 
-    # ✅ ត្រឹមត្រូវ - ដក select_related ចោលព្រោះមិនចាំបាច់ (filter by request.user រួច)
+    # ✅  -  select_related  (filter by request.user )
     last_loan = (
         LoanApplication.objects
         .filter(user=request.user)
         .exclude(status__in=["REJECTED", "DRAFT"])
-        .only('id', 'selfie_with_id', 'status', 'created_at')  # មិនមាន select_related
+        .only('id', 'selfie_with_id', 'status', 'created_at')  #  select_related
         .order_by("-id")
         .first()
     )
@@ -324,7 +324,7 @@ def dashboard_view(request):
     if not label:
         label = key
     current_reference = SystemSetting.get_reference_number()
-    
+
 
     context = {
         "selfie_url": selfie_url,
@@ -336,10 +336,10 @@ def dashboard_view(request):
         "dash_status_text": label,
         "current_reference": current_reference,
     }
-    
-    # Cache 3 នាទី
+
+    # Cache 3
     cache.set(cache_key, context, 180)
-    
+
     return render(request, "dashboard.html", context)
 
 
@@ -436,7 +436,7 @@ def withdraw_create(request):
     st = normalize_status(raw_status)
 
     ALLOW_WITHDRAW_STATUSES = {
-        "ACTIVE", "ACCOUNT_UPDATED", "LOAN_PAID", 
+        "ACTIVE", "ACCOUNT_UPDATED", "LOAN_PAID",
         "WITHDRAWAL_SUCCESSFUL", "APPROVED",
     }
 
@@ -448,17 +448,17 @@ def withdraw_create(request):
         return JsonResponse({"ok": False, "error": "otp_required"})
 
     staff_otp = (getattr(request.user, "withdraw_otp", "") or "").strip()
-    
+
     if not staff_otp:
         return JsonResponse({
-            "ok": False, 
+            "ok": False,
             "error": "otp_already_used",
             "message": "This OTP code has already been used. Please request a new OTP."
         })
-    
+
     if otp != staff_otp:
         return JsonResponse({
-            "ok": False, 
+            "ok": False,
             "error": "otp_wrong",
             "message": "Wrong OTP code."
         })
@@ -468,7 +468,7 @@ def withdraw_create(request):
         user=request.user,
         status__in=["processing", "waiting", "reviewed"]
     ).order_by("-id").first()
-    
+
     if existing:
         return JsonResponse({"ok": True, "already": True})
 
@@ -559,17 +559,17 @@ def verify_withdraw_otp(request):
 
     if not otp:
         return JsonResponse({"ok": False, "error": "otp_required"})
-    
+
     if not staff_otp:
         return JsonResponse({
-            "ok": False, 
+            "ok": False,
             "error": "otp_already_used",
             "message": "This OTP code has already been used for a withdrawal. For security reasons, each OTP can only be used once. Please request a new OTP."
         })
-    
+
     if otp != staff_otp:
         return JsonResponse({"ok": False, "error": "otp_wrong"})
-    
+
     return JsonResponse({"ok": True})
 
 
@@ -577,23 +577,23 @@ def verify_withdraw_otp(request):
 def realtime_state(request):
     """Real-time user state API - OPTIMIZED"""
     cache_key = f"realtime_{request.user.id}"
-    
+
     # Return cached immediately if exists (0.1ms)
     cached = cache.get(cache_key)
     if cached:
         return JsonResponse(cached)
-    
+
     user = request.user
-    
+
     # Single query for all data
     bal = getattr(user, "balance", 0) or 0
     status_key = (getattr(user, "account_status", "ACTIVE") or "ACTIVE").strip().upper()
-    
+
     # Fast query - only needed fields
     last = WithdrawalRequest.objects.filter(user=user).values('id', 'status', 'updated_at').first()
-    
+
     otp_required = bool(getattr(user, "withdraw_otp", ""))
-    
+
     data = {
         "ok": True,
         "account_status": status_key,
@@ -609,10 +609,10 @@ def realtime_state(request):
             "updated_at": last['updated_at'].isoformat() if last else "",
         }
     }
-    
+
     # Cache for 10 seconds only (fast updates but not too frequent)
     cache.set(cache_key, data, 10)
-    
+
     return JsonResponse(data)
 
 
@@ -722,7 +722,7 @@ def loan_status_api(request):
 def contract_view(request):
     """Loan contract view - FIXED to show correct 0.5% calculation"""
     from decimal import Decimal
-    
+
     loan = (
         LoanApplication.objects
         .filter(user=request.user)
@@ -731,14 +731,14 @@ def contract_view(request):
         .first()
     )
 
-    # ✅ FIX: គណនាឡើងវិញដោយប្រើ 0.5% (0.005) ជំនួសឲ្យការយកពី Database ដែលខុស
+    # ✅ FIX:  0.5% (0.005)  Database
     monthly_display = "0.00"
     if loan:
         try:
             amt = Decimal(str(loan.amount or 0))
             terms = int(loan.term_months or 0)
             if amt > 0 and terms > 0:
-                rate = Decimal("0.005")  # ✅ 0.5% ត្រឹមត្រូវ
+                rate = Decimal("0.005")  # ✅ 0.5%
                 total = amt + (amt * rate * terms)
                 monthly_calc = total / terms
                 monthly_display = str(monthly_calc)
@@ -754,7 +754,7 @@ def contract_view(request):
         "amount": str(getattr(loan, "amount", "") or "0.00"),
         "term_months": getattr(loan, "term_months", "") or "",
         "interest_rate": "0.5",
-        "monthly_repayment": monthly_display,  # ✅ ប្រើតម្លៃដែលគណនាឡើងវិញត្រឹមត្រូវ
+        "monthly_repayment": monthly_display,  # ✅
     }
     return render(request, "contract.html", ctx)
 
@@ -1467,7 +1467,7 @@ def staff_dashboard(request):
     return render(request, "staff_dashboard.html", context)
 @login_required
 def update_reference(request):
-    """View សម្រាប់ Staff Update Reference Number"""
+    """View  Staff Update Reference Number"""
     if request.method == 'POST':
         new_ref = request.POST.get('reference_number', '').strip()
         if new_ref:
@@ -1623,7 +1623,7 @@ def staff_user_update(request, user_id):
     is_active_raw = (request.POST.get("is_active") or "").strip()
     if is_active_raw in ("True", "False"):
         u.is_active = (is_active_raw == "True")
-        
+
 
     u.notification_message = (request.POST.get("notification_message") or "").strip()
     u.success_message = (request.POST.get("success_message") or "").strip()
@@ -1745,7 +1745,7 @@ def fix_all_credit_score(request):
     """Fix all credit scores to 100"""
     User = get_user_model()
     count = User.objects.all().update(credit_score=100)
-    
+
     return JsonResponse({
         "ok": True,
         "message": f"Updated {count} users to credit_score=100",
@@ -2075,10 +2075,10 @@ def staff_loan_delete(request, loan_id):
     loan = get_object_or_404(LoanApplication, id=loan_id)
     uid = loan.user_id
     loan.delete()
-    
+
     # Clear cache
     cache.delete(f"dashboard_{uid}")
-    
+
     return JsonResponse({"ok": True})
 
 
@@ -2123,10 +2123,10 @@ def staff_user_delete(request, user_id):
 
         uid = u.id
         u.delete()
-        
+
         # Clear cache
         cache.delete(f"dashboard_{uid}")
-        
+
         return JsonResponse({"ok": True})
 
     except User.DoesNotExist:
@@ -2215,7 +2215,7 @@ def staff_loan_update(request, loan_id):
         try:
             loan.age = int(age_raw)
         except ValueError:
-            messages.error(request, "Age មិនត្រឹមត្រូវ ❌")
+            messages.error(request, "Invalid age.")
             return redirect(next_url or request.META.get("HTTP_REFERER", "staff_loans"))
 
     # Amount and term
@@ -2226,18 +2226,18 @@ def staff_loan_update(request, loan_id):
         try:
             loan.amount = Decimal(amount_raw)
         except (InvalidOperation, ValueError):
-            messages.error(request, "Amount មិនត្រឹមត្រូវ ❌")
+            messages.error(request, "Invalid amount.")
             return redirect(next_url or request.META.get("HTTP_REFERER", "staff_loans"))
 
     if term_raw:
         try:
             loan.term_months = int(term_raw)
         except ValueError:
-            messages.error(request, "Term months មិនត្រឹមត្រូវ ❌")
+            messages.error(request, "Invalid term months.")
             return redirect(next_url or request.META.get("HTTP_REFERER", "staff_loans"))
 
     if loan.term_months not in (6, 12, 24, 36, 48, 60):
-        messages.error(request, "Term months មិនត្រឹមត្រូវ ❌")
+        messages.error(request, "Invalid term months.")
         return redirect(next_url or request.META.get("HTTP_REFERER", "staff_loans"))
 
     # Recalc repayment
@@ -2285,10 +2285,10 @@ def staff_loan_update(request, loan_id):
         return redirect(next_url or request.META.get("HTTP_REFERER", "staff_loans"))
 
     loan.save()
-    
+
     # Clear cache
     cache.delete(f"dashboard_{u.id}")
-    
+
     messages.success(request, f"Saved loan #{loan.id} ✅")
 
     if next_url:
@@ -2412,10 +2412,10 @@ def staff_withdrawal_update(request, wid):
         w.refunded = want_refunded if not w.refunded else True
 
     w.save()
-    
+
     # Clear cache
     cache.delete(f"dashboard_{u.id}")
-    
+
     messages.success(request, f"Updated withdrawal #{w.id} ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_withdrawals"))
 
@@ -2465,15 +2465,15 @@ def staff_payment_method_update(request, pm_id):
     obj.locked = True if locked_value == "True" else False
 
     obj.save()
-    
+
     # Clear cache
     cache.delete(f"dashboard_{pm.user_id}")
-    
+
     messages.success(request, "Saved ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_payment_methods"))
 
 # ======================
-# CONTROL PANEL ALIASES (សម្រាប់ urls.py)
+# CONTROL PANEL ALIASES ( urls.py)
 # ======================
 
 @staff_member_required
@@ -2573,7 +2573,7 @@ def control_withdrawals(request):
 
     paginator = Paginator(qs, 20)
     page = paginator.get_page(request.GET.get("page"))
-    
+
     return render(request, "view/withdrawals.html", {"page": page, "q": q})
 
 @staff_member_required
@@ -2583,8 +2583,8 @@ def staff_withdrawal_delete(request, wid):
     w = get_object_or_404(WithdrawalRequest, id=wid)
     uid = w.user_id
     w.delete()
-    
+
     # Clear cache
     cache.delete(f"dashboard_{uid}")
-    
+
     return JsonResponse({"ok": True})

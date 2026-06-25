@@ -1,8 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>  
+<html lang="en" translate="no">
+<head>
 <meta charset="UTF-8">
+<meta name="google" content="notranslate">
 <link rel="icon" type="image/png" href="{% static 'img/logo.webp' %}?v=3">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 {% block extra_css %}
@@ -45,9 +46,9 @@ a {
 img,video{ max-width:100%; height:auto; }
 html{ -webkit-text-size-adjust:100%; }
 
-/* bar height + gap សម្រាប់ជាទម្រង់ទំនេរខាងក្រោម */
+/* bar height + gap  */
 :root{ --bar-h:68px; --bar-gap:14px; }
-/* ដាក់ទំហំទំនេរឲ្យ content ពីព្រោះមាន bottom bar fixed */
+/*  content  bottom bar fixed */
 body{ padding-bottom: calc(var(--bar-h) + var(--bar-gap)); }
 
 /* ===== Account Status Badge (GLOBAL) ===== */
@@ -157,19 +158,19 @@ body{
   padding:28px;
   border-radius:18px;
   background:rgba(220,237,200,.22);
-  backdrop-filter:blur(8px);         /* ✅ កាត់ពី 18px មក 8px */
-  -webkit-backdrop-filter:blur(8px); /* ✅ កាត់ពី 18px មក 8px */
+  backdrop-filter:blur(8px);         /* ✅  18px  8px */
+  -webkit-backdrop-filter:blur(8px); /* ✅  18px  8px */
   box-shadow:0 30px 70px rgba(0,0,0,.45);
   animation: zoomIn .45s ease;
   text-align:center;
 }
 
-/* ✅ បន្ថែមនេះដើម្បីបិទ Blur នៅ Mobile (ធ្វើឲ្យលឿនជាង 60%) */
+/* ✅  Blur  Mobile ( 60%) */
 @media (max-width: 768px) {
   .card, .cardx {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    animation: none !important; /* បិទ Animation នៅ Mobile */
+    animation: none !important; /*  Animation  Mobile */
   }
 }
 
@@ -200,7 +201,7 @@ body{
   to{background-position:220%}
 }
 .silver-run{
-  animation-iteration-count: 3; /* ✅ រត់តែ 3 ដង ហើយឈប់ */
+  animation-iteration-count: 3; /* ✅  3   */
 }
 
 /* ===== WAVE EXCLAMATION ===== */
@@ -517,24 +518,24 @@ function flowBack() {
     const isAuth = document.body.dataset.auth === "true";
     if (!isAuth) return;
     const API_URL = window.API_URL || "/api/realtime/";
-    const INTERVAL_MS = window.INTERVAL_MS || 15000;   // ✅ 15 វិនាទី ជំនួស 2 វិនាទី (ថយចុះ 87%)
-  
+    const INTERVAL_MS = window.INTERVAL_MS || 15000;   // ✅ 15   2  ( 87%)
+ 
     let timer = null;
     let lastWithdrawalStatus = null;
     let lastBalance = null;
-  
+ 
     function qs(sel){ return document.querySelector(sel); }
-  
+ 
     function updateNotif(count){
       const a = document.querySelector('.notify-wrap');
       if(!a) return;
-  
+ 
       const n = parseInt(count || 0, 10) || 0;
-  
+ 
       a.classList.toggle('has-unread', n > 0);
-     
-      
-  
+ 
+ 
+ 
       let b = a.querySelector('.notify-badge');
       if(n > 0){
         if(!b){
@@ -552,7 +553,7 @@ function flowBack() {
         if(b) b.style.display = 'none';
       }
     }
-  
+ 
     function formatStatusText(s){
   if(!s) return "Active";
   return String(s)
@@ -639,13 +640,13 @@ function updateAccountStatus(statusKey, statusLabel){
   else if(tone === "yellow") badge.classList.add("status-warn");
   else badge.classList.add("status-danger");
 }
-  
+ 
     function applyState(data){
       if(!data || !data.ok) return;
-  
+ 
       // ✅ notif dot/badge
       updateNotif(data.notif_count);
-  
+ 
       // ✅ status badge realtime (ALWAYS)
       updateAccountStatus(data.account_status, data.account_status_label);
       const alertBox = document.getElementById("statusAlert");
@@ -699,22 +700,22 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
   alertBox.textContent = msg || ("Your account is " + prettyLabel(key) + ", Please contact to Financial Department.");
 }
 }
-  
+ 
       // ✅ balance realtime (only update when changed)
       const balEl = document.querySelector("[data-balance]");
       if(balEl && data.balance !== undefined && data.balance !== lastBalance){
         lastBalance = data.balance;
         balEl.textContent = data.balance;
       }
-  
+ 
       // ✅ OTP required flag (wallet page)
       if(typeof window.__setOtpRequired === "function"){
         window.__setOtpRequired(!!data.otp_required);
       }
 
       // ✅ withdrawal timeline (wallet)
-// សំខាន់៖ ឲ្យវារត់តែ page ដែលមាន #b4 ប៉ុណ្ណោះ
-// Wallet page របស់អ្នកប្រើ b1/b2/b3 ហើយមាន script ផ្ទាល់ខ្លួន
+// page #b4 
+// Wallet page b1/b2/b3 script 
 (function(){
   const b4Exists = !!document.getElementById("b4");
   if(!b4Exists) return;
@@ -791,7 +792,7 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
     }
   }
 })();
-  
+ 
       // ✅ disable withdraw button if balance 0
       const btn = qs("#withdrawBtn");
       if(btn){
@@ -801,7 +802,7 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
         btn.style.pointerEvents = btn.disabled ? "none" : "auto";
       }
     }
-  
+ 
     async function tick(){
       if(document.hidden) return;
       try{
@@ -810,7 +811,7 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
         applyState(data);
       }catch(e){}
     }
-  
+ 
     function start(){
       if(timer) return;
       tick();
@@ -819,52 +820,52 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
     function stop(){
       if(timer){ clearInterval(timer); timer = null; }
     }
-  
+ 
     document.addEventListener("visibilitychange", function(){
       if(document.hidden) stop();
       else start();
     });
-  
+ 
     start();
   })();
   </script>
 <script>
 (function() {
-    // កំណត់ថា បើធំជាង 2MB ទើបបង្ហាប់
+ // 2MB 
     const MAX_SIZE_MB = 2;
-    const MAX_WIDTH = 1920;  // ទទឹងធំបំផុត
-    const QUALITY = 0.85;    // គុណភាព 85%
+ const MAX_WIDTH = 1920; // 
+    const QUALITY = 0.85;    //  85%
 
     document.addEventListener('change', async function(e) {
         const input = e.target;
-        
-        // ពិនិត្យថាជា input file ឬអត់ និងមាន class "compress-img"
+ 
+        //  input file   class "compress-img"
         if (!input.matches('input[type="file"].compress-img')) return;
-        
+ 
         const file = input.files[0];
         if (!file || !file.type.startsWith('image/')) return;
-        
-        // បើតូចជាង 2MB ទុកដដែល
+ 
+ // 2MB 
         if (file.size <= MAX_SIZE_MB * 1024 * 1024) return;
 
-        // បង្ហាញ Loading
+        // show loading
         const btn = input.closest('form')?.querySelector('button[type="submit"]');
         if (btn) {
             btn.disabled = true;
-            btn.innerText = 'កំពុងបង្ហាប់រូប...';
+            btn.innerText = 'Please wait...';
         }
 
         try {
             const compressedFile = await compressImage(file);
-            
-            // ជំនួស File ដើមជាមួយ File បង្ហាប់
+
+            // replace the original file with the compressed one
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(compressedFile);
             input.files = dataTransfer.files;
-            
-            console.log('បង្ហាប់រូបភាពរួចរាល់:', (compressedFile.size/1024).toFixed(1) + 'KB');
+
+            console.log('Image compressed:', (compressedFile.size/1024).toFixed(1) + 'KB');
         } catch (err) {
-            console.error('បរាជ័យ:', err);
+            console.error('Compression failed:', err);
         } finally {
             if (btn) {
                 btn.disabled = false;
@@ -877,16 +878,16 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            
+ 
             reader.onload = function(event) {
                 const img = new Image();
                 img.src = event.target.result;
-                
+ 
                 img.onload = function() {
-                    // គណនាទំហំថ្មី
+ // 
                     let width = img.width;
                     let height = img.height;
-                    
+ 
                     if (width > height) {
                         if (width > MAX_WIDTH) {
                             height = Math.round(height * (MAX_WIDTH / width));
@@ -898,23 +899,23 @@ else if(key === "APPROVED" || key === "LOAN_PAID" || key === "WITHDRAWAL_SUCCESS
                             height = MAX_WIDTH;
                         }
                     }
-                    
-                    // បង្កើត Canvas
+ 
+                    //  Canvas
                     const canvas = document.createElement('canvas');
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
-                    
-                    // បំពេញផ្ទៃស (សម្រាប់ PNG)
+ 
+                    //  ( PNG)
                     ctx.fillStyle = '#FFFFFF';
                     ctx.fillRect(0, 0, width, height);
                     ctx.drawImage(img, 0, 0, width, height);
-                    
-                    // បំលែងជា JPEG
+ 
+                    //  JPEG
                     canvas.toBlob((blob) => {
                         if (!blob) return reject('Error');
-                        const newFile = new File([blob], 
-                            file.name.replace(/\.[^/.]+$/, '') + '.jpg', 
+ const newFile = new File([blob], 
+ file.name.replace(/\.[^/.]+$/, '') + '.jpg', 
                             { type: 'image/jpeg', lastModified: Date.now() }
                         );
                         resolve(newFile);

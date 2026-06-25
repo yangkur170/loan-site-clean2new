@@ -876,7 +876,7 @@
 
             const vdata = await vr.json().catch(()=>null);
       if(!vdata || vdata.ok !== true){
-        // ✅ បង្ហាញ message ត្រឹមត្រូវតាមប្រភេទ error
+        // ✅  message  error
         const err = vdata.error || "";
         if(err === "otp_already_used"){
           showAlert(vdata.message || "This OTP has already been used. Please request a new one.");
@@ -920,7 +920,7 @@
         else if(err === "account_not_active") showAlert("Your account is not ACTIVE. Please contact company department.");
         else showAlert("Request failed. Try again.");
 
-        return;  // ✅ ត្រូវការ return នៅទីនេះ
+ return; // ✅ return 
       }
 
       // ✅ Success code starts here (outside if block)
@@ -928,14 +928,14 @@
       lockUI(8000);
       playSubmitAnimation();
 
-      // ✅ ការពារ OTP reuse - clear input ភ្លាម
+ // ✅ OTP reuse - clear input 
       if(otpInput){
         otpInput.value = "";
         otpInput.placeholder = "Enter new OTP";
       }
       if(otpHidden) otpHidden.value = "";
 
-      // ✅ Disable button វិញ
+ // ✅ Disable button 
       updateBtn();
 
       const latest = document.querySelector(".pill[data-wstatus]");

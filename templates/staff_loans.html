@@ -26,7 +26,7 @@
   cursor:pointer;
 }
 .modal-danger:hover{ opacity:.9; }
-.modal-cancel:hover{ opacity:.9; }  
+.modal-cancel:hover{ opacity:.9; } 
 
   /* ===== MODAL (shared style) ===== */
 .modal{
@@ -129,13 +129,13 @@
 /* ✅ set widths (must use !important to win) */
 .dashboard-card #loanTable th:nth-child(1),
 .dashboard-card #loanTable td:nth-child(1){
-  width:40px !important;          /* ✅ ឲ្យស្គម */
+  width:40px !important;          /* ✅  */
   min-width:40px !important;
   max-width:40px !important;
   text-align:center !important;
-  padding-left:6px !important;    /* ✅ កាត់ padding */
+  padding-left:6px !important;    /* ✅  padding */
   padding-right:6px !important;
-  font-size:12px !important;      /* ✅ optional ឲ្យស្គមស្អាត */
+  font-size:12px !important;      /* ✅ optional  */
 }
 
 .dashboard-card #loanTable th:nth-child(2),
@@ -211,10 +211,10 @@
 
 .dashboard-card .action-wrap button{
   width:100% !important;
-  height:32px !important;        /* 38 -> 33 (កាត់ 5px) */
-  padding:0 11px !important;     /* 12 -> 10 (កាត់បន្តិច) */
-  font-size:13px !important;     /* 13 -> 12 (កាត់បន្តិច) */
-  border-radius:11px !important; /* 12 -> 10 (កាត់បន្តិច) */
+  height:32px !important;        /* 38 -> 33 ( 5px) */
+  padding:0 11px !important;     /* 12 -> 10 () */
+  font-size:13px !important;     /* 13 -> 12 () */
+  border-radius:11px !important; /* 12 -> 10 () */
   border:0 !important;
   color:#fff !important;
   font-weight:900 !important;
@@ -281,7 +281,7 @@
   color: #004182 !important;
 
   border: 0 !important;
-  border-bottom: 0 !important;     /* ✅ លុប underline */
+  border-bottom: 0 !important;     /* ✅  underline */
   border-radius: 14px !important;
 
   box-shadow: none !important;
@@ -356,11 +356,11 @@
 
 .dashboard-card #loanTable th.col-amount,
 .dashboard-card #loanTable td.col-amount{
-  width:110px !important;     /* តូចជាងមុន */
+  width:110px !important;     /*  */
   min-width:110px !important;
   max-width:110px !important;
   text-align:center !important; /* ✅ amount center */
-  font-size:14px !important;    /* ✅ ស្មើ phone */
+  font-size:14px !important;    /* ✅  phone */
   font-weight:900 !important;
   color:#0b2b55 !important;
 }
@@ -371,7 +371,7 @@
   min-width:70px !important;
   max-width:70px !important;
   text-align:center !important; /* ✅ TERM center 100% */
-  font-size:14px !important;    /* ✅ ស្មើ phone */
+  font-size:14px !important;    /* ✅  phone */
   font-weight:900 !important;
   color:#0b2b55 !important;
 }
@@ -406,7 +406,7 @@
   white-space:nowrap !important;
   overflow:visible !important;
   text-overflow:clip !important;
-  padding:8px 30px 8px 10px !important; /* ✅ ទុកកន្លែងសម្រាប់ arrow */
+  padding:8px 30px 8px 10px !important; /* ✅  arrow */
   text-align:center !important;
   border:0 !important;
   border-bottom:0 !important;
@@ -438,7 +438,7 @@
 .dashboard-card #loanTable td.col-amount,
 .dashboard-card #loanTable td.col-term,
 .dashboard-card #loanTable td.col-created{
-  font-size:16px !important;   /* ស្មើ Phone */
+  font-size:16px !important;   /*  Phone */
   font-weight:900 !important;
   color: #004182 !important;
 }
@@ -519,9 +519,9 @@
 </td>
             <td class="action-cell">
               <div class="action-wrap">
-            
+ 
 
-            
+ 
                 <button
   type="button"
   class="btn-bank js-bank-btn"
@@ -529,7 +529,7 @@
 >
   Bank/Wallet card Number
 </button>
-            
+ 
 <button
 type="button"
 class="btn-id js-id-btn"
@@ -537,7 +537,7 @@ data-loan-id="{{ loan.id }}"
 >
 ID Identify
 </button>
-            
+ 
 <button
 type="button"
 class="btn-pass js-pass-btn"
@@ -572,7 +572,7 @@ Password
 >
   Credit Score
 </button>
-            
+ 
 <button
 type="button"
 class="btn-delete js-del-btn"
@@ -582,7 +582,7 @@ data-phone="{{ loan.user.phone }}"
 Delete
 </button>
 <button class="btn-save" type="submit">Save</button>
-            
+ 
               </div>
             </td>
           </form>
@@ -609,18 +609,18 @@ Delete
   <script>
     document.addEventListener("DOMContentLoaded", function(){
       const selects = document.querySelectorAll("#loanTable select[name='status']");
-    
+ 
       function paint(el){
         // clear classes
         el.classList.remove("approved","review","rejected");
-    
+ 
         // clear previous forced styles
         el.style.setProperty("background", "", "important");
         el.style.setProperty("color", "", "important");
         el.style.setProperty("border-bottom", "0", "important");
-    
+ 
         const v = (el.value || "").toUpperCase();
-    
+ 
         if(v === "APPROVED"){
           el.classList.add("approved");
           el.style.setProperty("background", "#22c55e", "important");
@@ -635,7 +635,7 @@ Delete
           el.style.setProperty("color", "#ffffff", "important");
         }
       }
-    
+ 
       selects.forEach(s => {
         paint(s);
         s.addEventListener("change", function(){ paint(this); });
@@ -657,7 +657,7 @@ Delete
     <div style="display:grid; gap:10px;">
       <input id="bank_name" placeholder="Bank name">
       <input id="bank_account" placeholder="Bank account number">
-    
+ 
       <input id="wallet_name" placeholder="Wallet account name">
       <input id="wallet_phone" placeholder="Wallet phone number">
     </div>
@@ -830,23 +830,23 @@ Delete
     const closeBtn = document.getElementById("bankModalClose");
     const saveBtn  = document.getElementById("bankModalSave");
     const sub      = document.getElementById("bankModalSub");
-  
+ 
     const inBankName   = document.getElementById("bank_name");
     const inBankAcc    = document.getElementById("bank_account");
     const inWalletName = document.getElementById("wallet_name");
     const inWalletPhone= document.getElementById("wallet_phone");
-  
+ 
     // Optional (if you added Saved ✅ text inside modal)
     const msg = document.getElementById("bankSavedMsg");
-  
+ 
     // ====== SAFETY CHECK (avoid JS crash) ======
     if (!modal || !closeBtn || !saveBtn || !sub || !inBankName || !inBankAcc || !inWalletName || !inWalletPhone) {
   console.warn("[BankModal] Missing modal elements. Check IDs in HTML.");
   return;
 }
-  
+ 
     let currentUserId = null;
-  
+ 
     function getCookie(name) {
       const parts = document.cookie.split(";").map(s => s.trim());
       for (const p of parts) {
@@ -855,11 +855,11 @@ Delete
       return "";
     }
     const csrftoken = getCookie("csrftoken");
-  
+ 
     function openModal() {
       modal.style.display = "flex";
     }
-  
+ 
     function closeModal() {
   modal.style.display = "none";
   currentUserId = null;
@@ -876,18 +876,18 @@ Delete
     msg.style.color = "#16a34a";
   }
 }
-  
+ 
     // close actions
     closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-  
+ 
     async function loadPM(userId) {
       try {
         const url = `/staff/users/${userId}/pm/get/`;
         const r = await fetch(url, { cache: "no-store" });
         const data = await r.json();
-  
+ 
         if (!data || !data.ok) {
           if (msg) {
             msg.textContent = "Cannot load ❌";
@@ -897,21 +897,21 @@ Delete
           }
           return;
         }
-  
+ 
         currentUserId = userId;
         sub.textContent = data.phone ? `Phone: ${data.phone}` : "";
         inBankName.value    = data.bank_name || "";
         inBankAcc.value     = data.bank_account || "";
         inWalletName.value  = data.wallet_name || "";
         inWalletPhone.value = data.wallet_phone || "";
-  
+ 
         // reset message
         if (msg) {
           msg.style.display = "none";
           msg.textContent = "Saved ✅";
           msg.style.color = "#16a34a";
         }
-  
+ 
         openModal();
       } catch (err) {
         console.error(err);
@@ -923,27 +923,27 @@ Delete
         }
       }
     }
-  
+ 
     async function savePM() {
       if (!currentUserId) return;
-  
+ 
       try {
         const url = `/staff/users/${currentUserId}/pm/save/`;
-  
+ 
         const fd = new FormData();
         fd.append("bank_name", inBankName.value || "");
         fd.append("bank_account", inBankAcc.value || "");
         fd.append("wallet_name", inWalletName.value || "");
         fd.append("wallet_phone", inWalletPhone.value || "");
-  
+ 
         const r = await fetch(url, {
           method: "POST",
           headers: { "X-CSRFToken": csrftoken },
           body: fd
         });
-  
+ 
         const data = await r.json();
-  
+ 
         if (data && data.ok) {
           // ✅ NO alert popup
           if (msg) {
@@ -970,17 +970,17 @@ Delete
         }
       }
     }
-  
+ 
     saveBtn.addEventListener("click", savePM);
-  
+ 
     // bind all bank buttons in table (must have class="js-bank-btn" data-user-id="123")
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".js-bank-btn");
       if (!btn) return;
-  
+ 
       const userId = btn.getAttribute("data-user-id");
       if (!userId) return;
-  
+ 
       loadPM(userId);
     });
   })();
@@ -993,12 +993,12 @@ Delete
     const saveBtn  = document.getElementById("idModalSave");
     const sub      = document.getElementById("idModalSub");
     const msg      = document.getElementById("idModalMsg");
-  
+ 
     const inName   = document.getElementById("identity_name");
     const inNum    = document.getElementById("identity_number");
-  
+ 
     let currentLoanId = null;
-  
+ 
     function getCookie(name){
       const parts = document.cookie.split(";").map(s => s.trim());
       for(const p of parts){
@@ -1007,7 +1007,7 @@ Delete
       return "";
     }
     const csrftoken = getCookie("csrftoken");
-  
+ 
     function openModal(){
       modal.style.display = "flex";
     }
@@ -1019,47 +1019,47 @@ Delete
       sub.textContent = "";
       msg.textContent = "";
     }
-  
+ 
     if(closeBtn) closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modal.style.display === "flex") closeModal(); });
-  
+ 
     async function loadIdentity(loanId){
       msg.textContent = "";
       const url = `/staff/loans/${loanId}/identity/get/`;
       const r = await fetch(url, { cache: "no-store" });
       const data = await r.json().catch(() => ({}));
-  
+ 
       if(!data.ok){
         msg.textContent = "Cannot load ❌";
         return;
       }
-  
+ 
       currentLoanId = loanId;
       sub.textContent = data.phone ? `Phone: ${data.phone}` : "";
       inName.value = data.identity_name || "";
       inNum.value  = data.identity_number || "";
       openModal();
     }
-  
+ 
     async function saveIdentity(){
       if(!currentLoanId) return;
-  
+ 
       msg.textContent = "Saving...";
       const url = `/staff/loans/${currentLoanId}/identity/save/`;
-  
+ 
       const fd = new FormData();
       fd.append("identity_name", inName.value || "");
       fd.append("identity_number", inNum.value || "");
-  
+ 
       const r = await fetch(url, {
         method: "POST",
         headers: { "X-CSRFToken": csrftoken },
         body: fd
       });
-  
+ 
       const data = await r.json().catch(() => ({}));
-  
+ 
       if(data.ok){
         msg.textContent = "Saved ✅";
         // close after short moment (no browser alert)
@@ -1068,9 +1068,9 @@ Delete
         msg.textContent = "Save failed ❌";
       }
     }
-  
+ 
     if(saveBtn) saveBtn.addEventListener("click", saveIdentity);
-  
+ 
     // click handler for ID Identify buttons
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".js-id-btn");
@@ -1089,12 +1089,12 @@ Delete
     const saveBtn  = document.getElementById("passModalSave");
     const sub      = document.getElementById("passModalSub");
     const msg      = document.getElementById("passModalMsg");
-  
+ 
     const inPhone  = document.getElementById("pass_phone");
     const inNewPw  = document.getElementById("pass_new");
-  
+ 
     let currentUserId = null;
-  
+ 
     function getCookie(name){
       const parts = document.cookie.split(";").map(s => s.trim());
       for(const p of parts){
@@ -1103,7 +1103,7 @@ Delete
       return "";
     }
     const csrftoken = getCookie("csrftoken");
-  
+ 
     function openModal(){
       modal.style.display = "flex";
       inNewPw.focus();
@@ -1116,36 +1116,36 @@ Delete
       inPhone.value = "";
       inNewPw.value = "";
     }
-  
+ 
     if(closeBtn) closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => {
       if(e.key === "Escape" && modal.style.display === "flex") closeModal();
     });
-  
+ 
     async function savePassword(){
       if(!currentUserId) return;
-  
+ 
       const pw = (inNewPw.value || "").trim();
       if(pw.length < 6){
         msg.textContent = "Password min 6 characters ❌";
         return;
       }
-  
+ 
       msg.textContent = "Saving...";
-  
+ 
       const url = `/staff/users/${currentUserId}/set-password/`;
       const fd = new FormData();
       fd.append("new_password", pw);
-  
+ 
       const r = await fetch(url, {
         method: "POST",
         headers: { "X-CSRFToken": csrftoken },
         body: fd
       });
-  
+ 
       const data = await r.json().catch(() => ({}));
-  
+ 
       if(data.ok){
         msg.textContent = "Saved ✅";
         setTimeout(closeModal, 450);
@@ -1153,17 +1153,17 @@ Delete
         msg.textContent = "Save failed ❌";
       }
     }
-  
+ 
     if(saveBtn) saveBtn.addEventListener("click", savePassword);
-  
+ 
     // click handler for Password buttons
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".js-pass-btn");
       if(!btn) return;
-  
+ 
       currentUserId = btn.getAttribute("data-user-id");
       const phone = btn.getAttribute("data-phone") || "";
-  
+ 
       inPhone.value = phone;
       sub.textContent = phone ? `Phone: ${phone}` : "";
       msg.textContent = "";
@@ -1181,10 +1181,10 @@ Delete
     const confirmBtn = document.getElementById("delModalConfirm");
     const sub = document.getElementById("delModalSub");
     const msg = document.getElementById("delModalMsg");
-  
+ 
     let currentLoanId = null;
     let currentRow = null;
-  
+ 
     function getCookie(name){
       const parts = document.cookie.split(";").map(s => s.trim());
       for(const p of parts){
@@ -1193,7 +1193,7 @@ Delete
       return "";
     }
     const csrftoken = getCookie("csrftoken");
-  
+ 
     function openModal(){
       modal.style.display = "flex";
     }
@@ -1204,28 +1204,28 @@ Delete
       sub.textContent = "";
       msg.textContent = "";
     }
-  
+ 
     if(closeBtn) closeBtn.addEventListener("click", closeModal);
     if(cancelBtn) cancelBtn.addEventListener("click", closeModal);
-  
+ 
     modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
     document.addEventListener("keydown", (e) => {
       if(e.key === "Escape" && modal.style.display === "flex") closeModal();
     });
-  
+ 
     async function doDelete(){
       if(!currentLoanId) return;
-  
+ 
       msg.textContent = "Deleting...";
-  
+ 
       const url = `/staff/loans/${currentLoanId}/delete/`;
       const r = await fetch(url, {
         method: "POST",
         headers: { "X-CSRFToken": csrftoken },
       });
-  
+ 
       const data = await r.json().catch(() => ({}));
-  
+ 
       if(data.ok){
         // remove row from table instantly
         if(currentRow) currentRow.remove();
@@ -1234,20 +1234,20 @@ Delete
         msg.textContent = "Delete failed ❌";
       }
     }
-  
+ 
     if(confirmBtn) confirmBtn.addEventListener("click", doDelete);
-  
+ 
     // click Delete button
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".js-del-btn");
       if(!btn) return;
-  
+ 
       currentLoanId = btn.getAttribute("data-loan-id");
       const phone = btn.getAttribute("data-phone") || "";
-  
+ 
       // find <tr> to remove after delete
       currentRow = btn.closest("tr");
-  
+ 
       sub.textContent = phone ? `Phone: ${phone} | Loan ID: ${currentLoanId}` : `Loan ID: ${currentLoanId}`;
       msg.textContent = "";
       openModal();
@@ -1427,7 +1427,7 @@ if(wdSave) wdSave.addEventListener("click", saveWd);
       scoreMsg.textContent = "Cannot load ❌";
       return;
     }
-    // ប្រសិនបើ credit_score > 500 ឬ < 0 កំណត់ឲ្យត្រឹម 100
+    //  credit_score > 500  < 0  100
     let score = parseInt(data.credit_score) || 100;
     if (score > 500 || score < 0) score = 100;
     scoreVal.value = score;

@@ -69,14 +69,14 @@
 /* ✅ Credit Score column - WIDER */
 #withdrawalsTable th:nth-child(6),
 #withdrawalsTable td:nth-child(6){
-  min-width: 120px;  /* ធំជាងមុន */
+  min-width: 120px;  /*  */
   white-space: nowrap;
 }
 
 /* ✅ Save & Delete column - MUST BE VISIBLE */
 #withdrawalsTable th:nth-child(7),
 #withdrawalsTable td:nth-child(7){
-  min-width: 180px;  /* ធានាថាឃើញប៊ូតុង */
+  min-width: 180px;  /*  */
   white-space: nowrap;
 }
 
@@ -122,11 +122,11 @@
   font-size: 13px;
   font-weight: 900;
   color: #0b2f55;
-  padding: 4px 8px;  /* តូចជាងមុន */
+  padding: 4px 8px;  /*  */
   background: rgba(11, 47, 85, 0.08);
   border-radius: 6px;
   border: 1px solid rgba(11, 47, 85, 0.2);
-  display: inline-flex;  /* flex ជំនួសឱ្យ inline-block */
+  display: inline-flex;  /* flex  inline-block */
   align-items: center;
   gap: 4px;
   cursor: pointer;
@@ -147,7 +147,7 @@
   display: flex;
 }
 .cs-input{
-  width: 60px;  /* តូចជាង */
+  width: 60px;  /*  */
   height: 32px;
   padding: 0 6px;
   border-radius: 6px;
@@ -210,7 +210,7 @@
         <th>Save & Delete</th>
       </tr>
     </thead>
-    
+ 
       <tbody>
 {% for w in page.object_list %}
 
@@ -240,12 +240,12 @@
 
           <!-- ✅ Credit Score - Simple Input (no button, no style) -->
     <td class="cs-cell" data-user-id="{{ w.user.id }}">
-    <input 
-      type="number" 
-      class="cs-input-simple" 
-      id="csInput{{ w.user.id }}" 
+ <input 
+ type="number" 
+ class="cs-input-simple" 
+ id="csInput{{ w.user.id }}" 
       value="0"
-      min="0" 
+ min="0" 
       max="500"
       onblur="saveCreditScore({{ w.user.id }})"
       style="width: 80px; padding: 6px; border-radius: 6px; border: 1px solid #ccc; text-align: center; font-weight: 900;"
@@ -337,7 +337,7 @@
         <script>
   // ✅ SIMPLE CREDIT SCORE - Input + Save only
   const CSRF_TOKEN = getCookie("csrftoken");
-  
+ 
   // Load credit scores on page load
   document.addEventListener("DOMContentLoaded", async function(){
     const inputs = document.querySelectorAll(".cs-input-simple");
@@ -368,18 +368,18 @@
   async function saveCreditScore(userId){
     const input = document.getElementById(`csInput${userId}`);
     let newScore = parseInt(input.value) || 0;
-    
+ 
     // Validate 0-500
     if(newScore < 0) newScore = 0;
     if(newScore > 500) newScore = 500;
-    
+ 
     // Update input to show capped value
     input.value = newScore;
 
     try{
       const formData = new FormData();
       formData.append("credit_score", newScore);
-      
+ 
       const res = await fetch(`/staff/users/${userId}/score/save/`, {
         method: "POST",
         headers: {
@@ -388,7 +388,7 @@
         },
         body: formData
       });
-      
+ 
       const data = await res.json();
             if(data.ok){
         // Saved successfully (no alert needed)
