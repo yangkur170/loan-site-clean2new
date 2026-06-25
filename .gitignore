@@ -1,0 +1,24 @@
+# --- Secrets & data (NEVER commit) ---
+.env
+.env.*
+backups/
+*.dump
+*.sql
+*.bak
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# --- Django ---
+staticfiles/
+media/
+*.log
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

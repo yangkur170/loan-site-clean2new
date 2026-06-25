@@ -25,6 +25,13 @@ CSRF_TRUSTED_ORIGINS = env_list(
     "https://primelendingphp.com,https://www.primelendingphp.com,https://loving-tenderness-production-2c60.up.railway.app"
 )
 
+# Render injects the public hostname (e.g. my-app.onrender.com) at runtime.
+# Auto-allow it so the deploy works before a custom domain is attached.
+RENDER_HOST = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_HOST:
+    ALLOWED_HOSTS.append(RENDER_HOST)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_HOST}")
+
 INSTALLED_APPS = [
     "staffdash",
     "cloudinary",

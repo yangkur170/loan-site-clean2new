@@ -1,0 +1,2 @@
+# Force LF for shell scripts so they run correctly on Render's Linux builders.
+*.sh text eol=lf

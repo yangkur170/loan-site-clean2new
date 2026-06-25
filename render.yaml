@@ -1,0 +1,38 @@
+# Render Blueprint - deploys the Django web service + a managed Postgres.
+# Create the services by pointing Render at this repo (New + > Blueprint).
+databases:
+  - name: primelending-db
+    databaseName: primelending
+    plan: free          # upgrade to "starter" for a paid, non-expiring DB
+
+services:
+  - type: web
+    name: primelending
+    runtime: python
+    plan: starter       # "free" also works but sleeps when idle
+    buildCommand: "bash build.sh"
+    startCommand: "gunicorn config.wsgi:application -c config/gunicorn.conf.py"
+    healthCheckPath: /login/
+    envVars:
+      # DATABASE_URL is injected automatically from the managed Postgres above.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: primelending-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "primelendingphp.com,www.primelendingphp.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://primelendingphp.com,https://www.primelendingphp.com"
+      # Cloudinary - fill these in the Render dashboard (kept out of git).
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
