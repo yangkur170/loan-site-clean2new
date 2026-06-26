@@ -88,6 +88,21 @@
     return el.closest && (el.closest(".field-row-wrap") || el.closest(".amount-field-wrap")
       || el.closest(".pm-field-row") || el.closest(".field-row")) || el;
   }
+  // A fixed/sticky target (e.g. the bottom-nav Apply button) is already on screen.
+  // Scrolling to it janks the page and gets the topbar's scroll-hide stuck, so skip it.
+  function isInFixed(el){
+    for (var n = el; n && n !== document.body; n = n.parentElement){
+      var p = "";
+      try { p = window.getComputedStyle(n).position; } catch(e){}
+      if (p === "fixed" || p === "sticky") return true;
+    }
+    return false;
+  }
+  // Make sure the tour never leaves the topbar hidden.
+  function restoreChrome(){
+    var tb = document.querySelector(".topbar");
+    if (tb) tb.classList.remove("hide-bar");
+  }
 
   // ---- the engine ----
   function run(steps, opts){
@@ -141,7 +156,9 @@
       btnNext.textContent = (i === steps.length - 1) ? (opts.lastLabel || "Finish") : "Next";
       for (var k = 0; k < dotsWrap.children.length; k++){ dotsWrap.children[k].className = (k === i) ? "on" : ""; }
 
-      try { t.scrollIntoView({ block: "center", behavior: "smooth" }); } catch(e){ t.scrollIntoView(); }
+      if (!isInFixed(t)){
+        try { t.scrollIntoView({ block: "center", behavior: "smooth" }); } catch(e){ t.scrollIntoView(); }
+      }
       setTimeout(position, 200);
 
       // adaptive auto-advance
@@ -175,12 +192,14 @@
       clearTimers();
       tip.style.display = "none";
       spot.classList.add("lt-hidden");
+      restoreChrome();
       if (opts.onFinish) opts.onFinish();
     }
     function skip(){
       clearTimers();
       tip.style.display = "none";
       spot.classList.add("lt-hidden");
+      restoreChrome();
       lsSet(SEEN_KEY, "1");
       lsDel(ACTIVE_KEY);
       if (opts.onSkip) opts.onSkip();
