@@ -2,6 +2,10 @@
 import multiprocessing
 import os
 
+# Bind to the platform-provided port on all interfaces.
+# DigitalOcean App Platform / Render / Railway inject $PORT; default 8000 locally.
+bind = "0.0.0.0:" + os.environ.get("PORT", "8000")
+
 # Worker configuration
 # 2 workers x 4 threads = 8 concurrent requests, spread across 2 processes so
 # one stuck/slow request can't take the whole service down (the other worker
